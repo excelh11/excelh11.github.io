@@ -220,7 +220,7 @@
 
 <p><img src="https://velog.velcdn.com/images/aiexcelh/post/e9062050-bedf-448e-8eca-a00c215b4a29/image.png" alt="터미널을 4개로 나눈 화면 — 칸마다 별개의 bash가 떠 있고, 칸마다 .bashrc의 &quot;ROS2 Jazzy is activated&quot;가 한 번씩 찍혀 있다" /></p>
 
-<p><em>Terminator 같은 터미널을 분할해 쓰면 <strong>칸마다 별개의 bash</strong>가 실행됩니다. 그래서 <code class="language-plaintext highlighter-rouge">.bashrc</code>도 칸마다 한 번씩 읽히고(<code class="language-plaintext highlighter-rouge">ROS2 Jazzy is activated</code>가 칸마다 찍혀 있는 것이 그 증거입니다), <code class="language-plaintext highlighter-rouge">source ~/.bashrc</code>도 지금 커서가 있는 칸에만 적용됩니다. “옆 창에서는 되는데 이 창에서는 <code class="language-plaintext highlighter-rouge">ros2</code>가 안 된다”는 상황이 바로 이것입니다. (Ubuntu 24.04 + Terminator 화면)</em></p>
+<p><em>Terminator 같은 터미널을 분할해 쓰면 <strong>칸마다 별개의 bash</strong>가 실행됩니다. 그래서 <code class="language-plaintext highlighter-rouge">.bashrc</code>도 칸마다 한 번씩 읽히고(<code class="language-plaintext highlighter-rouge">ROS2 Jazzy is activated</code>가 칸마다 찍혀 있는 것이 그 증거입니다), <code class="language-plaintext highlighter-rouge">source ~/.bashrc</code>도 지금 커서가 있는 칸에만 적용됩니다. “옆 창에서는 되는데 이 창에서는 <code class="language-plaintext highlighter-rouge">ros2</code>가 안 된다”는 상황이 바로 이것입니다. (Ubuntu 24.04 + Terminator 화면 — 프롬프트의 <code class="language-plaintext highlighter-rouge">user@robot-pc</code>는 예시 계정 이름이고, 각자 PC에서는 자기 계정 이름이 표시됩니다.)</em></p>
 
 <blockquote>
   <p><code class="language-plaintext highlighter-rouge">~</code>는 홈 디렉터리(<code class="language-plaintext highlighter-rouge">/home/사용자명</code>)이고, 파일 이름 앞의 <code class="language-plaintext highlighter-rouge">.</code>은 <strong>숨김 파일</strong>이라는 표시입니다. <code class="language-plaintext highlighter-rouge">ls</code>로는 보이지 않고 <code class="language-plaintext highlighter-rouge">ls -a</code>로 확인할 수 있습니다.</p>
@@ -547,7 +547,7 @@ ros2 daemon stop <span class="o">&amp;&amp;</span> ros2 daemon start   <span cla
 </code></pre></div></div>
 
 <blockquote>
-  <p>터미널이 열리지 않을 정도로 깨졌다면, <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">Alt</code>+<code class="language-plaintext highlighter-rouge">F3</code>으로 가상 콘솔에 로그인해 파일을 고치거나, 복구 모드로 진입해 백업을 복원합니다. 백업이 있으면 1분, 없으면 1시간입니다.</p>
+  <p>터미널이 열리지 않을 정도로 깨졌다면, <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">Alt</code>+<code class="language-plaintext highlighter-rouge">F3</code>으로 가상 콘솔에 로그인해 파일을 고치거나, 복구 모드로 진입해 백업을 복원합니다. 백업이 있으면 되돌리는 일이 간단하지만, 없으면 손이 많이 갑니다.</p>
 </blockquote>
 
 <h3 id="bashrc가-실행되지-않는-경우"><code class="language-plaintext highlighter-rouge">.bashrc</code>가 실행되지 않는 경우</h3>

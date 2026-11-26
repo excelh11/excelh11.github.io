@@ -50,7 +50,7 @@
       <span class="dot">·</span>
       <time datetime="2026-11-26T09:03:00+09:00">2026년 11월 26일</time>
       <span class="dot">·</span>
-      <span>약 22분</span>
+      <span>약 23분</span>
     </div>
   </header>
 
@@ -109,7 +109,7 @@
   <div class="post-body">
     <p>앞 글에서 파이썬 가상환경을 만들었습니다. 이제 그 환경에서 코드를 <strong>편하게 쓰고, 실행하고, 결과를 확인할 도구</strong>가 필요합니다. 이 글은 <strong>VS Code(Visual Studio Code)</strong> 를 설치하고, 파이썬 인터프리터와 주피터 커널을 가상환경에 정확히 연결하는 과정을 다룹니다.</p>
 
-<p>로봇 개발에서 이 연결이 중요한 이유는 단순합니다. 편집기가 엉뚱한 파이썬을 바라보고 있으면, 아무리 패키지를 설치해도 <code class="language-plaintext highlighter-rouge">ModuleNotFoundError</code>가 계속 나고, 원인을 찾느라 몇 시간을 잃습니다. <strong>“지금 어느 파이썬으로 실행 중인가”를 눈으로 확인할 수 있게 만드는 것</strong>이 이 글의 목표입니다.</p>
+<p>로봇 개발에서 이 연결이 중요한 이유는 단순합니다. 편집기가 엉뚱한 파이썬을 바라보고 있으면, 아무리 패키지를 설치해도 <code class="language-plaintext highlighter-rouge">ModuleNotFoundError</code>가 계속 나고, 원인을 찾느라 시간을 허비합니다. <strong>“지금 어느 파이썬으로 실행 중인가”를 눈으로 확인할 수 있게 만드는 것</strong>이 이 글의 목표입니다.</p>
 
 <p>이 글에서 다루는 것</p>
 
@@ -319,7 +319,9 @@ code <span class="nb">.</span>
 
 <p><img src="https://velog.velcdn.com/images/aiexcelh/post/8184da0f-d499-403a-a53f-bede82796d05/image.png" alt="VS Code에서 Python: Select Interpreter를 열었을 때의 실제 화면 — 프로젝트 venv가 Recommended로 표시된다" /></p>
 
-<p><em>실제 화면입니다. <code class="language-plaintext highlighter-rouge">Python 3.10.5 ('venv': venv) … Recommended</code>가 지금 폴더의 가상환경이고, 아래는 시스템·Conda 등 다른 인터프리터입니다. 5장에서 고르는 것이 바로 이 목록입니다. (출처: VS Code 공식 문서, CC BY 3.0)</em></p>
+<p><em>VS Code 공식 문서에 실린 화면입니다. <code class="language-plaintext highlighter-rouge">Python 3.10.5 ('venv': venv) … Recommended</code>가 지금 폴더의 가상환경이고, 아래는 시스템·Conda 등 다른 인터프리터입니다. 5장에서 고르는 것이 바로 이 목록입니다. (출처: VS Code 공식 문서, CC BY 3.0)</em></p>
+
+<p><em>※ VS Code <strong>공식 문서의 예시 화면</strong>입니다. 화면의 경로(가상환경 폴더의 <code class="language-plaintext highlighter-rouge">.venv</code> 안 <code class="language-plaintext highlighter-rouge">Scripts/python.exe</code>, 윈도우 표기)와 파이썬 버전은 <strong>각자 사용하는 PC 환경에 따라 다릅니다</strong> — 우분투에서는 <code class="language-plaintext highlighter-rouge">~/venv/robot_venv/bin/python</code>처럼 보입니다.</em></p>
 
 <h3 id="선택하는-방법">선택하는 방법</h3>
 
@@ -373,9 +375,13 @@ python <span class="nt">-c</span> <span class="s2">"import sys; print(sys.prefix
 
 <p><em>파일을 만들고 코드를 저장하면 오른쪽 위에 <strong>▷ Run Python File</strong> 버튼이 나타납니다. (출처: VS Code 공식 문서)</em></p>
 
+<p><em>※ VS Code 공식 문서의 예시 화면입니다. 편집기 테마·글꼴·경로 표시는 각자 설정과 PC 환경에 따라 다를 수 있습니다.</em></p>
+
 <p><img src="https://velog.velcdn.com/images/aiexcelh/post/0f9b0677-c5dc-4ac1-9688-3aa048131ada/image.png" alt="▷ 버튼으로 실행하면 아래 TERMINAL 탭에 출력이 찍힌다" /></p>
 
 <p><em>실제 실행 결과입니다. 아래쪽 <code class="language-plaintext highlighter-rouge">TERMINAL</code> 탭에 <code class="language-plaintext highlighter-rouge">Roll a dice!</code>와 프롬프트가 이어서 찍힙니다. 실행에 쓴 파이썬 경로가 프롬프트 앞에 표시되는 것도 눈여겨보세요. (출처: VS Code 공식 문서)</em></p>
+
+<p><em>※ VS Code 공식 문서의 예시 화면입니다. 프롬프트가 <code class="language-plaintext highlighter-rouge">PS C:...&gt;</code> 같은 윈도우 파워셸 표기로 보이는 것은 운영체제에 따라 다르고, 우분투에서는 <code class="language-plaintext highlighter-rouge">(robot_venv) user@robot-pc:~/hello$</code>처럼 보입니다.</em></p>
 
 <ol>
   <li>오른쪽 위 <strong>▷ (Run Python File)</strong> 클릭 또는 <code class="language-plaintext highlighter-rouge">Ctrl</code> + <code class="language-plaintext highlighter-rouge">F5</code></li>
@@ -403,6 +409,8 @@ python <span class="nt">-c</span> <span class="s2">"import sys; print(sys.prefix
 
 <p><em><code class="language-plaintext highlighter-rouge">hello.ipynb</code>를 열면 오른쪽 위에 <strong>Select Kernel</strong>이 뜹니다. 이것을 먼저 눌러야 합니다. (출처: VS Code 공식 문서)</em></p>
 
+<p><em>※ VS Code 공식 문서의 예시 화면입니다. 커널 목록에 뜨는 파이썬 이름·버전은 각자 설치한 환경에 따라 다릅니다.</em></p>
+
 <ol>
   <li>Explorer에서 <strong>New File…</strong> → <code class="language-plaintext highlighter-rouge">hello.ipynb</code></li>
   <li>오른쪽 위 <strong>Select Kernel</strong> 클릭</li>
@@ -425,6 +433,8 @@ python <span class="nt">-c</span> <span class="s2">"import sys; print(sys.prefix
 <p><img src="https://velog.velcdn.com/images/aiexcelh/post/162cfcc8-d487-4685-b375-30202cc1c7f8/image.png" alt="노트북 셀 실행 실제 화면 — Run All, 실행 결과, 오른쪽 위 Python 3.11.x 커널 표시" /></p>
 
 <p><em>위쪽 <code class="language-plaintext highlighter-rouge">Run All</code>로 전체 실행, 각 셀 왼쪽의 ▷로 한 셀만 실행합니다. 오른쪽 위에 지금 붙어 있는 <strong>커널</strong>(예: <code class="language-plaintext highlighter-rouge">Python 3.11.x</code>)이 표시됩니다. (출처: VS Code 공식 문서)</em></p>
+
+<p><em>※ VS Code 공식 문서의 예시 화면입니다. 커널 이름(<code class="language-plaintext highlighter-rouge">Python 3.11.x</code>)과 경로는 각자 환경에 따라 다릅니다.</em></p>
 
 <h3 id="모듈이-없다고-나올-때">모듈이 없다고 나올 때</h3>
 
