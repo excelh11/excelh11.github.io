@@ -741,6 +741,8 @@ a:hover { color: var(--accent-dark); text-decoration: underline; text-underline-
 .footer-note { margin: 0 0 16px; color: var(--text-3); font-size: 14.5px; }
 
 .footer-meta { margin: 0; color: var(--muted); font-size: 13px; }
+.footer-meta a { color: inherit; text-decoration: none; }
+.footer-meta a:hover { text-decoration: underline; }
 
 /* ---------- 404 ---------- */
 
