@@ -26,7 +26,7 @@ order: 0
 
 ![명령 한 줄이 실행되는 순서 — 터미널, 셸, 커널, 하드웨어와 PATH](https://velog.velcdn.com/images/aiexcelh/post/25be7e37-7ff0-454a-b4bb-eec8f17c888a/image.png)
 
-*명령은 위에서 아래로 내려가고, 결과는 반대로 돌아옵니다. 맨 아래 상자는 ROS 2의 `source`가 `PATH`를 채우는 장면입니다. (이 그림만 개념을 정리한 도해이고, 아래부터는 실제 화면입니다.)*
+*명령은 위에서 아래로 내려가고, 결과는 반대로 돌아옵니다. 맨 아래 상자는 ROS 2의 `source`가 `PATH`를 채우는 장면입니다. (이 그림만 개념을 정리한 도해이고, 아래부터는 Ubuntu 24.04 화면입니다.)*
 
 1. **입력** — 키보드로 `ls -al` 입력
 2. **터미널** — 입력과 출력을 주고받는 창
@@ -52,9 +52,9 @@ order: 0
 
 *실제 Ubuntu 24.04 LTS를 설치하고 처음 켰을 때 보이는 화면입니다. 왼쪽 아래 **점 9개(Show Applications)** 를 누르면 앱 목록이 열리고, 거기서 "Terminal"을 찾습니다.*
 
-![터미널에서 ls -al을 실행한 실제 화면 — 프롬프트, 명령, 결과가 한 화면에 이어서 찍힌다](https://velog.velcdn.com/images/aiexcelh/post/415df837-c1c2-4018-9460-6b25f7ccbf1d/image.png)
+![터미널에서 ls -al을 실행한 화면 — 프롬프트, 명령, 결과가 한 화면에 이어서 찍힌다](https://velog.velcdn.com/images/aiexcelh/post/aed2e6d7-b819-4cdb-98d1-0cb520a8d75a/image.png)
 
-*프롬프트(`wajper@goślinyzwrot:~$`) 뒤에 `ls -al`을 입력하고 Enter를 누른 결과입니다. 파일 권한(`-rw-r--r--`), 소유자, 크기, 이름 순서로 한 줄씩 출력됩니다.*
+*프롬프트(`user@robot-pc:~$`) 뒤에 `ls -al`을 입력하고 Enter를 누른 결과입니다. 파일 권한(`-rw-r--r--`), 소유자, 크기, 이름 순서로 한 줄씩 출력됩니다. (Ubuntu 24.04 기본 터미널 화면)*
 
 **입력하는 위치**
 - 창이 열리면 `사용자명@컴퓨터명:~$` 같은 **프롬프트**가 보이고, 그 **`$` 뒤에 커서**가 깜빡입니다.
@@ -149,9 +149,9 @@ echo $SHELL
 
 *실제 우분투의 `/` 구조를 그린 공개 자료입니다. `bin`→`usr/bin`, `lib`→`usr/lib` 같은 링크(→ 표시)도 보입니다. (출처: Wikimedia Commons, CC BY-SA 4.0)*
 
-![루트(/)에서 ls를 실행한 실제 화면 — bin, boot, dev, etc, home, opt, usr, var가 실제로 들어 있다](https://velog.velcdn.com/images/aiexcelh/post/8e4f84e6-8827-420b-b529-68986d861738/image.png)
+![`ls /`를 실행한 화면 — bin, boot, dev, etc, home, opt, usr, var가 실제로 들어 있다](https://velog.velcdn.com/images/aiexcelh/post/2dc5f544-cb5f-4922-875a-43b8f709ed3d/image.png)
 
-*`ls /`를 실행하면 위 표의 디렉터리들이 실제로 나옵니다. 로봇 개발에서 가장 자주 들어갈 곳은 **`/opt`(ROS 2 설치 위치)**, **`/dev`(USB 카메라·포트)**, **`/home`(내 작업 폴더)** 입니다.*
+*`ls /`를 실행하면 위 표의 디렉터리들이 실제로 나옵니다(`bin`·`lib`·`sbin`처럼 `usr` 아래를 가리키는 링크는 청록색). 로봇 개발에서 가장 자주 들어갈 곳은 **`/opt`(ROS 2 설치 위치)**, **`/dev`(USB 카메라·포트)**, **`/home`(내 작업 폴더)** 입니다.*
 
 로봇 개발에서 자주 만나는 위치만 정리하면 다음과 같습니다.
 
@@ -457,6 +457,6 @@ history              # 이전 명령 목록
 | 그림 | 출처 | 라이선스 |
 | --- | --- | --- |
 | 우분투 24.04 데스크톱 화면 | Wikimedia Commons [Ubuntu 24.04 LTS default desktop](https://commons.wikimedia.org/wiki/File:Ubuntu_24.04_LTS_default_desktop_-_English.png) (Canonical) | GPL (자유 소프트웨어 라이선스) |
-| 터미널 `ls -al` 화면 | Wikimedia Commons [GNOME Terminal 3.32 screenshot](https://commons.wikimedia.org/wiki/File:GNOME_Terminal_3.32_screenshot.png) | GPLv3 |
+| 터미널 `ls -al` 화면 | 직접 제작 — Ubuntu 24.04 기본 터미널(GNOME Terminal) 재현 화면 (`user@robot-pc`) | — |
 | 파일 시스템 계층 | Wikimedia Commons [Ubuntu Filesystem Hierarchy](https://commons.wikimedia.org/wiki/File:Ubuntu_Filesystem_Hierarchy.png) | CC BY-SA 4.0 |
-| 루트 `ls` 화면 | Wikimedia Commons [Command line.png](https://commons.wikimedia.org/wiki/File:Command_line.png) | GPL |
+| `ls /` 화면 | 직접 제작 — Ubuntu 24.04 기본 터미널(GNOME Terminal) 재현 화면 (`user@robot-pc`) | — |

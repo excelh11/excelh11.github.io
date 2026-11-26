@@ -77,9 +77,9 @@ bash는 실행될 때 상황에 따라 다른 파일을 읽습니다.
 
 우리가 GUI에서 터미널을 열 때는 **대화형 비로그인 셸**이므로 `~/.bashrc`가 읽힙니다. 그래서 ROS 2 환경 설정은 `.bashrc`에 넣는 것이 맞습니다.
 
-![터미널을 4개로 나눠 쓴 실제 화면 — 칸마다 bash가 따로 떠 있다](https://velog.velcdn.com/images/aiexcelh/post/837f4c11-1f67-499a-bb20-75ebbc6e5f65/image.png)
+![터미널을 4개로 나눈 화면 — 칸마다 별개의 bash가 떠 있고, 칸마다 .bashrc의 "ROS2 Jazzy is activated"가 한 번씩 찍혀 있다](https://velog.velcdn.com/images/aiexcelh/post/e9062050-bedf-448e-8eca-a00c215b4a29/image.png)
 
-*Terminator 같은 터미널을 분할해 쓰면 **칸마다 별개의 bash**가 실행됩니다. 그래서 `.bashrc`도 칸마다 한 번씩 읽히고, `source ~/.bashrc`도 지금 커서가 있는 칸에만 적용됩니다. "옆 창에서는 되는데 이 창에서는 `ros2`가 안 된다"는 상황이 바로 이것입니다. (출처: Wikimedia Commons, GPLv2)*
+*Terminator 같은 터미널을 분할해 쓰면 **칸마다 별개의 bash**가 실행됩니다. 그래서 `.bashrc`도 칸마다 한 번씩 읽히고(`ROS2 Jazzy is activated`가 칸마다 찍혀 있는 것이 그 증거입니다), `source ~/.bashrc`도 지금 커서가 있는 칸에만 적용됩니다. "옆 창에서는 되는데 이 창에서는 `ros2`가 안 된다"는 상황이 바로 이것입니다. (Ubuntu 24.04 + Terminator 화면)*
 
 > `~`는 홈 디렉터리(`/home/사용자명`)이고, 파일 이름 앞의 `.`은 **숨김 파일**이라는 표시입니다. `ls`로는 보이지 않고 `ls -a`로 확인할 수 있습니다.
 
@@ -458,5 +458,5 @@ echo $ROS_DISTRO $ROS_DOMAIN_ID
 
 | 그림 | 출처 | 라이선스 |
 | --- | --- | --- |
-| Terminator 분할 터미널 | Wikimedia Commons [Terminator sample.png](https://commons.wikimedia.org/wiki/File:Terminator_sample.png) | GPLv2 |
+| Terminator 4분할 터미널 | 직접 제작 — Ubuntu 24.04 + Terminator 재현 화면 (`user@robot-pc`, ROS 2 Jazzy 실행 결과) | — |
 | `.bashrc` 실행 흐름 / ROS_DOMAIN_ID | 직접 그린 도해 | — |
