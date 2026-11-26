@@ -19,10 +19,6 @@ layout: default
     <h1 class="post-title">{{ page.title }}</h1>
     <div class="post-meta">
       <span class="post-part">{{ page.order | prepend: '0' | slice: -2, 2 }} / {{ series_posts.size | prepend: '0' | slice: -2, 2 }}</span>
-      <span class="dot">·</span>
-      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%Y년 %m월 %d일' }}</time>
-      <span class="dot">·</span>
-      <span>약 {{ content | strip_html | size | divided_by: 500 | at_least: 1 }}분</span>
     </div>
   </header>
 
