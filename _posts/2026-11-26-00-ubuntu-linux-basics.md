@@ -1,22 +1,22 @@
 ---
-title: "로봇 공부를 시작하기 전에 알아야 할 우분투·리눅스 기초"
-description: "운영체제·커널·셸·PATH·sudo·apt가 로봇 개발에서 어디에 쓰이는지, 코드보다 먼저 만나는 벽을 정리합니다."
+title: "로봇 공부를 시작하기 전에 알아야 할 Ubuntu·Linux 기초"
+description: "운영체제·Kernel·Shell·PATH·sudo·apt가 로봇 개발에서 어디에 쓰이는지, 코드보다 먼저 만나는 벽을 정리합니다."
 date: 2026-11-26 09:00:00 +0900
 series: robot-setup
 order: 0
 ---
 
-로봇 공부를 시작하면 가장 먼저 만나는 벽은 코드가 아니라 **운영체제**입니다. 튜토리얼을 따라가려고 보면 `sudo`, `apt`, `~/.bashrc`, `/opt/ros/...` 같은 것들이 먼저 튀어나오고, 윈도우만 써 본 사람에게는 이 낯선 단어들이 진입 장벽이 됩니다.
+로봇 공부를 시작하면 가장 먼저 만나는 벽은 코드가 아니라 **운영체제**입니다. 튜토리얼을 따라가려고 보면 `sudo`, `apt`, `~/.bashrc`, `/opt/ros/...` 같은 것들이 먼저 튀어나오고, Windows만 써 본 사람에게는 이 낯선 단어들이 진입 장벽이 됩니다.
 
-그래서 이 시리즈의 0편에서는 **로봇을 공부하기 전에 반드시 알아야 하는 우분투·리눅스 기초 개념**만 골라 정리합니다. 명령어를 외우는 글이 아니라, "이게 왜 필요한지", "실제 로봇 개발에서 어디에 쓰이는지"를 이해하는 글로 만들었습니다.
+그래서 이 시리즈의 0편에서는 **로봇을 공부하기 전에 반드시 알아야 하는 Ubuntu·Linux 기초 개념**만 골라 정리합니다. 명령어를 외우는 글이 아니라, "이게 왜 필요한지", "실제 로봇 개발에서 어디에 쓰이는지"를 이해하는 글로 만들었습니다.
 
 이 글에서 다루는 것
 
-- 운영체제, 커널, 셸, 터미널이 각각 무엇이고 어떻게 연결되는지
-- 우분투와 LTS 버전을 쓰는 이유
-- 리눅스 파일 구조와 경로 개념
+- 운영체제, Kernel(커널), Shell(셸), Terminal(터미널)이 각각 무엇이고 어떻게 연결되는지
+- Ubuntu와 LTS 버전을 쓰는 이유
+- Linux 파일 구조와 경로 개념
 - 사용자 권한과 `sudo`
-- 패키지 관리자 `apt`와 `update`/`upgrade`의 차이
+- Package Manager `apt`와 `update`/`upgrade`의 차이
 - 환경변수와 `PATH`
 - 이 개념들이 실제 로봇 개발에서 등장하는 지점
 
@@ -24,37 +24,37 @@ order: 0
 
 ## 한눈에 보는 전체 흐름
 
-![명령 한 줄이 실행되는 순서 — 터미널, 셸, 커널, 하드웨어와 PATH](https://velog.velcdn.com/images/aiexcelh/post/25be7e37-7ff0-454a-b4bb-eec8f17c888a/image.png)
+![명령 한 줄이 실행되는 순서 — Terminal, Shell, Kernel, 하드웨어와 PATH](https://velog.velcdn.com/images/aiexcelh/post/25be7e37-7ff0-454a-b4bb-eec8f17c888a/image.png)
 
 *명령은 위에서 아래로 내려가고, 결과는 반대로 돌아옵니다. 맨 아래 상자는 ROS 2의 `source`가 `PATH`를 채우는 장면입니다. (이 그림만 개념을 정리한 도해이고, 아래부터는 Ubuntu 24.04 화면입니다.)*
 
 1. **입력** — 키보드로 `ls -al` 입력
-2. **터미널** — 입력과 출력을 주고받는 창
-3. **셸(bash)** — 명령을 해석하고 `PATH`에서 실행 파일을 찾음
-4. **커널** — CPU·메모리·디스크·장치에 실제로 일을 시킴
+2. **Terminal** — 입력과 출력을 주고받는 창
+3. **Shell(bash)** — 명령을 해석하고 `PATH`에서 실행 파일을 찾음
+4. **Kernel** — CPU·메모리·디스크·장치에 실제로 일을 시킴
 5. **하드웨어** — 디스크를 읽고 USB 카메라·모터에 접근
-6. **출력** — 결과가 커널 → 셸 → 터미널 순서로 되돌아와 화면에 표시
+6. **출력** — 결과가 Kernel → Shell → Terminal 순서로 되돌아와 화면에 표시
 
-> 로봇 개발에서 이 흐름이 막히는 지점은 3번입니다. `ros2` 실행 파일이 `/opt/ros/jazzy/bin`에 있어도 `PATH`에 없으면 셸이 찾지 못해 `ros2: command not found`가 됩니다. 그때 필요한 한 줄이 `source /opt/ros/jazzy/setup.bash`입니다.
+> 로봇 개발에서 이 흐름이 막히는 지점은 3번입니다. `ros2` 실행 파일이 `/opt/ros/jazzy/bin`에 있어도 `PATH`에 없으면 Shell이 찾지 못해 `ros2: command not found`가 됩니다. 그때 필요한 한 줄이 `source /opt/ros/jazzy/setup.bash`입니다.
 
 ---
 
 ## 명령은 어디에 입력하나요?
 
-이 시리즈에 나오는 모든 명령은 **터미널(터미널 창)** 에 입력합니다. 윈도우의 '명령 프롬프트'와 같은 것입니다.
+이 시리즈에 나오는 모든 명령은 **Terminal**에 입력합니다. Windows의 '명령 프롬프트'와 같은 것입니다.
 
 **여는 방법 (Ubuntu 24.04)**
 
 1. 바탕화면에서 `Ctrl` + `Alt` + `T` 를 동시에 누릅니다.
 2. 또는 화면 왼쪽 아래 **앱 표시(점 9개)** → "Terminal" 또는 "터미널"을 검색해 실행합니다.
 
-![우분투 24.04 LTS 기본 데스크톱 화면 — 왼쪽 세로 막대가 독(Dock), 맨 아래 점 9개가 앱 표시](https://velog.velcdn.com/images/aiexcelh/post/d224ba60-491e-4ab5-a6c9-bd87be9aaa59/image.jpg)
+![Ubuntu 24.04 LTS 기본 Desktop 화면 — 왼쪽 세로 막대가 독(Dock), 맨 아래 점 9개가 앱 표시](https://velog.velcdn.com/images/aiexcelh/post/d224ba60-491e-4ab5-a6c9-bd87be9aaa59/image.jpg)
 
 *실제 Ubuntu 24.04 LTS를 설치하고 처음 켰을 때 보이는 화면입니다. 왼쪽 아래 **점 9개(Show Applications)** 를 누르면 앱 목록이 열리고, 거기서 "Terminal"을 찾습니다.*
 
-![터미널에서 ls -al을 실행한 화면 — 프롬프트, 명령, 결과가 한 화면에 이어서 찍힌다](https://velog.velcdn.com/images/aiexcelh/post/aed2e6d7-b819-4cdb-98d1-0cb520a8d75a/image.png)
+![Terminal에서 ls -al을 실행한 화면 — 프롬프트, 명령, 결과가 한 화면에 이어서 찍힌다](https://velog.velcdn.com/images/aiexcelh/post/aed2e6d7-b819-4cdb-98d1-0cb520a8d75a/image.png)
 
-*프롬프트(`user@robot-pc:~$`) 뒤에 `ls -al`을 입력하고 Enter를 누른 결과입니다. 파일 권한(`-rw-r--r--`), 소유자, 크기, 이름 순서로 한 줄씩 출력됩니다. (Ubuntu 24.04 기본 터미널 화면 — `user@robot-pc`는 예시 계정 이름이고, 각자 PC에서는 자기 계정 이름이 표시됩니다.)*
+*프롬프트(`user@robot-pc:~$`) 뒤에 `ls -al`을 입력하고 Enter를 누른 결과입니다. 파일 권한(`-rw-r--r--`), 소유자, 크기, 이름 순서로 한 줄씩 출력됩니다. (Ubuntu 24.04 기본 Terminal 화면 — `user@robot-pc`는 예시 계정 이름이고, 각자 PC에서는 자기 계정 이름이 표시됩니다.)*
 
 **입력하는 위치**
 - 창이 열리면 `사용자명@컴퓨터명:~$` 같은 **프롬프트**가 보이고, 그 **`$` 뒤에 커서**가 깜빡입니다.
@@ -66,53 +66,53 @@ order: 0
 | `user@robot-pc` | 사용자이름@컴퓨터이름 |
 | `~` | 지금 내 홈 폴더(`/home/사용자명`)에 있음 |
 | `$` | 일반 사용자로 입력 대기 (관리자면 `#`) |
-| `(robot_venv)` | 가상환경이 켜진 상태 (2편) |
+| `(robot_venv)` | Virtual Environment이 켜진 상태 (2편) |
 
-> 터미널에서는 `Ctrl`+`C` 가 **"실행 중인 명령 중단"** 입니다. 복사는 `Ctrl`+`Shift`+`C`, 붙여넣기는 `Ctrl`+`Shift`+`V` 를 씁니다.
+> Terminal에서는 `Ctrl`+`C` 가 **"실행 중인 명령 중단"** 입니다. 복사는 `Ctrl`+`Shift`+`C`, 붙여넣기는 `Ctrl`+`Shift`+`V` 를 씁니다.
 
-## 1. 왜 로봇 공부는 리눅스부터 시작할까
+## 1. 왜 로봇 공부는 Linux부터 시작할까
 
-로봇 소프트웨어의 표준은 사실상 리눅스입니다. ROS 2(로봇 운영체제 2)는 공식 문서에서 **우분투(Ubuntu)를 1순위 지원 플랫폼**으로 두고 있고, 연구실의 로봇 PC, 자율주행 키트, 협동로봇 제어기, 라즈베리파이 같은 임베디드 보드까지 대부분 우분투나 그 계열 리눅스를 씁니다.
+로봇 소프트웨어의 표준은 사실상 Linux(리눅스)입니다. ROS 2(로봇 운영체제 2)는 공식 문서에서 **Ubuntu(우분투)를 1순위 지원 플랫폼**으로 두고 있고, 연구실의 로봇 PC, 자율주행 키트, 협동로봇 제어기, 라즈베리파이 같은 임베디드 보드까지 대부분 Ubuntu나 그 계열 Linux를 씁니다.
 
 이유는 세 가지로 정리할 수 있습니다.
 
-1. **필요한 라이브러리가 리눅스에 먼저 옵니다.** 로봇은 카메라, 라이다, IMU, 모터 드라이버 같은 하드웨어를 아주 세밀하게 다뤄야 하는데, 이런 저수준 장치 제어 라이브러리와 드라이버가 리눅스 생태계에 가장 촘촘하게 준비되어 있습니다.
-2. **수정하고 배포하기 쉽습니다.** 오픈소스이기 때문에 커널 옵션부터 패키지 버전까지 내 로봇에 맞게 바꿀 수 있습니다.
+1. **필요한 라이브러리가 Linux에 먼저 옵니다.** 로봇은 카메라, 라이다, IMU, 모터 드라이버 같은 하드웨어를 아주 세밀하게 다뤄야 하는데, 이런 저수준 장치 제어 라이브러리와 드라이버가 Linux 생태계에 가장 촘촘하게 준비되어 있습니다.
+2. **수정하고 배포하기 쉽습니다.** 오픈소스이기 때문에 Kernel 옵션부터 Package 버전까지 내 로봇에 맞게 바꿀 수 있습니다.
 3. **실시간성과 네트워크 도구가 강합니다.** 로봇은 센서 데이터를 정해진 주기로 정확히 주고받아야 하므로, 프로세스 우선순위·네트워크·네임스페이스 같은 운영체제 기능을 그대로 쓸 수 있다는 점이 큽니다.
 
-> 정리: 로봇 공부 = (로봇 소프트웨어 생태계가 사는) 리눅스 위에서 살아남는 법을 배우는 일입니다.
+> 정리: 로봇 공부 = (로봇 소프트웨어 생태계가 사는) Linux 위에서 살아남는 법을 배우는 일입니다.
 
 ---
 
-## 2. 운영체제 구조: 커널, 셸, 터미널
+## 2. 운영체제 구조: Kernel, Shell, Terminal
 
-리눅스에서 명령을 처리하는 구조는 4단으로 생각하면 깔끔합니다.
+Linux에서 명령을 처리하는 구조는 4단으로 생각하면 깔끔합니다.
 
 ```text
 [사용자]  키보드로 명령 입력
    │
    ▼
-[터미널]  명령과 출력을 주고받는 창(콘솔)
+[Terminal]  명령과 출력을 주고받는 창(콘솔)
    │
    ▼
-[셸]      입력을 해석해 "실행할 프로그램"을 결정 (bash가 대표)
+[Shell]     입력을 해석해 "실행할 프로그램"을 결정 (bash가 대표)
    │
    ▼
-[커널]    하드웨어를 실제로 움직임 (CPU·메모리·디스크·장치)
+[Kernel]    하드웨어를 실제로 움직임 (CPU·메모리·디스크·장치)
    │
    ▼
-결과를 다시 터미널로 출력
+결과를 다시 Terminal으로 출력
 ```
 
-- **커널(Kernel)**: 운영체제의 심장입니다. 하드웨어와 직접 맞닿아 CPU 연산, 메모리 할당, 디스크 읽기/쓰기, 장치 제어를 담당합니다. 시스템 전체에 **하나만** 존재합니다.
-- **셸(Shell)**: 사용자가 입력한 문자열을 해석해 커널에 일을 시키는 프로그램입니다. 우분투 기본 셸은 **bash**(Bourne Again SHell)입니다.
-- **터미널(Terminal)**: 셸과 사용자를 이어 주는 창입니다. 터미널을 새로 열 때마다 그 안에 **셸이 새로 하나** 실행됩니다. 그래서 터미널 창 3개를 열면 셸도 3개이고, 각 창은 서로 독립된 환경(디렉터리 위치, 환경변수)을 가집니다.
+- **Kernel**: 운영체제의 심장입니다. 하드웨어와 직접 맞닿아 CPU 연산, 메모리 할당, 디스크 읽기/쓰기, 장치 제어를 담당합니다. 시스템 전체에 **하나만** 존재합니다.
+- **Shell**: 사용자가 입력한 문자열을 해석해 Kernel에 일을 시키는 프로그램입니다. Ubuntu 기본 Shell은 **bash**(Bourne Again SHell)입니다.
+- **Terminal**: Shell과 사용자를 이어 주는 창입니다. Terminal을 새로 열 때마다 그 안에 **Shell이 새로 하나** 실행됩니다. 그래서 Terminal 창 3개를 열면 Shell도 3개이고, 각 창은 서로 독립된 환경(디렉터리 위치, 환경변수)을 가집니다.
 
-이 구조는 로봇 개발에서 곧바로 체감됩니다. 예를 들어 로봇을 띄울 때는 터미널을 여러 개 열어 **한 창에서는 로봇 구동 노드**, **다른 창에서는 센서 확인**, **또 다른 창에서는 주행 명령**을 보냅니다. 각 창이 독립된 셸을 가지기 때문에 한 창에서 환경변수를 바꿔도 다른 창에 영향을 주지 않고, 반대로 새 창마다 환경 설정을 다시 해 줘야 하는 번거로움도 생깁니다(이 문제를 5편에서 `.bashrc`로 해결합니다).
+이 구조는 로봇 개발에서 곧바로 체감됩니다. 예를 들어 로봇을 띄울 때는 Terminal을 여러 개 열어 **한 창에서는 로봇 구동 Node**, **다른 창에서는 센서 확인**, **또 다른 창에서는 주행 명령**을 보냅니다. 각 창이 독립된 Shell을 가지기 때문에 한 창에서 환경변수를 바꿔도 다른 창에 영향을 주지 않고, 반대로 새 창마다 환경 설정을 다시 해 줘야 하는 번거로움도 생깁니다(이 문제를 5편에서 `.bashrc`로 해결합니다).
 
-현재 셸을 확인하는 명령은 다음과 같습니다.
+현재 Shell을 확인하는 명령은 다음과 같습니다.
 
-*⌨️ 입력 위치: 터미널(새로 연 창) · `$` 뒤에 입력하고 `Enter`*
+*⌨️ 입력 위치: Terminal(새로 연 창) · `$` 뒤에 입력하고 `Enter`*
 
 ```bash
 echo $SHELL
@@ -120,11 +120,11 @@ echo $SHELL
 
 ---
 
-## 3. 우분투와 LTS: 버전을 고르는 기준
+## 3. Ubuntu와 LTS: 버전을 고르는 기준
 
-**우분투(Ubuntu)** 는 리눅스 커널에 데스크톱 환경(GNOME), 패키지 관리 도구, 설치 프로그램 등을 묶어 배포하는 **리눅스 배포판**입니다. 로봇 개발에서 우분투를 쓰는 가장 실용적인 이유는 **ROS 2의 공식 지원 대상**이라는 점입니다.
+**Ubuntu(우분투)**는 Linux Kernel에 Desktop 환경(GNOME), Package Manager, 설치 프로그램 등을 묶어 배포하는 **Linux 배포판**입니다. 로봇 개발에서 Ubuntu를 쓰는 가장 실용적인 이유는 **ROS 2의 공식 지원 대상**이라는 점입니다.
 
-우분투는 **LTS(Long Term Support)** 버전을 2년마다 내놓고, 일반 버전은 9개월만 지원합니다. 로봇 프로젝트는 한 번 환경을 잡으면 몇 달~몇 년을 쓰기 때문에 무조건 LTS를 고릅니다.
+Ubuntu는 **LTS(Long Term Support)** 버전을 2년마다 내놓고, 일반 버전은 9개월만 지원합니다. 로봇 프로젝트는 한 번 환경을 잡으면 몇 달~몇 년을 쓰기 때문에 무조건 LTS를 고릅니다.
 
 이 시리즈가 기준으로 삼는 버전은 **Ubuntu 24.04 LTS (Noble Numbat)** 입니다.
 
@@ -133,21 +133,21 @@ echo $SHELL
 | 출시 | 2024년 4월 25일 |
 | 표준 보안 지원 | 2029년 5월 31일까지 (Ubuntu Pro로 연장 가능) |
 | 기본 Python | 3.12 |
-| 기본 커널 | 6.8 |
-| 데스크톱 환경 | GNOME 46 |
+| 기본 Kernel | 6.8 |
+| Desktop 환경 | GNOME 46 |
 | 대응 ROS 2 배포판 | ROS 2 Jazzy Jalisco |
 
-이 조합이 중요한 이유는 **ROS 2 배포판과 우분투 버전의 짝이 정해져 있기 때문**입니다. ROS 2 Jazzy는 우분투 24.04를 기준으로 빌드·검증되며, 반대로 ROS 2 Humble은 우분투 22.04 대상입니다. 버전 짝이 어긋나면 바이너리 패키지가 설치되지 않거나 의존성이 깨집니다. 로봇 공부를 시작할 때 "우분투 24.04 + ROS 2 Jazzy"를 한 세트로 기억해 두면 이후 모든 튜토리얼이 편해집니다.
+이 조합이 중요한 이유는 **ROS 2 배포판과 Ubuntu 버전의 짝이 정해져 있기 때문**입니다. ROS 2 Jazzy는 Ubuntu 24.04를 기준으로 빌드·검증되며, 반대로 ROS 2 Humble은 Ubuntu 22.04 대상입니다. 버전 짝이 어긋나면 바이너리 Package가 설치되지 않거나 의존성이 깨집니다. 로봇 공부를 시작할 때 "Ubuntu 24.04 + ROS 2 Jazzy"를 한 세트로 기억해 두면 이후 모든 튜토리얼이 편해집니다.
 
 ---
 
-## 4. 리눅스 파일 구조: 모든 것은 `/`에서 시작한다
+## 4. Linux 파일 구조: 모든 것은 `/`에서 시작한다
 
-윈도우는 `C:` `D:` 처럼 드라이브 문자로 시작하지만, 리눅스는 **하나의 거대한 트리**입니다. 최상위는 `/`(루트)이고 모든 장치와 파티션조차 이 트리 어딘가에 매달립니다.
+Windows는 `C:` `D:` 처럼 드라이브 문자로 시작하지만, Linux는 **하나의 거대한 트리**입니다. 최상위는 `/`(루트)이고 모든 장치와 파티션조차 이 트리 어딘가에 매달립니다.
 
-![유닉스/리눅스 표준 파일 시스템 계층 — / 아래에 bin, boot, dev, etc, home, usr, var가 매달린다](https://velog.velcdn.com/images/aiexcelh/post/a959c42c-ee2b-49e4-b023-bb305ee795a9/image.png)
+![Unix/Linux 표준 파일 시스템 계층 — / 아래에 bin, boot, dev, etc, home, usr, var가 매달린다](https://velog.velcdn.com/images/aiexcelh/post/a959c42c-ee2b-49e4-b023-bb305ee795a9/image.png)
 
-*실제 우분투의 `/` 구조를 그린 공개 자료입니다. `bin`→`usr/bin`, `lib`→`usr/lib` 같은 링크(→ 표시)도 보입니다. (출처: Wikimedia Commons, CC BY-SA 4.0)*
+*실제 Ubuntu의 `/` 구조를 그린 공개 자료입니다. `bin`→`usr/bin`, `lib`→`usr/lib` 같은 링크(→ 표시)도 보입니다. (출처: Wikimedia Commons, CC BY-SA 4.0)*
 
 ![`ls /`를 실행한 화면 — bin, boot, dev, etc, home, opt, usr, var가 실제로 들어 있다](https://velog.velcdn.com/images/aiexcelh/post/2dc5f544-cb5f-4922-875a-43b8f709ed3d/image.png)
 
@@ -168,9 +168,9 @@ echo $SHELL
 
 특히 세 곳을 눈여겨보세요.
 
-- **`/opt/ros/jazzy`**: ROS 2를 패키지로 설치하면 여기에 들어갑니다. `source /opt/ros/jazzy/setup.bash` 명령이 이 경로를 가리키는 이유입니다(4편).
+- **`/opt/ros/jazzy`**: ROS 2를 Package로 설치하면 여기에 들어갑니다. `source /opt/ros/jazzy/setup.bash` 명령이 이 경로를 가리키는 이유입니다(4편).
 - **`/dev/ttyUSB0`**: USB로 연결한 모터 드라이버·아두이노·라이다가 이 이름으로 나타납니다. 로봇이 "포트를 못 찾는다"는 오류의 대부분이 여기서 시작합니다.
-- **`~/.bashrc`**: 터미널을 열 때마다 자동으로 읽히는 설정 파일. ROS 환경 설정을 여기에 넣습니다(5편).
+- **`~/.bashrc`**: Terminal을 열 때마다 자동으로 읽히는 설정 파일. ROS 환경 설정을 여기에 넣습니다(5편).
 
 ### 경로를 읽는 법
 
@@ -178,7 +178,7 @@ echo $SHELL
 - **상대 경로**: 현재 위치부터 시작. `robot/src`
 - `.` = 현재 디렉터리, `..` = 상위 디렉터리, `~` = 내 홈 디렉터리
 
-*⌨️ 입력 위치: 터미널(새로 연 창) · `$` 뒤에 입력하고 `Enter`*
+*⌨️ 입력 위치: Terminal(새로 연 창) · `$` 뒤에 입력하고 `Enter`*
 
 ```bash
 pwd          # 현재 위치(print working directory)
@@ -188,15 +188,15 @@ cd ~         # 홈으로 이동
 cd ..        # 상위로 이동
 ```
 
-터미널을 새로 열면 항상 **홈 디렉터리(`~`)** 에서 시작합니다. 이 사실을 모르면 "분명히 파일을 만들었는데 없다"는 상황이 자주 생깁니다. `pwd`로 위치를 확인하는 습관이 첫걸음입니다.
+Terminal을 새로 열면 항상 **홈 디렉터리(`~`)** 에서 시작합니다. 이 사실을 모르면 "분명히 파일을 만들었는데 없다"는 상황이 자주 생깁니다. `pwd`로 위치를 확인하는 습관이 첫걸음입니다.
 
 ---
 
 ## 5. 사용자, 권한, 그리고 sudo
 
-리눅스는 여러 사용자가 한 시스템을 나눠 쓰는 것을 전제로 만들어졌습니다. 그래서 파일마다 **소유자**와 **권한**이 붙습니다.
+Linux는 여러 사용자가 한 시스템을 나눠 쓰는 것을 전제로 만들어졌습니다. 그래서 파일마다 **소유자**와 **권한**이 붙습니다.
 
-*⌨️ 입력 위치: 터미널(새로 연 창) · `$` 뒤에 입력하고 `Enter`*
+*⌨️ 입력 위치: Terminal(새로 연 창) · `$` 뒤에 입력하고 `Enter`*
 
 ```bash
 ls -l
@@ -216,44 +216,44 @@ ls -l
 - `r` = 읽기(4), `w` = 쓰기(2), `x` = 실행(1)
 - 권한을 바꾸는 명령이 `chmod`입니다.
 
-*⌨️ 입력 위치: 터미널(새로 연 창) · `$` 뒤에 입력하고 `Enter`*
+*⌨️ 입력 위치: Terminal(새로 연 창) · `$` 뒤에 입력하고 `Enter`*
 
 ```bash
 chmod +x run_robot.sh     # 실행 권한 추가
 chmod 755 run_robot.sh    # 소유자 rwx, 그룹 r-x, 기타 r-x
 ```
 
-로봇 개발에서 이 개념이 실제로 필요한 순간은 **스크립트 실행**입니다. 내가 만든 런치 스크립트나 파이썬 스크립트에 실행 권한이 없으면 `Permission denied`가 나고, 이때 `chmod +x`로 해결합니다.
+로봇 개발에서 이 개념이 실제로 필요한 순간은 **스크립트 실행**입니다. 내가 만든 Launch 스크립트나 Python 스크립트에 실행 권한이 없으면 `Permission denied`가 나고, 이때 `chmod +x`로 해결합니다.
 
 ### sudo: 관리자 권한을 잠깐 빌리기
 
-시스템 전체에 영향을 주는 작업(패키지 설치, `/etc` 수정, 장치 설정)은 **root(관리자)** 권한이 필요합니다. 그렇다고 평소에 root로 작업하면 실수 한 번에 시스템이 망가지므로, 리눅스는 **`sudo`** 로 필요한 명령만 잠깐 관리자 권한으로 실행합니다.
+시스템 전체에 영향을 주는 작업(Package 설치, `/etc` 수정, 장치 설정)은 **root(관리자)** 권한이 필요합니다. 그렇다고 평소에 root로 작업하면 실수 한 번에 시스템이 망가지므로, Linux는 **`sudo`** 로 필요한 명령만 잠깐 관리자 권한으로 실행합니다.
 
-*⌨️ 입력 위치: 터미널(새로 연 창) · `$` 뒤에 입력하고 `Enter`*
+*⌨️ 입력 위치: Terminal(새로 연 창) · `$` 뒤에 입력하고 `Enter`*
 
 ```bash
-sudo apt update       # 관리자 권한으로 패키지 목록 갱신
+sudo apt update       # 관리자 권한으로 Package 목록 갱신
 ```
 
 > 원칙: `sudo`는 "시스템을 바꾸는 명령"에만 붙입니다. `ls`, `cd`, `python3` 같은 일반 명령에는 붙이지 않습니다. 습관적으로 모든 명령에 `sudo`를 붙이면, 나중에 파일 소유자가 root로 바뀌어 본인이 수정하지 못하는 문제가 생깁니다.
 
 ---
 
-## 6. 패키지 관리자 apt: 앱 스토어를 명령어로
+## 6. Package Manager apt: 앱 스토어를 명령어로
 
-윈도우에서 프로그램을 설치할 때 설치 파일을 받아 실행하듯, 리눅스는 **패키지 관리자**로 프로그램을 설치합니다. 우분투의 기본 도구가 **APT(Advanced Package Tool)** 이고, 명령은 `apt`입니다.
+Windows에서 프로그램을 설치할 때 설치 파일을 받아 실행하듯, Linux는 **Package Manager**로 프로그램을 설치합니다. Ubuntu의 기본 도구가 **APT(Advanced Package Tool)** 이고, 명령은 `apt`입니다.
 
-- 저장소(repository): 패키지가 모여 있는 서버
-- 패키지(package): 프로그램 + 설정 + 의존성 정보를 묶은 단위
-- 의존성(dependency): 어떤 패키지가 동작하기 위해 필요한 다른 패키지
+- 저장소(repository): Package가 모여 있는 Server
+- Package(package): 프로그램 + 설정 + 의존성 정보를 묶은 단위
+- 의존성(dependency): 어떤 Package가 동작하기 위해 필요한 다른 Package
 
 ### update와 upgrade는 다릅니다
 
-*⌨️ 입력 위치: 터미널 — `sudo` 는 관리자 권한을 빌리는 표시입니다 · `$` 뒤에 입력하고 `Enter`*
+*⌨️ 입력 위치: Terminal — `sudo` 는 관리자 권한을 빌리는 표시입니다 · `$` 뒤에 입력하고 `Enter`*
 
 ```bash
 sudo apt update      # 저장소에서 "최신 버전 목록"만 새로 받아옴 (설치 X)
-sudo apt upgrade     # 그 목록을 기준으로 실제 설치된 패키지를 업그레이드
+sudo apt upgrade     # 그 목록을 기준으로 실제 설치된 Package를 업그레이드
 ```
 
 - `update` = 장보기 목록 갱신
@@ -263,7 +263,7 @@ sudo apt upgrade     # 그 목록을 기준으로 실제 설치된 패키지를 
 
 자주 쓰는 형태는 다음과 같습니다.
 
-*⌨️ 입력 위치: 터미널(새로 연 창) · `$` 뒤에 입력하고 `Enter`*
+*⌨️ 입력 위치: Terminal(새로 연 창) · `$` 뒤에 입력하고 `Enter`*
 
 ```bash
 sudo apt update
@@ -271,38 +271,38 @@ sudo apt upgrade
 sudo apt install terminator        # 설치
 sudo apt remove terminator         # 삭제
 apt search ros-jazzy               # 검색
-apt show ros-jazzy-desktop         # 패키지 정보 확인
+apt show ros-jazzy-desktop         # Package 정보 확인
 ```
 
-### 왜 우분투는 "버전 충돌"이 자주 생길까
+### 왜 Ubuntu는 "버전 충돌"이 자주 생길까
 
-오픈소스 생태계는 같은 기능의 패키지가 여러 버전으로 존재합니다. 프로그램 A가 라이브러리 B의 특정 버전을 요구하는데 B가 업데이트되면서 동작이 바뀌면 A가 깨집니다. 이를 **의존성 충돌**이라고 합니다.
+오픈소스 생태계는 같은 기능의 Package가 여러 버전으로 존재합니다. 프로그램 A가 라이브러리 B의 특정 버전을 요구하는데 B가 업데이트되면서 동작이 바뀌면 A가 깨집니다. 이를 **의존성 충돌**이라고 합니다.
 
-로봇 개발에서 이 문제는 특히 민감합니다. ROS 2 패키지들은 서로 촘촘하게 의존하고, NVIDIA 그래픽 드라이버나 커널 모듈은 조금만 어긋나도 부팅이나 센서 인식이 안 될 수 있습니다. 그래서 실무에서는 함부로 전체 업그레이드를 하지 않고, **ROS 배포판이 검증한 조합을 유지**하는 쪽을 택합니다. (이 문제의 절반을 해결해 주는 것이 2편의 파이썬 가상환경입니다.)
+로봇 개발에서 이 문제는 특히 민감합니다. ROS 2 Package들은 서로 촘촘하게 의존하고, NVIDIA 그래픽 드라이버나 Kernel 모듈은 조금만 어긋나도 부팅이나 센서 인식이 안 될 수 있습니다. 그래서 실무에서는 함부로 전체 업그레이드를 하지 않고, **ROS 배포판이 검증한 조합을 유지**하는 쪽을 택합니다. (이 문제의 절반을 해결해 주는 것이 2편의 Python Virtual Environment입니다.)
 
 ---
 
 ## 7. 환경변수와 PATH: 명령이 어디서 발견되는가
 
-셸에는 **환경변수**라는 이름-값 저장소가 있습니다. 그중 로봇 개발에서 가장 중요한 것이 `PATH`입니다.
+Shell에는 **환경변수**라는 이름-값 저장소가 있습니다. 그중 로봇 개발에서 가장 중요한 것이 `PATH`입니다.
 
-*⌨️ 입력 위치: 터미널(새로 연 창) · `$` 뒤에 입력하고 `Enter`*
+*⌨️ 입력 위치: Terminal(새로 연 창) · `$` 뒤에 입력하고 `Enter`*
 
 ```bash
 echo $PATH
 ```
 
-`PATH`는 콜론(`:`)으로 구분된 디렉터리 목록이고, 셸은 명령을 입력받으면 **이 목록을 순서대로 뒤져 실행 파일을 찾습니다**. `/usr/bin`에 `python3`가 있으니 `python3`라고만 쳐도 실행되는 것입니다.
+`PATH`는 콜론(`:`)으로 구분된 디렉터리 목록이고, Shell은 명령을 입력받으면 **이 목록을 순서대로 뒤져 실행 파일을 찾습니다**. `/usr/bin`에 `python3`가 있으니 `python3`라고만 쳐도 실행되는 것입니다.
 
 이해를 돕는 사고 실험: `PATH`에 없는 곳에 있는 프로그램은 파일이 분명히 존재해도 `command not found`가 납니다. ROS 2를 설치한 직후 `ros2: command not found`가 뜨는 대표적인 이유가 바로 이것입니다. `ros2` 실행 파일은 `/opt/ros/jazzy/bin`에 있는데, 그 경로가 `PATH`에 아직 추가되지 않았기 때문입니다. 이때 필요한 명령이 다음 한 줄입니다.
 
-*⌨️ 입력 위치: 터미널 (ROS 2를 설치한 뒤라면) · `$` 뒤에 입력하고 `Enter`*
+*⌨️ 입력 위치: Terminal (ROS 2를 설치한 뒤라면) · `$` 뒤에 입력하고 `Enter`*
 
 ```bash
 source /opt/ros/jazzy/setup.bash
 ```
 
-`setup.bash`는 `PATH`를 비롯한 여러 환경변수를 현재 셸에 등록해 줍니다. 어떤 변수가 생기는지는 직접 확인할 수 있습니다.
+`setup.bash`는 `PATH`를 비롯한 여러 환경변수를 현재 Shell에 등록해 줍니다. 어떤 변수가 생기는지는 직접 확인할 수 있습니다.
 
 ```bash
 printenv | grep -i ros
@@ -312,7 +312,7 @@ printenv | grep -i ros
 
 | 조각 | 원래 말 | 하는 일 |
 | --- | --- | --- |
-| `printenv` | **print** + **env**ironment | 지금 이 터미널에 설정된 **환경변수를 전부 출력**합니다 |
+| `printenv` | **print** + **env**ironment | 지금 이 Terminal에 설정된 **환경변수를 전부 출력**합니다 |
 | &#124; | 파이프(pipe). 키보드에서는 `Shift` + 원화(₩) 키 | 앞 명령의 출력을 화면에 뿌리지 않고 **뒤 명령의 입력**으로 넘깁니다 |
 | `grep` | — | 넘어온 글자들 중 **조건에 맞는 줄만** 걸러 냅니다 |
 | `-i` | **i**gnore case | 대소문자를 무시합니다 (`ROS`·`ros` 모두 찾음) |
@@ -320,15 +320,15 @@ printenv | grep -i ros
 
 즉 "환경변수를 전부 뿌린 다음, 그중 `ros` 가 들어간 줄만 남겨라"는 뜻입니다. `-i` 덕분에 `ROS_DOMAIN_ID`, `ros_version`, `ROS_VERSION` 이 한꺼번에 잡힙니다.
 
-로봇 개발에서 환경변수는 단순한 설정이 아니라 **"이 터미널이 어느 ROS 버전·어느 로봇 그룹에 속하는가"를 결정하는 스위치**입니다. 5편에서 다루는 `ROS_DOMAIN_ID`도 환경변수입니다.
+로봇 개발에서 환경변수는 단순한 설정이 아니라 **"이 Terminal이 어느 ROS 버전·어느 로봇 그룹에 속하는가"를 결정하는 스위치**입니다. 5편에서 다루는 `ROS_DOMAIN_ID`도 환경변수입니다.
 
 ---
 
-## 8. 알아 두면 편한 셸 기능 세 가지
+## 8. 알아 두면 편한 Shell 기능 세 가지
 
 로봇 로그를 다루다 보면 명령을 조합하는 일이 많아집니다.
 
-*⌨️ 입력 위치: 터미널 — 여러 명령을 조합해 봅니다 · `$` 뒤에 입력하고 `Enter`*
+*⌨️ 입력 위치: Terminal — 여러 명령을 조합해 봅니다 · `$` 뒤에 입력하고 `Enter`*
 
 ```bash
 # 1) 파이프: 앞 명령의 출력을 뒤 명령의 입력으로
@@ -359,27 +359,27 @@ history              # 이전 명령 목록
 
 | 개념 | 실제 로봇 개발에서 |
 | --- | --- |
-| 커널·셸·터미널 | 로봇 노드를 여러 터미널에 나눠 띄우고, 각 창에서 로그를 본다 |
-| LTS·버전 짝 | Ubuntu 24.04 + ROS 2 Jazzy처럼 배포판-우분투 조합을 맞춘다 |
+| Kernel·Shell·Terminal | 로봇 Node를 여러 Terminal에 나눠 띄우고, 각 창에서 로그를 본다 |
+| LTS·버전 짝 | Ubuntu 24.04 + ROS 2 Jazzy처럼 배포판-Ubuntu 조합을 맞춘다 |
 | `/opt/ros/...` | ROS 2 설치 경로. `source`로 환경을 켠다 |
 | `/dev/ttyUSB0` | USB 시리얼로 연결된 모터·센서 장치. 권한 문제가 자주 발생 |
-| `chmod` | ROS 2 파이썬 노드/스크립트에 실행 권한 부여 |
-| `sudo` | ROS 2 패키지 설치, 장치 권한 설정 |
+| `chmod` | ROS 2 Python Node/스크립트에 실행 권한 부여 |
+| `sudo` | ROS 2 Package 설치, 장치 권한 설정 |
 | `apt update/upgrade` | 로봇 PC를 최신 보안 패치 상태로 유지 |
-| `PATH`, `source` | 새 터미널에서 ROS 2 명령을 인식시키는 첫 단계 |
-| `.bashrc` | 매 터미널마다 ROS 환경 자동 활성화 |
+| `PATH`, `source` | 새 Terminal에서 ROS 2 명령을 인식시키는 첫 단계 |
+| `.bashrc` | 매 Terminal마다 ROS 환경 자동 활성화 |
 
 ---
 
 ## 10. 정리
 
-- 로봇 소프트웨어 생태계의 표준은 리눅스이고, 그 중심에 **Ubuntu LTS**가 있습니다.
-- 리눅스는 **터미널 → 셸 → 커널** 구조로 명령을 처리하며, 터미널마다 독립된 셸이 생깁니다.
+- 로봇 소프트웨어 생태계의 표준은 Linux이고, 그 중심에 **Ubuntu LTS**가 있습니다.
+- Linux는 **Terminal → Shell → Kernel** 구조로 명령을 처리하며, Terminal마다 독립된 Shell이 생깁니다.
 - 파일은 `/` 아래 하나의 트리로 관리되고, `/opt/ros`, `/dev`, `~` 세 곳이 로봇 개발의 단골입니다.
 - 시스템을 바꾸는 일은 `sudo`, 프로그램 설치는 `apt`, 그리고 `update`와 `upgrade`는 세트입니다.
 - 명령이 실행되려면 `PATH`에 있어야 하고, 그 `PATH`를 채워 주는 것이 `source`입니다.
 
-다음 글에서는 이 개념을 실제 환경으로 옮깁니다. 부팅 USB를 만들어 **Ubuntu 24.04 Desktop**을 설치하고, 터미널·한글 입력·브라우저까지 첫 세팅을 끝내겠습니다.
+다음 글에서는 이 개념을 실제 환경으로 옮깁니다. 부팅 USB를 만들어 **Ubuntu 24.04 Desktop**을 설치하고, Terminal·한글 입력·브라우저까지 첫 세팅을 끝내겠습니다.
 
 ---
 
@@ -403,14 +403,14 @@ history              # 이전 명령 목록
 | `+x` | — | 실행(e**x**ecute) 권한을 **추가**합니다 |
 | `755` | — | 소유자 `rwx`(7) + 그룹 `r-x`(5) + 기타 `r-x`(5) |
 | `sudo` | **su**peruser **do** | 관리자(root) 권한으로 실행합니다 (비밀번호 물어봄) |
-| `apt` | **A**dvanced **P**ackage **T**ool | 우분투의 패키지 관리자(앱 스토어의 명령어 판) |
+| `apt` | **A**dvanced **P**ackage **T**ool | Ubuntu의 Package Manager(앱 스토어의 명령어 판) |
 | `apt update` | — | 저장소의 **최신 목록만** 새로 받습니다 (설치는 안 함) |
 | `apt upgrade` | — | 그 목록대로 **실제 업그레이드**합니다 |
 | `apt install` / `remove` | — | 설치 / 삭제 |
-| `apt search` / `show` | — | 검색 / 패키지 정보 보기 |
+| `apt search` / `show` | — | 검색 / Package 정보 보기 |
 | `-y` | yes | "설치할까요? [Y/n]" 에 **자동으로 yes** |
-| `source` | — | 스크립트를 **현재 셸에서** 실행해 환경변수를 적용합니다 |
-| `printenv` | **print** + **env**ironment | 현재 셸의 **환경변수 전체**를 출력합니다 |
+| `source` | — | 스크립트를 **현재 Shell에서** 실행해 환경변수를 적용합니다 |
+| `printenv` | **print** + **env**ironment | 현재 Shell의 **환경변수 전체**를 출력합니다 |
 | &#124; | 파이프(pipe) — `Shift` + 원화(₩) 키 | 앞 명령의 출력을 화면에 뿌리지 않고 **뒤 명령의 입력**으로 넘깁니다 |
 | `grep` | — | 입력에서 **특정 글자가 든 줄만** 걸러 냅니다 |
 | `-i` | **i**gnore case | 대소문자를 구분하지 않습니다 (`ROS`·`ros` 모두 찾음) |
@@ -427,7 +427,7 @@ history              # 이전 명령 목록
 
 | 조각 | 뜻 |
 | --- | --- |
-| `printenv` | `print` + `environment`. 지금 이 터미널에 설정된 **환경변수를 전부 출력** |
+| `printenv` | `print` + `environment`. 지금 이 Terminal에 설정된 **환경변수를 전부 출력** |
 | &#124; | 파이프. `printenv` 의 출력을 화면에 뿌리지 않고 **`grep` 의 입력**으로 넘김 |
 | `grep` | 넘어온 글자들 중 **`ros` 가 들어간 줄만** 골라 냄 |
 | `-i` | `ignore case`. 대소문자 무시 → `ROS_DOMAIN_ID`, `ros_version` 둘 다 잡힘 |
@@ -444,11 +444,11 @@ history              # 이전 명령 목록
 
 ## 공식 문서 참고
 
-- Ubuntu 24.04 LTS 릴리스 노트(지원 기간, 커널 6.8, GNOME 46, Python 3.12): <https://documentation.ubuntu.com/release-notes/24.04/>
+- Ubuntu 24.04 LTS 릴리스 노트(지원 기간, Kernel 6.8, GNOME 46, Python 3.12): <https://documentation.ubuntu.com/release-notes/24.04/>
 - Ubuntu 릴리스 주기(LTS 지원 정책): <https://ubuntu.com/about/release-cycle>
 - Ubuntu Desktop 문서(설치·언어·소프트웨어): <https://documentation.ubuntu.com/desktop/>
-- GNU Bash 매뉴얼(셸과 시작 파일): <https://www.gnu.org/software/bash/manual/bash.html>
-- APT 패키지 관리(Ubuntu Server 문서): <https://ubuntu.com/server/docs/how-to/software/package-management/>
+- GNU Bash 매뉴얼(Shell과 시작 파일): <https://www.gnu.org/software/bash/manual/bash.html>
+- APT Package Manager(Ubuntu Server 문서): <https://ubuntu.com/server/docs/how-to/software/package-management/>
 - ROS 2 Jazzy가 지원하는 플랫폼(REP 2000): <https://reps.openrobotics.org/rep-2000/>
 - ROS 2 Jazzy 문서: <https://docs.ros.org/en/jazzy/>
 
@@ -456,7 +456,7 @@ history              # 이전 명령 목록
 
 | 그림 | 출처 | 라이선스 |
 | --- | --- | --- |
-| 우분투 24.04 데스크톱 화면 | Wikimedia Commons [Ubuntu 24.04 LTS default desktop](https://commons.wikimedia.org/wiki/File:Ubuntu_24.04_LTS_default_desktop_-_English.png) (Canonical) | GPL (자유 소프트웨어 라이선스) |
-| 터미널 `ls -al` 화면 | 직접 제작 — Ubuntu 24.04 기본 터미널(GNOME Terminal) 재현 화면 (`user@robot-pc`) | — |
+| Ubuntu 24.04 Desktop 화면 | Wikimedia Commons [Ubuntu 24.04 LTS default desktop](https://commons.wikimedia.org/wiki/File:Ubuntu_24.04_LTS_default_desktop_-_English.png) (Canonical) | GPL (자유 소프트웨어 라이선스) |
+| Terminal `ls -al` 화면 | 직접 제작 — Ubuntu 24.04 기본 Terminal(GNOME Terminal) 재현 화면 (`user@robot-pc`) | — |
 | 파일 시스템 계층 | Wikimedia Commons [Ubuntu Filesystem Hierarchy](https://commons.wikimedia.org/wiki/File:Ubuntu_Filesystem_Hierarchy.png) | CC BY-SA 4.0 |
-| `ls /` 화면 | 직접 제작 — Ubuntu 24.04 기본 터미널(GNOME Terminal) 재현 화면 (`user@robot-pc`) | — |
+| `ls /` 화면 | 직접 제작 — Ubuntu 24.04 기본 Terminal(GNOME Terminal) 재현 화면 (`user@robot-pc`) | — |
