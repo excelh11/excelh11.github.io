@@ -143,9 +143,9 @@ sha256sum ~/Downloads/ubuntu-24.04.5-desktop-amd64.iso
 
 <https://etcher.balena.io/> 에서 내려받아 설치(또는 압축 해제)하고 실행합니다.
 
-![balenaEtcher 3단계 — Flash from file → Select target → Flash!](https://velog.velcdn.com/images/aiexcelh/post/7b38f55b-4ca8-4ff0-8610-1fdb272ae2f5/image.png)
+![balenaEtcher 실제 실행 화면 — 아직 아무것도 고르지 않아 Select target과 Flash!가 회색으로 꺼져 있다](https://velog.velcdn.com/images/aiexcelh/post/41f87612-9077-47e9-9a1d-0e020b6d84d5/image.png)
 
-*왼쪽부터 순서대로. 가운데 단계(Select target)에서 USB 용량을 확인하는 것이 가장 중요합니다.*
+*실제 balenaEtcher 첫 화면입니다. 아무것도 고르지 않았기 때문에 가운데 `Select target`과 오른쪽 `Flash!`가 **회색으로 비활성** 상태입니다. `Flash from file`을 눌러 ISO를 고르면 가운데가 켜집니다.*
 
 **① Flash from file** — 받아 둔 `.iso` 선택
 
@@ -199,9 +199,13 @@ sha256sum ~/Downloads/ubuntu-24.04.5-desktop-amd64.iso
 
 ### 2) 전원을 켜고 GRUB까지
 
-![부팅 메뉴 키 → USB 선택 → GRUB에서 Try or Install Ubuntu](https://velog.velcdn.com/images/aiexcelh/post/247aeede-caa5-4a97-91e0-2a9fe347dfa3/image.png)
+![부트 메뉴(UEFI) 실제 화면 — 부팅할 장치 목록에서 USB 항목을 고른다](https://velog.velcdn.com/images/aiexcelh/post/33a79b31-0993-4fc6-b5ae-8b98b22e1148/image.png)
 
-*왼쪽 아래 검은 화면이 GRUB입니다. 첫 줄 `Try or Install Ubuntu`가 기본 선택되어 있습니다.*
+*전원을 켜고 부트 메뉴 키를 연타하면 이런 **장치 목록**이 뜹니다. 목록에서 `USB`/`UEFI: …` 항목을 방향키로 고르고 Enter를 누릅니다. (사진은 VirtualBox의 UEFI 부트 메뉴 예시입니다.)*
+
+![GRUB 실제 화면 — 첫 줄 Ubuntu가 기본 선택되어 있다](https://velog.velcdn.com/images/aiexcelh/post/958f6962-1906-4eb1-ba9b-89dc160ca95c/image.jpg)
+
+*USB로 부팅하면 이 검은 화면이 뜹니다. 맨 위 `*Ubuntu`(또는 `Try or Install Ubuntu`)가 이미 선택된 상태이므로 그대로 **Enter**를 누르면 됩니다. 화면이 넘어가지 않으면 `safe graphics`를 고릅니다. (윈도우와 함께 설치한 PC의 GRUB 예시 — 항목 이름만 조금 다릅니다.)
 
 1. USB를 꽂고 PC를 **완전히 종료**합니다. (윈도우의 "다시 시작"이 아니라 **종료 후 전원 켜기**)
 2. 전원을 켜자마자 **부트 메뉴 키를 연타**합니다. 로고가 뜨기 전부터 톡톡톡 누르는 느낌으로.
@@ -271,9 +275,7 @@ UEFI Firmware Settings
 
 Ubuntu 24.04는 **새 설치 프로그램(Subiquity 기반)** 을 씁니다. 23.10까지와 화면 순서·이름이 다르므로, 인터넷의 옛 글과 헷갈리지 않도록 아래 순서를 기준으로 보세요.
 
-![설치 마법사 핵심 네 화면 — 언어·키보드 / 설치 방식 / 디스크 / 계정](https://velog.velcdn.com/images/aiexcelh/post/847eef4a-1992-486a-9025-d037fcf1d8a2/image.png)
-
-*이 네 화면만 제대로 넘기면 나머지는 `Next`를 눌러도 됩니다. 맨 아래 줄(설치 완료 → 재시작)은 꼭 기억하세요.*
+아래 4-1부터 4-15까지가 **실제 24.04 설치 화면을 그대로 찍은 사진**입니다. 사진과 내 화면을 눈으로 대조하면서 넘기면 훨씬 덜 헤맵니다.
 
 **화면 공통 규칙**
 
@@ -282,6 +284,10 @@ Ubuntu 24.04는 **새 설치 프로그램(Subiquity 기반)** 을 씁니다. 23.
 - 확신이 없으면 **기본값 그대로 Next**를 눌러도 쓸 만한 시스템이 됩니다.
 
 ### 4-1. `Welcome to Ubuntu` — 언어
+
+![4-1 언어 선택 화면 — Choose your language 목록에서 English 또는 한국어를 고른다](https://velog.velcdn.com/images/aiexcelh/post/0967dfaa-9d4f-4ea8-81f5-2b1cf6dd1f5c/image.jpg)
+
+*실제 화면입니다. 목록 왼쪽의 주황색 점이 지금 위치(1번째 화면)를 표시합니다.*
 
 - **화면 제목**: Welcome to Ubuntu
 - **고를 것**: `English` (권장) 또는 `한국어`
@@ -294,6 +300,10 @@ Ubuntu 24.04는 **새 설치 프로그램(Subiquity 기반)** 을 씁니다. 23.
 - 필요한 기능이 없으면 **그대로 Next**. 모두 설치 후에 바꿀 수 있습니다.
 
 ### 4-3. `Keyboard layout` — 키보드 배열
+
+![4-3 키보드 배열 화면 — English (US)가 기본 선택되어 있다](https://velog.velcdn.com/images/aiexcelh/post/ae9988a7-4a95-405a-b902-9f23dd57dccb/image.jpg)
+
+*아래쪽 입력 칸에 글자를 쳐서 자판이 맞는지 바로 확인할 수 있습니다.*
 
 - **화면 제목**: Keyboard layout
 - **고를 것**: `English (US)` (권장) 또는 `Korean` → `Korean (101/104 key compatible)`
@@ -322,11 +332,19 @@ Ubuntu 24.04는 **새 설치 프로그램(Subiquity 기반)** 을 씁니다. 23.
 
 ### 4-6. `Type of installation` — 설치 방식
 
+![4-6 설치 방식 화면 — Interactive installation이 기본 선택](https://velog.velcdn.com/images/aiexcelh/post/8af4cec2-b043-404f-9627-758f7feedc0f/image.jpg)
+
+*`Automated installation`은 autoinstall YAML 파일이 있어야 진행됩니다. 처음이면 그냥 `Interactive installation`.*
+
 - **선택지**: `Interactive installation` / `Automated with autoinstall file` (또는 `Automated with Landscape`)
 - **고를 것**: **`Interactive installation`** → **Next**
 - **왜**: Interactive는 화면을 보며 한 단계씩 설정하는 **표준 경로**입니다. Automated는 설정 파일(autoinstall.yaml)을 미리 준비해 **여러 대를 똑같이** 설치할 때 쓰는 고급 기능입니다. 파일이 없으면 진행할 수 없습니다.
 
 ### 4-7. `Applications` — 기본 앱 선택
+
+![4-7 기본 앱 선택 화면 — Default selection과 Extended selection](https://velog.velcdn.com/images/aiexcelh/post/09d383cf-319e-48b8-b97c-38b4b54015e7/image.jpg)
+
+*기본값은 `Default selection`(최소 설치)입니다. 로봇 개발용이면 `Extended selection`을 고르세요.*
 
 - **화면 제목**: Applications (질문: *What apps would you like to install to start with?*)
 - **선택지**: `Default selection` / `Extended selection`
@@ -351,6 +369,10 @@ Ubuntu 24.04는 **새 설치 프로그램(Subiquity 기반)** 을 씁니다. 23.
 > ⚠️ 이 항목을 체크하면 Secure Boot가 켜진 PC에서는 **"보안 키(security key)를 정하라"**는 화면이 이어집니다. 지금 정한 비밀번호를 **적어 두세요.** 재부팅 때 파란 **MOK 관리** 화면에서 등록해야 드라이버가 활성화됩니다(4-14).
 
 ### 4-9. `Disk setup` — 디스크 (가장 중요한 갈림길)
+
+![4-9 디스크 설정 화면 — Erase disk and install Ubuntu가 기본 선택](https://velog.velcdn.com/images/aiexcelh/post/c49a3a73-5ba6-4489-a313-f7fdb8ada2da/image.jpg)
+
+*`Manual installation`은 파티션을 직접 나누는 고급 경로입니다. 처음이면 `Erase disk and install Ubuntu`가 가장 간단하고, 그 아래 `Advanced features…`에서 LVM·암호화 여부를 정합니다.*
 
 - **화면 제목**: Disk setup (질문: *How do you want to install Ubuntu?*)
 - **선택지**: `Erase disk and install Ubuntu` / `Install Ubuntu alongside …`(다른 OS가 있을 때만) / `Manual installation`
@@ -379,6 +401,10 @@ Ubuntu 24.04는 **새 설치 프로그램(Subiquity 기반)** 을 씁니다. 23.
 
 ### 4-10. `Create your account` — 계정 만들기
 
+![4-10 계정 만들기 화면 — Your name / Your computer's name / Your username / Password](https://velog.velcdn.com/images/aiexcelh/post/d6abbe59-9e98-49e6-abbd-8fe6f7029a18/image.jpg)
+
+*입력할 때마다 오른쪽에 초록 체크가 뜨면 형식이 맞다는 뜻입니다. `Require my password to log in`은 체크된 채로 두는 것을 권합니다.*
+
 - **화면 제목**: Create your account
 - **입력할 것**:
 
@@ -406,17 +432,33 @@ Ubuntu 24.04는 **새 설치 프로그램(Subiquity 기반)** 을 씁니다. 23.
 
 ### 4-12. `Ready to install` — 최종 확인
 
+![4-12 최종 확인 화면 — 디스크·앱·보안·파티션이 한 화면에 요약된다](https://velog.velcdn.com/images/aiexcelh/post/49691045-485c-4d2f-835e-46b161020729/image.jpg)
+
+*오른쪽 아래 초록색 **Install** 버튼을 눌러야 실제 설치가 시작됩니다.*
+
 - 지금까지 고른 내용(**언어, 키보드, 디스크, 계정, 시간대**)이 요약됩니다.
 - 틀린 항목이 있으면 **Back**으로 돌아가 고칩니다.
 - 확인했으면 **Install**을 누릅니다. 여기서부터 실제로 디스크에 기록됩니다.
 
 ### 4-13. 설치 중 — 기다리기
 
+![4-13 설치 중 화면 — 우분투 소개 슬라이드가 돌아가고 아래에 복사 진행률이 보인다](https://velog.velcdn.com/images/aiexcelh/post/f5f04281-2ed9-4fa5-b77d-bca4df1c455a/image.jpg)
+
+*왼쪽 아래 아이콘을 누르면 설치 로그가 펼쳐집니다.*
+
 - 우분투 소개 슬라이드가 돌아가고, 아래/오른쪽의 **자세히 보기 아이콘**을 누르면 실제 설치 로그를 볼 수 있습니다.
 - 보통 **10~30분** 걸립니다. 진행률이 한동안 멈춘 것처럼 보여도 정상입니다.
 - 이 동안에는 **창을 닫거나 USB를 뽑지 마세요.**
 
 ### 4-14. `Installation complete` — 재시작과 USB 분리 (여기서 많이 막힙니다)
+
+![4-14 설치 완료 화면 — Restart now를 누른다](https://velog.velcdn.com/images/aiexcelh/post/c6c72d8f-90e8-4585-aae5-dde82116dad5/image.jpg)
+
+*`Continue testing`을 누르면 설치된 시스템이 아니라 USB의 체험 모드로 들어갑니다. 반드시 **Restart now**.*
+
+![재시작 직후 실제 화면 — Please remove the installation medium, then press ENTER](https://velog.velcdn.com/images/aiexcelh/post/b0f6c47e-8b3e-41ae-980e-3b3b1c6b6e7d/image.png)
+
+*이 검은 화면이 나오면 **USB를 뽑고 Enter**를 누르세요. 그냥 두면 다시 설치 화면으로 들어갈 수 있습니다.*
 
 1. 설치가 끝나면 **Installation complete** 화면이 뜹니다. **`Restart Now`** 를 누릅니다.
 2. 화면이 검게 바뀌며 이 문구가 나옵니다.
@@ -433,6 +475,14 @@ Please remove the installation medium, then press ENTER.
 > 💡 **Secure Boot + 서드파티 드라이버**를 함께 설치했다면, 재부팅 때 파란 **`Perform MOK management`** 화면이 나옵니다. 이때 **`Enroll MOK`** → **`Continue`** → **`Yes`** → (4-8에서 정한 보안 키 입력) → **`Reboot`** 를 고르면 드라이버가 등록됩니다. **`Continue boot`** 를 눌러 그냥 넘어가면 NVIDIA 드라이버가 동작하지 않을 수 있습니다.
 
 ### 4-15. 첫 로그인 — 초기 설정
+
+![재부팅 후 로그인 화면 — 사용자 이름을 누르고 비밀번호를 입력한다](https://velog.velcdn.com/images/aiexcelh/post/4f842a20-45cc-4c0f-ba2d-c1a4c2a5468e/image.jpg)
+
+*설치 때 만든 계정 이름이 보입니다. 클릭 → 비밀번호 → Enter.*
+
+![첫 로그인 후 뜨는 시작 화면 — Get started with more applications](https://velog.velcdn.com/images/aiexcelh/post/3b27e881-38c6-472e-b0aa-b09d5745302f/image.jpg)
+
+*`Ready to go` 창이 뜨면 설치와 첫 부팅이 모두 끝난 것입니다. `Open App Center` 또는 창을 닫고 바탕화면으로 가면 됩니다.*
 
 - 24.04부터는 첫 로그인 후 **간단한 초기 설정 화면**이 뜹니다. 위치 서비스, 진단 정보 전송(기본은 보내지 않음), 테마 색상, 추가 앱 등을 묻습니다.
   - 회사·학교 PC가 아니라면 기본값으로 넘어가면 됩니다.
@@ -694,3 +744,15 @@ apt list --installed terminator google-chrome-stable
 - Terminator 저장소(단축키 정리): <https://github.com/gnome-terminator/terminator>
 - Google Chrome Linux용 다운로드: <https://www.google.com/chrome/>
 - APT 패키지 관리: <https://documentation.ubuntu.com/server/how-to/software/package-management/>
+
+## 이미지 출처
+
+설치 마법사·화면 사진은 **Ubuntu 공식 튜토리얼**(Canonical, <https://ubuntu.com/tutorials/install-ubuntu-desktop>, CC BY-SA 4.0)의 실제 24.04 화면을 그대로 인용했습니다.
+
+| 그림 | 출처 | 라이선스 |
+| --- | --- | --- |
+| balenaEtcher 실행 화면 | Wikimedia Commons [Balena etcher.png](https://commons.wikimedia.org/wiki/File:Balena_etcher.png) | CC0 |
+| UEFI 부트 메뉴 | Wikimedia Commons [TianoCore boot menu screenshot.png](https://commons.wikimedia.org/wiki/File:TianoCore_boot_menu_screenshot.png) | BSD |
+| GRUB 메뉴 | Wikimedia Commons [Grub2.02 DualBoot Ubuntu and Windows.jpg](https://commons.wikimedia.org/wiki/File:Grub2.02_DualBoot_Ubuntu_and_Windows.jpg) | CC BY-SA 4.0 |
+| 4-1 ~ 4-15 설치 화면 10장 | Ubuntu 공식 튜토리얼(Canonical) | CC BY-SA 4.0 |
+| 한글 입력 클릭 순서 | 직접 그린 도해 | — |
