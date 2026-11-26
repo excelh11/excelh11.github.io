@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ROS 2 기초 명령 — 터틀심으로 노드·토픽·서비스·액션 익히기 · aiexcelh</title>
-  <meta name="description" content="터틀심으로 노드·서비스·토픽·액션을 하나씩 실행하며 ROS 2 통신 구조를 손으로 익힙니다.">
+  <title>ROS 2 기초 명령 — Turtlesim으로 Node·Topic·Service·Action 익히기 · aiexcelh</title>
+  <meta name="description" content="Turtlesim으로 Node·Service·Topic·Action을 하나씩 실행하며 ROS 2 통신 구조를 손으로 익힙니다.">
   <meta name="author" content="excelh11">
   <link rel="canonical" href="https://excelh11.github.io/posts/06-ros2-cli/">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="ROS 2 기초 명령 — 터틀심으로 노드·토픽·서비스·액션 익히기">
-  <meta property="og:description" content="터틀심으로 노드·서비스·토픽·액션을 하나씩 실행하며 ROS 2 통신 구조를 손으로 익힙니다.">
+  <meta property="og:title" content="ROS 2 기초 명령 — Turtlesim으로 Node·Topic·Service·Action 익히기">
+  <meta property="og:description" content="Turtlesim으로 Node·Service·Topic·Action을 하나씩 실행하며 ROS 2 통신 구조를 손으로 익힙니다.">
   <meta property="og:url" content="https://excelh11.github.io/posts/06-ros2-cli/">
   <meta property="og:site_name" content="aiexcelh">
   <meta name="twitter:card" content="summary">
@@ -44,7 +44,7 @@
 <article class="post">
   <header class="post-header">
     <a class="series-tag" href="/#series">로봇을 공부하기 위한 가장 처음 해야 하는 세팅</a>
-    <h1 class="post-title">ROS 2 기초 명령 — 터틀심으로 노드·토픽·서비스·액션 익히기</h1>
+    <h1 class="post-title">ROS 2 기초 명령 — Turtlesim으로 Node·Topic·Service·Action 익히기</h1>
     <div class="post-meta">
       <span class="post-part">06 / 07</span>
     </div>
@@ -53,31 +53,31 @@
   <details class="series-nav">
     <summary>
       <span class="series-nav-label">시리즈 목차</span>
-      <span class="series-nav-current">06. ROS 2 기초 명령 — 터틀심으로 노드·토픽·서비스·액션 익히기</span>
+      <span class="series-nav-current">06. ROS 2 기초 명령 — Turtlesim으로 Node·Topic·Service·Action 익히기</span>
     </summary>
     <ol class="series-nav-list">
       
       <li class="">
         
-        <a href="/posts/00-ubuntu-linux-basics/">00. 로봇 공부를 시작하기 전에 알아야 할 우분투·리눅스 기초</a>
+        <a href="/posts/00-ubuntu-linux-basics/">00. 로봇 공부를 시작하기 전에 알아야 할 Ubuntu·Linux 기초</a>
         
       </li>
       
       <li class="">
         
-        <a href="/posts/01-ubuntu-install/">01. 우분투 24.04 설치와 첫 세팅 (부팅 USB부터 한글 입력까지)</a>
+        <a href="/posts/01-ubuntu-install/">01. Ubuntu 24.04 설치와 첫 세팅 (부팅 USB부터 한글 입력까지)</a>
         
       </li>
       
       <li class="">
         
-        <a href="/posts/02-python-venv/">02. 파이썬 가상환경(venv) 완벽 정리 — 로봇 프로젝트를 위한 격리</a>
+        <a href="/posts/02-python-venv/">02. Python Virtual Environment(venv) 완벽 정리 — 로봇 프로젝트를 위한 격리</a>
         
       </li>
       
       <li class="">
         
-        <a href="/posts/03-vscode/">03. VS Code 설치와 파이썬 인터프리터·주피터 커널 연결</a>
+        <a href="/posts/03-vscode/">03. VS Code 설치와 Python Interpreter·Jupyter Kernel 연결</a>
         
       </li>
       
@@ -95,7 +95,7 @@
       
       <li class="is-current">
         
-        <span>06. ROS 2 기초 명령 — 터틀심으로 노드·토픽·서비스·액션 익히기</span>
+        <span>06. ROS 2 기초 명령 — Turtlesim으로 Node·Topic·Service·Action 익히기</span>
         
       </li>
       
@@ -103,18 +103,18 @@
   </details>
 
   <div class="post-body">
-    <p>ROS 2를 설치했으니 이제 <strong>명령어로 로봇을 움직여</strong> 봅니다. 이 글은 ROS 2의 네 가지 핵심 개념 — <strong>노드, 서비스, 토픽, 액션</strong> — 을 <strong>터틀심(turtlesim)</strong> 이라는 학습용 거북이 시뮬레이터로 하나씩 확인합니다.</p>
+    <p>ROS 2를 설치했으니 이제 <strong>명령어로 로봇을 움직여</strong> 봅니다. 이 글은 ROS 2의 네 가지 핵심 개념 — <strong>Node(노드), Service(서비스), Topic(토픽), Action(액션)</strong> — 을 <strong>Turtlesim</strong> 이라는 학습용 거북이 시뮬레이터로 하나씩 확인합니다.</p>
 
-<p>터틀심은 실제 로봇이 아니라 화면 속 거북이지만, 구조는 실제 로봇과 같습니다. 여기서 익힌 명령이 그대로 자율주행 로봇, 로봇팔, 드론의 제어에 쓰입니다.</p>
+<p>Turtlesim은 실제 로봇이 아니라 화면 속 거북이지만, 구조는 실제 로봇과 같습니다. 여기서 익힌 명령이 그대로 자율주행 로봇, 로봇팔, 드론의 제어에 쓰입니다.</p>
 
 <p>이 글에서 다루는 것</p>
 
 <ul>
-  <li>터틀심 실행과 키보드 조종</li>
-  <li><strong>노드</strong>: 실행 단위, 목록·정보 확인</li>
-  <li><strong>서비스</strong>: 요청-응답, 타입 확인, 호출</li>
-  <li><strong>토픽</strong>: 발행-구독, <code class="language-plaintext highlighter-rouge">cmd_vel</code>로 주행 명령 보내기</li>
-  <li><strong>액션</strong>: 목표-피드백-결과, 회전 목표 보내기</li>
+  <li>Turtlesim 실행과 키보드 조종</li>
+  <li><strong>Node</strong>: 실행 단위, 목록·정보 확인</li>
+  <li><strong>Service</strong>: 요청-응답, 타입 확인, 호출</li>
+  <li><strong>Topic</strong>: 발행-구독, <code class="language-plaintext highlighter-rouge">cmd_vel</code>로 주행 명령 보내기</li>
+  <li><strong>Action</strong>: 목표-피드백-결과, 회전 목표 보내기</li>
   <li>네임스페이스와 도메인의 차이</li>
   <li>세 통신 방식의 비교와 실제 로봇에서의 대응</li>
 </ul>
@@ -123,7 +123,7 @@
 
 <h2 id="명령은-어디에-입력하나요">명령은 어디에 입력하나요?</h2>
 
-<p>6편은 <strong>터미널을 두 개 이상</strong> 띄워 놓고 진행합니다.</p>
+<p>6편은 <strong>Terminal을 두 개 이상</strong> 띄워 놓고 진행합니다.</p>
 
 <table>
   <thead>
@@ -136,19 +136,19 @@
   </thead>
   <tbody>
     <tr>
-      <td>터미널 1 (시뮬레이터)</td>
+      <td>Terminal 1 (시뮬레이터)</td>
       <td><code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">Alt</code>+<code class="language-plaintext highlighter-rouge">T</code></td>
       <td><code class="language-plaintext highlighter-rouge">ros2 run turtlesim turtlesim_node</code></td>
       <td><strong>끄지 말고 계속 띄워 둡니다</strong></td>
     </tr>
     <tr>
-      <td>터미널 2 (명령용)</td>
+      <td>Terminal 2 (명령용)</td>
       <td>새 창</td>
       <td><code class="language-plaintext highlighter-rouge">ros2 node/topic/service/action ...</code></td>
       <td>이 글의 대부분 명령</td>
     </tr>
     <tr>
-      <td>터미널 3 (조종용, 선택)</td>
+      <td>Terminal 3 (조종용, 선택)</td>
       <td>새 창</td>
       <td><code class="language-plaintext highlighter-rouge">ros2 run turtlesim turtle_teleop_key</code></td>
       <td>이 창에서만 방향키가 먹습니다</td>
@@ -157,38 +157,38 @@
 </table>
 
 <ul>
-  <li>터미널 1에서 거북이 창이 뜨고 로그가 계속 흐릅니다. <strong>그 창에 다른 명령을 치면 안 됩니다</strong> (실행 중이라 입력이 먹지 않습니다).</li>
+  <li>Terminal 1에서 거북이 창이 뜨고 로그가 계속 흐릅니다. <strong>그 창에 다른 명령을 치면 안 됩니다</strong> (실행 중이라 입력이 먹지 않습니다).</li>
   <li>새 창마다 <code class="language-plaintext highlighter-rouge">ROS 2</code> 환경이 필요합니다. <code class="language-plaintext highlighter-rouge">.bashrc</code> 를 설정했다면(5편) 자동으로 켜지고, 아니라면 <code class="language-plaintext highlighter-rouge">source /opt/ros/jazzy/setup.bash</code> 를 먼저 입력합니다.</li>
   <li>값이 <code class="language-plaintext highlighter-rouge">{x: 2.0, y: 2.0}</code> 처럼 중괄호로 들어가는 명령은 <strong>따옴표까지 그대로</strong> 복사해야 합니다.</li>
   <li>복사는 <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">Shift</code>+<code class="language-plaintext highlighter-rouge">C</code>, 붙여넣기는 <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">Shift</code>+<code class="language-plaintext highlighter-rouge">V</code> 입니다.</li>
 </ul>
 
-<h2 id="한눈에-보는-전체-흐름-실행--노드--토픽--서비스--액션">한눈에 보는 전체 흐름: 실행 → 노드 → 토픽 → 서비스 → 액션</h2>
+<h2 id="한눈에-보는-전체-흐름-실행--node--topic--service--action">한눈에 보는 전체 흐름: 실행 → Node → Topic → Service → Action</h2>
 
-<p><img src="https://velog.velcdn.com/images/aiexcelh/post/32c1e6ec-d257-421c-b920-190c40d7a818/image.png" alt="터틀심으로 통신 3형제를 실습하는 순서" /></p>
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/32c1e6ec-d257-421c-b920-190c40d7a818/image.png" alt="Turtlesim으로 통신 3형제를 실습하는 순서" /></p>
 
-<p><em>“무엇이 있나”(노드)에서 “어떻게 시키나”(토픽 → 서비스 → 액션)로 넘어가는 순서입니다.</em></p>
+<p><em>“무엇이 있나”(Node)에서 “어떻게 시키나”(Topic → Service → Action)로 넘어가는 순서입니다.</em></p>
 
 <ol>
-  <li><strong>터틀심 실행</strong> — <code class="language-plaintext highlighter-rouge">ros2 run turtlesim turtlesim_node</code></li>
-  <li><strong>노드 확인</strong> — <code class="language-plaintext highlighter-rouge">ros2 node list</code>, <code class="language-plaintext highlighter-rouge">ros2 node info /turtlesim</code></li>
-  <li><strong>토픽</strong> — <code class="language-plaintext highlighter-rouge">ros2 topic list</code> / <code class="language-plaintext highlighter-rouge">echo</code> / <code class="language-plaintext highlighter-rouge">pub</code></li>
-  <li><strong>서비스</strong> — <code class="language-plaintext highlighter-rouge">ros2 service call</code></li>
-  <li><strong>액션</strong> — <code class="language-plaintext highlighter-rouge">ros2 action send_goal ... --feedback</code></li>
+  <li><strong>Turtlesim 실행</strong> — <code class="language-plaintext highlighter-rouge">ros2 run turtlesim turtlesim_node</code></li>
+  <li><strong>Node 확인</strong> — <code class="language-plaintext highlighter-rouge">ros2 node list</code>, <code class="language-plaintext highlighter-rouge">ros2 node info /turtlesim</code></li>
+  <li><strong>Topic</strong> — <code class="language-plaintext highlighter-rouge">ros2 topic list</code> / <code class="language-plaintext highlighter-rouge">echo</code> / <code class="language-plaintext highlighter-rouge">pub</code></li>
+  <li><strong>Service</strong> — <code class="language-plaintext highlighter-rouge">ros2 service call</code></li>
+  <li><strong>Action</strong> — <code class="language-plaintext highlighter-rouge">ros2 action send_goal ... --feedback</code></li>
 </ol>
 
 <hr />
 
-<h2 id="1-터틀심-시작하기">1. 터틀심 시작하기</h2>
+<h2 id="1-turtlesim-시작하기">1. Turtlesim 시작하기</h2>
 
 <h3 id="준비">준비</h3>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">source</span> /opt/ros/jazzy/setup.bash
 </code></pre></div></div>
 
-<p>터틀심이 설치되어 있는지 확인:</p>
+<p>Turtlesim이 설치되어 있는지 확인:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 pkg executables turtlesim
 </code></pre></div></div>
@@ -201,7 +201,7 @@ turtlesim turtlesim_node
 
 <p>없다면 설치합니다.</p>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update
 <span class="nb">sudo </span>apt <span class="nb">install </span>ros-jazzy-turtlesim
@@ -209,9 +209,9 @@ turtlesim turtlesim_node
 
 <h3 id="실행">실행</h3>
 
-<p><strong>터미널 1</strong> — 시뮬레이터:</p>
+<p><strong>Terminal 1</strong> — 시뮬레이터:</p>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 1</strong> — 시뮬레이터 (끄지 말 것) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 1</strong> — 시뮬레이터 (끄지 말 것) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 run turtlesim turtlesim_node
 </code></pre></div></div>
@@ -221,21 +221,21 @@ turtlesim turtlesim_node
 </code></pre></div></div>
 
 <blockquote>
-  <p>여기서 읽을 정보가 세 가지 있습니다. 노드 이름은 <code class="language-plaintext highlighter-rouge">/turtlesim</code>, 거북이 이름은 <code class="language-plaintext highlighter-rouge">turtle1</code>, 시작 자세는 <code class="language-plaintext highlighter-rouge">x=5.544445, y=5.544445, theta=0</code>. 이 값들은 뒤에서 서비스·토픽 이름에 그대로 등장합니다.</p>
+  <p>여기서 읽을 정보가 세 가지 있습니다. Node 이름은 <code class="language-plaintext highlighter-rouge">/turtlesim</code>, 거북이 이름은 <code class="language-plaintext highlighter-rouge">turtle1</code>, 시작 자세는 <code class="language-plaintext highlighter-rouge">x=5.544445, y=5.544445, theta=0</code>. 이 값들은 뒤에서 Service·Topic 이름에 그대로 등장합니다.</p>
 </blockquote>
 
-<p><img src="https://velog.velcdn.com/images/aiexcelh/post/2d578c67-2ecd-4692-a20d-cac91ed307a6/image.png" alt="터미널 1에서 turtlesim_node를 실행했을 때 뜨는 실제 창 — 가운데 거북이, 위쪽에 현재 자세가 표시된다" /></p>
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/2d578c67-2ecd-4692-a20d-cac91ed307a6/image.png" alt="Terminal 1에서 turtlesim_node를 실행했을 때 뜨는 실제 창 — 가운데 거북이, 위쪽에 현재 자세가 표시된다" /></p>
 
-<p><em>파란 배경의 이 창이 시뮬레이터입니다. 이 창은 <strong>끄지 말고</strong> 그대로 두고, 나머지 명령은 다른 터미널에서 칩니다. (출처: ROS 2 공식 문서, CC BY 4.0)</em></p>
+<p><em>파란 배경의 이 창이 시뮬레이터입니다. 이 창은 <strong>끄지 말고</strong> 그대로 두고, 나머지 명령은 다른 Terminal에서 칩니다. (출처: ROS 2 공식 문서, CC BY 4.0)</em></p>
 
-<p><strong>터미널 3</strong> — 키보드 조종:</p>
+<p><strong>Terminal 3</strong> — 키보드 조종:</p>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 3</strong> — 이 창에서 방향키 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 3</strong> — 이 창에서 방향키 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 run turtlesim turtle_teleop_key
 </code></pre></div></div>
 
-<p>터미널 3을 <strong>활성 창으로 선택한 상태</strong>에서 방향키를 누르면 거북이가 움직이고, 지나간 자리에 선이 그려집니다.</p>
+<p>Terminal 3을 <strong>활성 창으로 선택한 상태</strong>에서 방향키를 누르면 거북이가 움직이고, 지나간 자리에 선이 그려집니다.</p>
 
 <blockquote>
   <p>💡 방향키를 한 번 누르면 <strong>짧게 움직이고 멈춥니다.</strong> 버그가 아니라 의도된 동작입니다. 실제 로봇에서 조종 신호가 끊겼는데 계속 달리면 위험하기 때문에, “명령이 계속 들어오는 동안만 움직이는” 방식이 기본입니다.</p>
@@ -257,7 +257,7 @@ turtlesim turtlesim_node
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">G</code> <code class="language-plaintext highlighter-rouge">B</code> <code class="language-plaintext highlighter-rouge">V</code> <code class="language-plaintext highlighter-rouge">C</code> <code class="language-plaintext highlighter-rouge">D</code> <code class="language-plaintext highlighter-rouge">E</code> <code class="language-plaintext highlighter-rouge">R</code> <code class="language-plaintext highlighter-rouge">T</code></td>
-      <td>지정된 방향으로 <strong>절대 회전</strong>(액션 목표 전송)</td>
+      <td>지정된 방향으로 <strong>절대 회전</strong>(Action 목표 전송)</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">F</code></td>
@@ -267,26 +267,26 @@ turtlesim turtlesim_node
 </table>
 
 <blockquote>
-  <p>이 키들은 실행 시 터미널에 안내가 표시됩니다. 8개의 회전 키는 “절대 방향”을 목표로 보내고, <code class="language-plaintext highlighter-rouge">F</code>는 그 목표를 중간에 취소합니다. 뒤에서 보겠지만 <strong>취소가 가능하다는 점</strong>이 액션의 핵심 특징입니다.</p>
+  <p>이 키들은 실행 시 Terminal에 안내가 표시됩니다. 8개의 회전 키는 “절대 방향”을 목표로 보내고, <code class="language-plaintext highlighter-rouge">F</code>는 그 목표를 중간에 취소합니다. 뒤에서 보겠지만 <strong>취소가 가능하다는 점</strong>이 Action의 핵심 특징입니다.</p>
 </blockquote>
 
 <hr />
 
-<h2 id="2-노드node-실행-단위">2. 노드(Node): 실행 단위</h2>
+<h2 id="2-node-실행-단위">2. Node: 실행 단위</h2>
 
-<h3 id="노드가-뭔가요">노드가 뭔가요</h3>
+<h3 id="node가-뭔가요">Node가 뭔가요</h3>
 
-<p><strong>노드</strong>는 ROS 2에서 <strong>하나의 기능을 담당하는 실행 프로그램</strong>입니다. 터틀심에서는 <code class="language-plaintext highlighter-rouge">turtlesim_node</code>가 노드이고, 키보드 입력을 받아 명령을 보내는 <code class="language-plaintext highlighter-rouge">turtle_teleop_key</code>도 노드입니다.</p>
+<p><strong>Node</strong>는 ROS 2에서 <strong>하나의 기능을 담당하는 실행 프로그램</strong>입니다. Turtlesim에서는 <code class="language-plaintext highlighter-rouge">turtlesim_node</code>가 Node이고, 키보드 입력을 받아 명령을 보내는 <code class="language-plaintext highlighter-rouge">turtle_teleop_key</code>도 Node입니다.</p>
 
 <blockquote>
-  <p>패키지(package)와 노드(node)의 관계는 <strong>“묶음”과 “실행 파일”</strong> 의 관계입니다. <code class="language-plaintext highlighter-rouge">turtlesim</code> 패키지 안에 <code class="language-plaintext highlighter-rouge">turtlesim_node</code>, <code class="language-plaintext highlighter-rouge">turtle_teleop_key</code>, <code class="language-plaintext highlighter-rouge">draw_square</code>, <code class="language-plaintext highlighter-rouge">mimic</code> 네 개의 실행 파일(노드)이 들어 있습니다. 패키지는 배포 단위, 노드는 실행 단위입니다.</p>
+  <p>Package(package)와 Node(node)의 관계는 <strong>“묶음”과 “실행 파일”</strong> 의 관계입니다. <code class="language-plaintext highlighter-rouge">turtlesim</code> Package 안에 <code class="language-plaintext highlighter-rouge">turtlesim_node</code>, <code class="language-plaintext highlighter-rouge">turtle_teleop_key</code>, <code class="language-plaintext highlighter-rouge">draw_square</code>, <code class="language-plaintext highlighter-rouge">mimic</code> 네 개의 실행 파일(Node)이 들어 있습니다. Package는 배포 단위, Node는 실행 단위입니다.</p>
 </blockquote>
 
 <h3 id="목록-보기">목록 보기</h3>
 
-<p><strong>터미널 3</strong>을 열고:</p>
+<p><strong>Terminal 3</strong>을 열고:</p>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">source</span> /opt/ros/jazzy/setup.bash
 ros2 node list
@@ -296,11 +296,11 @@ ros2 node list
 /turtlesim
 </code></pre></div></div>
 
-<p>지금 실행 중인 노드가 두 개라는 것을 알 수 있습니다. (윈도우의 작업 관리자와 비슷한 역할입니다.)</p>
+<p>지금 실행 중인 Node가 두 개라는 것을 알 수 있습니다. (Windows의 작업 관리자와 비슷한 역할입니다.)</p>
 
-<h3 id="노드-정보-보기">노드 정보 보기</h3>
+<h3 id="node-정보-보기">Node 정보 보기</h3>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 node info /turtlesim
 </code></pre></div></div>
@@ -339,34 +339,34 @@ ros2 node list
   <tbody>
     <tr>
       <td><strong>Subscribers</strong></td>
-      <td>이 노드가 <strong>받는</strong> 토픽 (<code class="language-plaintext highlighter-rouge">/turtle1/cmd_vel</code> = 주행 명령)</td>
+      <td>이 Node가 <strong>받는</strong> Topic (<code class="language-plaintext highlighter-rouge">/turtle1/cmd_vel</code> = 주행 명령)</td>
     </tr>
     <tr>
       <td><strong>Publishers</strong></td>
-      <td>이 노드가 <strong>내보내는</strong> 토픽 (<code class="language-plaintext highlighter-rouge">/turtle1/pose</code> = 현재 자세)</td>
+      <td>이 Node가 <strong>내보내는</strong> Topic (<code class="language-plaintext highlighter-rouge">/turtle1/pose</code> = 현재 자세)</td>
     </tr>
     <tr>
       <td><strong>Service Servers</strong></td>
-      <td>이 노드가 <strong>응답하는</strong> 서비스</td>
+      <td>이 Node가 <strong>응답하는</strong> Service</td>
     </tr>
     <tr>
       <td><strong>Action Servers</strong></td>
-      <td>이 노드가 <strong>수행하는</strong> 액션</td>
+      <td>이 Node가 <strong>수행하는</strong> Action</td>
     </tr>
   </tbody>
 </table>
 
 <blockquote>
-  <p>로봇 디버깅의 절반은 이 명령으로 시작합니다. “센서 노드가 값을 내보내고 있는가?”, “제어 노드가 그 토픽을 구독하고 있는가?”를 한 번에 볼 수 있기 때문입니다.</p>
+  <p>로봇 디버깅의 절반은 이 명령으로 시작합니다. “센서 Node가 값을 내보내고 있는가?”, “제어 Node가 그 Topic을 구독하고 있는가?”를 한 번에 볼 수 있기 때문입니다.</p>
 </blockquote>
 
 <hr />
 
-<h2 id="3-서비스service-요청하면-즉답">3. 서비스(Service): 요청하면 즉답</h2>
+<h2 id="3-service-요청하면-즉답">3. Service: 요청하면 즉답</h2>
 
 <h3 id="개념">개념</h3>
 
-<p><strong>서비스</strong>는 <strong>클라이언트가 요청(Request)을 보내면 서버가 응답(Response)을 돌려주는</strong> 1:1 동기 통신입니다. 전화 통화에 비유할 수 있습니다. 묻고, 답을 받고, 끝납니다.</p>
+<p><strong>Service</strong>는 <strong>Client가 요청(Request)을 보내면 Server가 응답(Response)을 돌려주는</strong> 1:1 동기 통신입니다. 전화 통화에 비유할 수 있습니다. 묻고, 답을 받고, 끝납니다.</p>
 
 <ul>
   <li>한 번의 요청에 한 번의 응답</li>
@@ -376,7 +376,7 @@ ros2 node list
 
 <h3 id="목록과-타입">목록과 타입</h3>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 service list
 </code></pre></div></div>
@@ -393,9 +393,9 @@ ros2 node list
 /turtle1/teleport_relative [turtlesim/srv/TeleportRelative]
 </code></pre></div></div>
 
-<p>특정 서비스의 타입만 확인:</p>
+<p>특정 Service의 타입만 확인:</p>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 service <span class="nb">type</span> /turtle1/teleport_absolute
 </code></pre></div></div>
@@ -405,9 +405,9 @@ ros2 node list
 
 <h3 id="타입의-구조-보기">타입의 구조 보기</h3>
 
-<p>서비스를 호출하려면 <strong>어떤 값을 넣어야 하는지</strong> 알아야 합니다.</p>
+<p>Service를 호출하려면 <strong>어떤 값을 넣어야 하는지</strong> 알아야 합니다.</p>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 interface show turtlesim/srv/TeleportAbsolute
 </code></pre></div></div>
@@ -418,9 +418,9 @@ float32 theta
 ---
 </code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">---</code> 위쪽이 <strong>요청</strong>, 아래쪽이 <strong>응답</strong>입니다. 이 서비스는 <code class="language-plaintext highlighter-rouge">x, y, theta</code>를 보내고, 응답은 <strong>비어 있습니다</strong>(성공/실패 값조차 없음).</p>
+<p><code class="language-plaintext highlighter-rouge">---</code> 위쪽이 <strong>요청</strong>, 아래쪽이 <strong>응답</strong>입니다. 이 Service는 <code class="language-plaintext highlighter-rouge">x, y, theta</code>를 보내고, 응답은 <strong>비어 있습니다</strong>(성공/실패 값조차 없음).</p>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 interface show turtlesim/srv/Spawn
 </code></pre></div></div>
@@ -436,14 +436,14 @@ string name
 <p>이번엔 응답이 있습니다 — 새로 만들어진 거북이의 <strong>이름</strong>을 돌려줍니다.</p>
 
 <blockquote>
-  <p><code class="language-plaintext highlighter-rouge">---</code> 세 줄(대시 3개)이 요청/응답의 경계입니다. 이 규칙은 서비스 정의 파일(<code class="language-plaintext highlighter-rouge">.srv</code>)의 표준 문법입니다.</p>
+  <p><code class="language-plaintext highlighter-rouge">---</code> 세 줄(대시 3개)이 요청/응답의 경계입니다. 이 규칙은 Service 정의 파일(<code class="language-plaintext highlighter-rouge">.srv</code>)의 표준 문법입니다.</p>
 </blockquote>
 
 <h3 id="호출해-보기">호출해 보기</h3>
 
 <p>절대 좌표로 순간이동:</p>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 service call /turtle1/teleport_absolute turtlesim/srv/TeleportAbsolute <span class="s2">"{x: 2.0, y: 2.0, theta: 1.57}"</span>
 </code></pre></div></div>
@@ -451,12 +451,12 @@ string name
 <ul>
   <li><code class="language-plaintext highlighter-rouge">{...}</code> 안의 값은 <strong>YAML 문법</strong>입니다.</li>
   <li><code class="language-plaintext highlighter-rouge">theta</code>는 <strong>라디안</strong>입니다. <code class="language-plaintext highlighter-rouge">1.57</code> ≈ 90°(위쪽).</li>
-  <li>이 서비스는 이동 경로를 그리지 않고 <strong>순간이동</strong>합니다.</li>
+  <li>이 Service는 이동 경로를 그리지 않고 <strong>순간이동</strong>합니다.</li>
 </ul>
 
 <p>거북이 추가 생성:</p>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 service call /spawn turtlesim/srv/Spawn <span class="s2">"{x: 2.0, y: 2.0, theta: 0.2, name: ''}"</span>
 </code></pre></div></div>
@@ -466,11 +466,11 @@ response:
 turtlesim.srv.Spawn_Response(name='turtle2')
 </code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">name</code>을 비워 두면 자동으로 <code class="language-plaintext highlighter-rouge">turtle2</code>가 만들어집니다. 이제 서비스 목록에 <code class="language-plaintext highlighter-rouge">turtle2/...</code>가 추가된 것을 볼 수 있습니다.</p>
+<p><code class="language-plaintext highlighter-rouge">name</code>을 비워 두면 자동으로 <code class="language-plaintext highlighter-rouge">turtle2</code>가 만들어집니다. 이제 Service 목록에 <code class="language-plaintext highlighter-rouge">turtle2/...</code>가 추가된 것을 볼 수 있습니다.</p>
 
-<p><img src="https://velog.velcdn.com/images/aiexcelh/post/68135ca7-1d94-4b63-bcd9-052fd6bf597b/image.png" alt="rqt의 Service Caller로 /spawn 서비스를 호출하는 실제 화면 — Type을 고르면 필드가 자동으로 채워진다" /></p>
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/68135ca7-1d94-4b63-bcd9-052fd6bf597b/image.png" alt="rqt의 Service Caller로 /spawn Service를 호출하는 실제 화면 — Type을 고르면 필드가 자동으로 채워진다" /></p>
 
-<p><em>명령으로 치기 번거로우면 <code class="language-plaintext highlighter-rouge">rqt</code> → Plugins → Services → <strong>Service Caller</strong>에서 서비스를 고르고 값을 넣어 <strong>Call</strong>을 누르면 됩니다. 필드 구조(이름·타입)를 눈으로 확인할 수 있어 처음 배울 때 특히 유용합니다. (출처: ROS 2 공식 문서, CC BY 4.0)</em></p>
+<p><em>명령으로 치기 번거로우면 <code class="language-plaintext highlighter-rouge">rqt</code> → Plugins → Services → <strong>Service Caller</strong>에서 Service를 고르고 값을 넣어 <strong>Call</strong>을 누르면 됩니다. 필드 구조(이름·타입)를 눈으로 확인할 수 있어 처음 배울 때 특히 유용합니다. (출처: ROS 2 공식 문서, CC BY 4.0)</em></p>
 
 <p><img src="https://velog.velcdn.com/images/aiexcelh/post/d0c6c832-f5d3-43b9-8755-308e8e8ecc9c/image.png" alt="같은 방식으로 /turtle1/set_pen 호출 — r, g, b, width, off 값을 채운다" /></p>
 
@@ -478,13 +478,13 @@ turtlesim.srv.Spawn_Response(name='turtle2')
 
 <p>화면 지우기 / 초기화:</p>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 service call /clear std_srvs/srv/Empty
 ros2 service call /reset std_srvs/srv/Empty
 </code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">Empty</code> 타입은 요청도 응답도 없는 서비스입니다. <code class="language-plaintext highlighter-rouge">---</code>만 있는 구조를 떠올리면 됩니다.</p>
+<p><code class="language-plaintext highlighter-rouge">Empty</code> 타입은 요청도 응답도 없는 Service입니다. <code class="language-plaintext highlighter-rouge">---</code>만 있는 구조를 떠올리면 됩니다.</p>
 
 <blockquote>
   <p>💡 긴 명령은 <strong>Tab 자동완성</strong>을 쓰세요. <code class="language-plaintext highlighter-rouge">ros2 service call /turtle1/tele&lt;Tab&gt;</code>까지 치면 타입과 필드 구조까지 자동으로 채워집니다.</p>
@@ -578,7 +578,7 @@ ros2 service call /reset std_srvs/srv/Empty
 
 <h3 id="차동-구동-로봇의-제약">차동 구동 로봇의 제약</h3>
 
-<p>터틀심의 거북이는 <strong>차동 구동(differential drive)</strong> 로봇을 단순화한 모델입니다. 양쪽 바퀴의 속도 차이로 방향을 바꾸는 방식으로, 자동차와 비슷합니다.</p>
+<p>Turtlesim의 거북이는 <strong>차동 구동(differential drive)</strong> 로봇을 단순화한 모델입니다. 양쪽 바퀴의 속도 차이로 방향을 바꾸는 방식으로, 자동차와 비슷합니다.</p>
 
 <ul>
   <li>제자리에서 <strong>방향만</strong> 바꿀 수 없습니다. 앞으로 가면서(또는 뒤로 가면서) 회전해야 합니다.</li>
@@ -594,21 +594,21 @@ ros2 service call /reset std_srvs/srv/Empty
 
 <hr />
 
-<h2 id="5-토픽topic-계속-흘러가는-데이터">5. 토픽(Topic): 계속 흘러가는 데이터</h2>
+<h2 id="5-topic-계속-흘러가는-데이터">5. Topic: 계속 흘러가는 데이터</h2>
 
 <h3 id="개념-1">개념</h3>
 
-<p><strong>토픽</strong>은 <strong>발행자(Publisher)가 계속 내보내고, 구독자(Subscriber)가 받아보는</strong> 비동기 단방향 통신입니다. 라디오 방송과 같습니다.</p>
+<p><strong>Topic</strong>은 <strong>Publisher(발행자)가 계속 내보내고, Subscriber(구독자)가 받아보는</strong> 비동기 단방향 통신입니다. 라디오 방송과 같습니다.</p>
 
 <ul>
-  <li>발행자는 누가 듣는지 모르고, 구독자는 누가 보내는지 몰라도 됨</li>
-  <li>여러 발행자와 여러 구독자가 동시에 붙을 수 있음 (다대다)</li>
+  <li>Publisher는 누가 듣는지 모르고, Subscriber는 누가 보내는지 몰라도 됨</li>
+  <li>여러 Publisher와 여러 Subscriber가 동시에 붙을 수 있음 (다대다)</li>
   <li>응답이라는 개념이 없음</li>
 </ul>
 
 <h3 id="목록-보기-1">목록 보기</h3>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 topic list
 </code></pre></div></div>
@@ -622,7 +622,7 @@ ros2 service call /reset std_srvs/srv/Empty
 
 <p>타입까지 함께:</p>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 topic list <span class="nt">-t</span>
 </code></pre></div></div>
@@ -631,9 +631,9 @@ ros2 service call /reset std_srvs/srv/Empty
 /turtle1/pose [turtlesim/msg/Pose]
 </code></pre></div></div>
 
-<p>발행자/구독자 수와 QoS까지:</p>
+<p>Publisher/Subscriber 수와 QoS까지:</p>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 topic info /turtle1/cmd_vel <span class="nt">--verbose</span>
 </code></pre></div></div>
@@ -654,7 +654,7 @@ angular_velocity: 0.0
 
 <p>발행 주기(Hz) 확인 — 센서 데이터가 정상 속도로 들어오는지 볼 때 유용합니다.</p>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 topic hz /turtle1/pose
 </code></pre></div></div>
@@ -668,9 +668,9 @@ angular_velocity: 0.0
 
 <h3 id="주행-명령-보내기-cmd_vel과-twist">주행 명령 보내기: <code class="language-plaintext highlighter-rouge">cmd_vel</code>과 <code class="language-plaintext highlighter-rouge">Twist</code></h3>
 
-<p>거북이를 움직이는 토픽은 <code class="language-plaintext highlighter-rouge">/turtle1/cmd_vel</code>이고, 타입은 <code class="language-plaintext highlighter-rouge">geometry_msgs/msg/Twist</code>입니다. 구조를 확인합니다.</p>
+<p>거북이를 움직이는 Topic은 <code class="language-plaintext highlighter-rouge">/turtle1/cmd_vel</code>이고, 타입은 <code class="language-plaintext highlighter-rouge">geometry_msgs/msg/Twist</code>입니다. 구조를 확인합니다.</p>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 interface show geometry_msgs/msg/Twist
 </code></pre></div></div>
@@ -707,13 +707,13 @@ Vector3 angular
 
 <h3 id="한-번만-발행하기">한 번만 발행하기</h3>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 topic pub <span class="nt">--once</span> /turtle1/cmd_vel geometry_msgs/msg/Twist <span class="s2">"{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 1.8}}"</span>
 </code></pre></div></div>
 
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">--once</code>: 메시지를 한 번 보내고 종료</li>
+  <li><code class="language-plaintext highlighter-rouge">--once</code>: Message를 한 번 보내고 종료</li>
   <li><code class="language-plaintext highlighter-rouge">linear.x: 2.0</code> = 앞으로 2.0</li>
   <li><code class="language-plaintext highlighter-rouge">angular.z: 1.8</code> = 반시계 방향으로 1.8 rad/s 회전</li>
 </ul>
@@ -722,7 +722,7 @@ Vector3 angular
 
 <h3 id="계속-움직이게-하기">계속 움직이게 하기</h3>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> — 계속 발행 (멈추려면 <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">C</code>) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> — 계속 발행 (멈추려면 <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">C</code>) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 topic pub <span class="nt">--rate</span> 1 /turtle1/cmd_vel geometry_msgs/msg/Twist <span class="s2">"{linear: {x: 2.0}, angular: {z: 1.8}}"</span>
 </code></pre></div></div>
@@ -735,21 +735,21 @@ Vector3 angular
 <p>이제 거북이가 원을 그리며 계속 돕니다. <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">C</code>로 멈춥니다.</p>
 
 <blockquote>
-  <p>💡 실제 로봇에서 <code class="language-plaintext highlighter-rouge">cmd_vel</code>은 <strong>가장 중요한 토픽</strong>입니다. 자율주행 스택(Nav2)이 경로를 계산해 <code class="language-plaintext highlighter-rouge">cmd_vel</code>로 속도 명령을 내보내고, 베이스 드라이버가 이를 받아 바퀴를 돌립니다. 즉 <code class="language-plaintext highlighter-rouge">ros2 topic pub</code>으로 <code class="language-plaintext highlighter-rouge">cmd_vel</code>에 값을 넣는 것은 <strong>자율주행 스택이 하는 일을 손으로 흉내 내는 것</strong>입니다.</p>
+  <p>💡 실제 로봇에서 <code class="language-plaintext highlighter-rouge">cmd_vel</code>은 <strong>가장 중요한 Topic</strong>입니다. 자율주행 스택(Nav2)이 경로를 계산해 <code class="language-plaintext highlighter-rouge">cmd_vel</code>로 속도 명령을 내보내고, 베이스 드라이버가 이를 받아 바퀴를 돌립니다. 즉 <code class="language-plaintext highlighter-rouge">ros2 topic pub</code>으로 <code class="language-plaintext highlighter-rouge">cmd_vel</code>에 값을 넣는 것은 <strong>자율주행 스택이 하는 일을 손으로 흉내 내는 것</strong>입니다.</p>
 </blockquote>
 
-<h3 id="노드-토픽-관계를-그림으로">노드-토픽 관계를 그림으로</h3>
+<h3 id="node-topic-관계를-그림으로">Node-Topic 관계를 그림으로</h3>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rqt_graph
 </code></pre></div></div>
 
 <p><code class="language-plaintext highlighter-rouge">teleop_turtle</code> → <code class="language-plaintext highlighter-rouge">/turtle1/cmd_vel</code> → <code class="language-plaintext highlighter-rouge">turtlesim</code> → <code class="language-plaintext highlighter-rouge">/turtle1/pose</code> 흐름이 그래프로 표시됩니다.</p>
 
-<p><img src="https://velog.velcdn.com/images/aiexcelh/post/bac1726a-717f-4cc1-9b75-e75bb5e094bb/image.png" alt="rqt_graph 실제 화면 — 왼쪽 teleop_turtle 노드가 /turtle1/cmd_vel 토픽을 거쳐 turtlesim 노드로 이어진다" /></p>
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/bac1726a-717f-4cc1-9b75-e75bb5e094bb/image.png" alt="rqt_graph 실제 화면 — 왼쪽 teleop_turtle Node가 /turtle1/cmd_vel Topic을 거쳐 turtlesim Node로 이어진다" /></p>
 
-<p><em>화면의 동그라미가 <strong>노드</strong>, 화살표 위의 글자가 <strong>토픽</strong>입니다. <code class="language-plaintext highlighter-rouge">teleop_turtle → /turtle1/cmd_vel → turtlesim</code>이 한눈에 보입니다. (출처: ROS 2 공식 문서, CC BY 4.0)</em></p>
+<p><em>화면의 동그라미가 <strong>Node</strong>, 화살표 위의 글자가 <strong>Topic</strong>입니다. <code class="language-plaintext highlighter-rouge">teleop_turtle → /turtle1/cmd_vel → turtlesim</code>이 한눈에 보입니다. (출처: ROS 2 공식 문서, CC BY 4.0)</em></p>
 
 <blockquote>
   <p>시스템이 복잡해질수록 이 그래프가 구명줄이 됩니다. “왜 로봇이 안 움직이지?” 싶을 때 <code class="language-plaintext highlighter-rouge">rqt_graph</code>를 열어 <strong>연결이 끊긴 지점</strong>을 찾는 것이 첫 단계입니다.</p>
@@ -757,18 +757,18 @@ Vector3 angular
 
 <hr />
 
-<h2 id="6-액션action-오래-걸리는-일의-진행-상황까지">6. 액션(Action): 오래 걸리는 일의 진행 상황까지</h2>
+<h2 id="6-action-오래-걸리는-일의-진행-상황까지">6. Action: 오래 걸리는 일의 진행 상황까지</h2>
 
-<h3 id="서비스와-토픽의-한계">서비스와 토픽의 한계</h3>
+<h3 id="service와-topic의-한계">Service와 Topic의 한계</h3>
 
 <p>로봇에게 “여기서 10미터 앞까지 이동해”라고 명령한다고 합시다.</p>
 
 <ul>
-  <li><strong>서비스</strong>로 만들면: 도착할 때까지 아무 응답이 없다가, 끝나고 나서 “도착”만 돌아옵니다. 이동 중에 “지금 어디쯤인지”, “멈춘 건 아닌지” 알 수 없습니다.</li>
-  <li><strong>토픽</strong>으로 만들면: 명령을 흘려보내는 건 쉽지만, “이 작업이 끝났는가”를 알 방법이 없습니다.</li>
+  <li><strong>Service</strong>로 만들면: 도착할 때까지 아무 응답이 없다가, 끝나고 나서 “도착”만 돌아옵니다. 이동 중에 “지금 어디쯤인지”, “멈춘 건 아닌지” 알 수 없습니다.</li>
+  <li><strong>Topic</strong>으로 만들면: 명령을 흘려보내는 건 쉽지만, “이 작업이 끝났는가”를 알 방법이 없습니다.</li>
 </ul>
 
-<p>이 간극을 메우는 것이 <strong>액션</strong>입니다.</p>
+<p>이 간극을 메우는 것이 <strong>Action</strong>입니다.</p>
 
 <table>
   <thead>
@@ -797,11 +797,11 @@ Vector3 angular
   </tbody>
 </table>
 
-<p>액션은 서비스(목표/결과)와 토픽(피드백)을 조합한 구조입니다. 그리고 서비스와 달리 <strong>취소가 가능</strong>합니다.</p>
+<p>Action은 Service(목표/결과)와 Topic(피드백)을 조합한 구조입니다. 그리고 Service와 달리 <strong>취소가 가능</strong>합니다.</p>
 
 <h3 id="타입-구조-3단">타입 구조: 3단</h3>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 action list <span class="nt">-t</span>
 </code></pre></div></div>
@@ -809,7 +809,7 @@ Vector3 angular
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/turtle1/rotate_absolute [turtlesim/action/RotateAbsolute]
 </code></pre></div></div>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 interface show turtlesim/action/RotateAbsolute
 </code></pre></div></div>
@@ -824,7 +824,7 @@ float32 delta
 float32 remaining
 </code></pre></div></div>
 
-<p>서비스는 2단(요청/응답)이지만, 액션은 <strong>3단</strong>입니다.</p>
+<p>Service는 2단(요청/응답)이지만, Action은 <strong>3단</strong>입니다.</p>
 
 <table>
   <thead>
@@ -859,7 +859,7 @@ float32 remaining
 
 <h3 id="목표-보내기">목표 보내기</h3>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> — 목표만 보내고 기다리는 예 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> — 목표만 보내고 기다리는 예 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 action send_goal /turtle1/rotate_absolute turtlesim/action/RotateAbsolute <span class="s2">"{theta: 1.57}"</span>
 </code></pre></div></div>
@@ -883,7 +883,7 @@ Goal finished with status: SUCCEEDED
 
 <h3 id="피드백-보기">피드백 보기</h3>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 action send_goal /turtle1/rotate_absolute turtlesim/action/RotateAbsolute <span class="s2">"{theta: -1.57}"</span> <span class="nt">--feedback</span>
 </code></pre></div></div>
@@ -897,11 +897,11 @@ Result:
   delta: 3.12...
 </code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">remaining</code>이 줄어드는 것을 보며 <strong>“지금 얼마나 남았는지”</strong> 를 실시간으로 알 수 있습니다. 이것이 액션을 쓰는 이유입니다.</p>
+<p><code class="language-plaintext highlighter-rouge">remaining</code>이 줄어드는 것을 보며 <strong>“지금 얼마나 남았는지”</strong> 를 실시간으로 알 수 있습니다. 이것이 Action을 쓰는 이유입니다.</p>
 
 <h3 id="취소">취소</h3>
 
-<p>키보드 조작(<code class="language-plaintext highlighter-rouge">turtle_teleop_key</code>)에서 회전 키를 누른 뒤 <code class="language-plaintext highlighter-rouge">F</code>를 누르면 목표가 취소되고, 시뮬레이터 터미널에 다음과 같은 메시지가 나옵니다.</p>
+<p>키보드 조작(<code class="language-plaintext highlighter-rouge">turtle_teleop_key</code>)에서 회전 키를 누른 뒤 <code class="language-plaintext highlighter-rouge">F</code>를 누르면 목표가 취소되고, 시뮬레이터 Terminal에 다음과 같은 메시지가 나옵니다.</p>
 
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[INFO] [turtlesim]: Rotation goal canceled
 </code></pre></div></div>
@@ -910,9 +910,9 @@ Result:
   <p>실제 로봇에서 “취소”는 안전 기능입니다. 자율주행 로봇이 이동 중 장애물을 발견했을 때, 사람이 정지 버튼을 눌렀을 때, 배터리가 부족할 때 — 이런 상황에서 <strong>진행 중인 목표를 중단</strong>할 수 있어야 합니다.</p>
 </blockquote>
 
-<h3 id="액션-목록과-정보">액션 목록과 정보</h3>
+<h3 id="action-목록과-정보">Action 목록과 정보</h3>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> (명령용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ros2 action list
 ros2 action list <span class="nt">-t</span>
@@ -926,13 +926,13 @@ Action servers: 1
     /turtlesim
 </code></pre></div></div>
 
-<p>클라이언트(명령을 보내는 쪽)와 서버(수행하는 쪽)가 명확히 구분됩니다.</p>
+<p>Client(명령을 보내는 쪽)와 Server(수행하는 쪽)가 명확히 구분됩니다.</p>
 
 <hr />
 
 <h2 id="7-네임스페이스-같은-로봇-안에서-대상을-구분하기">7. 네임스페이스: 같은 로봇 안에서 대상을 구분하기</h2>
 
-<p>서비스·토픽 이름 앞에 붙는 <code class="language-plaintext highlighter-rouge">/turtle1/</code>을 <strong>네임스페이스(Namespace)</strong> 라고 합니다.</p>
+<p>Service·Topic 이름 앞에 붙는 <code class="language-plaintext highlighter-rouge">/turtle1/</code>을 <strong>네임스페이스(Namespace)</strong> 라고 합니다.</p>
 
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/turtle1/cmd_vel      → 1번 거북이의 주행 명령
 /turtle2/cmd_vel      → 2번 거북이의 주행 명령
@@ -940,9 +940,9 @@ Action servers: 1
 /reset                → 네임스페이스 없음 (전역)
 </code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">/spawn</code>, <code class="language-plaintext highlighter-rouge">/reset</code>, <code class="language-plaintext highlighter-rouge">/clear</code>처럼 네임스페이스가 없는 서비스는 <strong>전체에 영향</strong>을 줍니다. 반면 <code class="language-plaintext highlighter-rouge">/turtle1/...</code>은 <strong>그 개체에만</strong> 적용됩니다.</p>
+<p><code class="language-plaintext highlighter-rouge">/spawn</code>, <code class="language-plaintext highlighter-rouge">/reset</code>, <code class="language-plaintext highlighter-rouge">/clear</code>처럼 네임스페이스가 없는 Service는 <strong>전체에 영향</strong>을 줍니다. 반면 <code class="language-plaintext highlighter-rouge">/turtle1/...</code>은 <strong>그 개체에만</strong> 적용됩니다.</p>
 
-<p><code class="language-plaintext highlighter-rouge">/spawn</code>으로 <code class="language-plaintext highlighter-rouge">turtle2</code>를 만든 뒤 <code class="language-plaintext highlighter-rouge">ros2 service list</code>를 다시 보면, <code class="language-plaintext highlighter-rouge">turtle2/...</code> 서비스가 새로 생긴 것을 확인할 수 있습니다.</p>
+<p><code class="language-plaintext highlighter-rouge">/spawn</code>으로 <code class="language-plaintext highlighter-rouge">turtle2</code>를 만든 뒤 <code class="language-plaintext highlighter-rouge">ros2 service list</code>를 다시 보면, <code class="language-plaintext highlighter-rouge">turtle2/...</code> Service가 새로 생긴 것을 확인할 수 있습니다.</p>
 
 <h3 id="도메인-vs-네임스페이스">도메인 vs 네임스페이스</h3>
 
@@ -987,9 +987,9 @@ Action servers: 1
   <thead>
     <tr>
       <th>항목</th>
-      <th>토픽(Topic)</th>
-      <th>서비스(Service)</th>
-      <th>액션(Action)</th>
+      <th>Topic</th>
+      <th>Service</th>
+      <th>Action</th>
     </tr>
   </thead>
   <tbody>
@@ -1009,7 +1009,7 @@ Action servers: 1
       <td>연결</td>
       <td>다대다</td>
       <td>1:1</td>
-      <td>1:1 (클라이언트/서버)</td>
+      <td>1:1 (Client/Server)</td>
     </tr>
     <tr>
       <td>응답</td>
@@ -1032,9 +1032,9 @@ Action servers: 1
   </tbody>
 </table>
 
-<p><img src="https://velog.velcdn.com/images/aiexcelh/post/4f460a4e-f1c1-4c18-b544-4af1047926e5/image.png" alt="토픽, 서비스, 액션 비교표" /></p>
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/4f460a4e-f1c1-4c18-b544-4af1047926e5/image.png" alt="Topic, Service, Action 비교표" /></p>
 
-<p><em>계속 보내야 하면 토픽, 즉답이 필요하면 서비스, 시간이 걸리고 진행률이 필요하면 액션입니다.</em></p>
+<p><em>계속 보내야 하면 Topic, 즉답이 필요하면 Service, 시간이 걸리고 진행률이 필요하면 Action입니다.</em></p>
 
 <h3 id="실제-로봇에서의-대응">실제 로봇에서의 대응</h3>
 
@@ -1047,41 +1047,41 @@ Action servers: 1
   </thead>
   <tbody>
     <tr>
-      <td>토픽 <code class="language-plaintext highlighter-rouge">/cmd_vel</code></td>
+      <td>Topic <code class="language-plaintext highlighter-rouge">/cmd_vel</code></td>
       <td>자율주행 스택이 바퀴에 속도 명령을 보냄</td>
     </tr>
     <tr>
-      <td>토픽 <code class="language-plaintext highlighter-rouge">/scan</code>, <code class="language-plaintext highlighter-rouge">/image_raw</code>, <code class="language-plaintext highlighter-rouge">/imu</code></td>
+      <td>Topic <code class="language-plaintext highlighter-rouge">/scan</code>, <code class="language-plaintext highlighter-rouge">/image_raw</code>, <code class="language-plaintext highlighter-rouge">/imu</code></td>
       <td>라이다·카메라·IMU 센서 데이터</td>
     </tr>
     <tr>
-      <td>토픽 <code class="language-plaintext highlighter-rouge">/odom</code></td>
+      <td>Topic <code class="language-plaintext highlighter-rouge">/odom</code></td>
       <td>바퀴 엔코더 기반 추정 위치</td>
     </tr>
     <tr>
-      <td>서비스 <code class="language-plaintext highlighter-rouge">/spawn</code> 같은 역할</td>
+      <td>Service <code class="language-plaintext highlighter-rouge">/spawn</code> 같은 역할</td>
       <td>시뮬레이터에서 로봇 생성, 그리퍼 열기/닫기 같은 단발 명령</td>
     </tr>
     <tr>
-      <td>액션 <code class="language-plaintext highlighter-rouge">NavigateToPose</code> (Nav2)</td>
+      <td>Action <code class="language-plaintext highlighter-rouge">NavigateToPose</code> (Nav2)</td>
       <td>“이 좌표로 이동해” — 진행률 피드백 + 취소</td>
     </tr>
     <tr>
-      <td>액션 <code class="language-plaintext highlighter-rouge">FollowJointTrajectory</code></td>
+      <td>Action <code class="language-plaintext highlighter-rouge">FollowJointTrajectory</code></td>
       <td>로봇팔 관절 궤적 실행</td>
     </tr>
   </tbody>
 </table>
 
 <blockquote>
-  <p>정리하면 <strong>“계속 흐르는 것 = 토픽”, “즉답이면 끝나는 것 = 서비스”, “오래 걸리고 중간 보고가 필요한 것 = 액션”</strong> 입니다. 로봇 개발에서 이 분류를 잘못하면, 나중에 “왜 진행률을 알 수 없지?” 같은 문제로 돌아옵니다.</p>
+  <p>정리하면 <strong>“계속 흐르는 것 = Topic”, “즉답이면 끝나는 것 = Service”, “오래 걸리고 중간 보고가 필요한 것 = Action”</strong> 입니다. 로봇 개발에서 이 분류를 잘못하면, 나중에 “왜 진행률을 알 수 없지?” 같은 문제로 돌아옵니다.</p>
 </blockquote>
 
 <hr />
 
 <h2 id="9-위치-오차와-허용-오차">9. 위치 오차와 허용 오차</h2>
 
-<p>액션 결과가 목표와 미세하게 다른 것을 볼 수 있습니다. <code class="language-plaintext highlighter-rouge">theta: 1.57</code>에 <code class="language-plaintext highlighter-rouge">delta: -1.568...</code>처럼 소수점 아래가 어긋나는 이유는 두 가지입니다.</p>
+<p>Action 결과가 목표와 미세하게 다른 것을 볼 수 있습니다. <code class="language-plaintext highlighter-rouge">theta: 1.57</code>에 <code class="language-plaintext highlighter-rouge">delta: -1.568...</code>처럼 소수점 아래가 어긋나는 이유는 두 가지입니다.</p>
 
 <ol>
   <li><strong>정의 차이</strong>: <code class="language-plaintext highlighter-rouge">delta</code>는 “시작 자세로 돌아가는 변위”라서 부호와 기준이 다릅니다.</li>
@@ -1097,7 +1097,7 @@ Action servers: 1
 </code></pre></div></div>
 
 <blockquote>
-  <p>나중에 배우게 될 <strong>SLAM</strong>(지도 작성과 위치 추정), <strong>AMCL</strong>(지도 기반 위치 추정), 센서 퓨전은 모두 이 “추정을 더 정확하게 만드는” 기술입니다. 터틀심의 소수점 오차는 그 세계의 아주 작은 예고편입니다.</p>
+  <p>나중에 배우게 될 <strong>SLAM</strong>(지도 작성과 위치 추정), <strong>AMCL</strong>(지도 기반 위치 추정), 센서 퓨전은 모두 이 “추정을 더 정확하게 만드는” 기술입니다. Turtlesim의 소수점 오차는 그 세계의 아주 작은 예고편입니다.</p>
 </blockquote>
 
 <hr />
@@ -1116,7 +1116,7 @@ Action servers: 1
     <tr>
       <td><code class="language-plaintext highlighter-rouge">ros2: command not found</code></td>
       <td><code class="language-plaintext highlighter-rouge">source</code> 누락</td>
-      <td>새 터미널마다 <code class="language-plaintext highlighter-rouge">source /opt/ros/jazzy/setup.bash</code></td>
+      <td>새 Terminal마다 <code class="language-plaintext highlighter-rouge">source /opt/ros/jazzy/setup.bash</code></td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">Package 'turtlesim' not found</code></td>
@@ -1125,26 +1125,26 @@ Action servers: 1
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">ros2 run</code> 했는데 아무 반응 없음</td>
-      <td>노드가 실행 중인데 GUI 창이 뒤에 있음</td>
+      <td>Node가 실행 중인데 GUI 창이 뒤에 있음</td>
       <td>창 전환, <code class="language-plaintext highlighter-rouge">ros2 node list</code>로 확인</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">service call</code>에서 타입 오류</td>
-      <td>서비스 타입 문자열 오타</td>
+      <td>Service 타입 문자열 오타</td>
       <td><code class="language-plaintext highlighter-rouge">ros2 service list -t</code>로 정확한 타입 복사</td>
     </tr>
     <tr>
-      <td>토픽을 발행해도 안 움직임</td>
-      <td>토픽 이름/타입 불일치, <code class="language-plaintext highlighter-rouge">--once</code>만 보냄</td>
+      <td>Topic을 발행해도 안 움직임</td>
+      <td>Topic 이름/타입 불일치, <code class="language-plaintext highlighter-rouge">--once</code>만 보냄</td>
       <td><code class="language-plaintext highlighter-rouge">ros2 topic list -t</code> 확인, <code class="language-plaintext highlighter-rouge">--rate</code>로 반복 발행</td>
     </tr>
     <tr>
       <td>키보드 조종이 안 됨</td>
-      <td><code class="language-plaintext highlighter-rouge">turtle_teleop_key</code> 터미널이 비활성</td>
-      <td>해당 터미널 창을 클릭해 포커스</td>
+      <td><code class="language-plaintext highlighter-rouge">turtle_teleop_key</code> Terminal이 비활성</td>
+      <td>해당 Terminal 창을 클릭해 포커스</td>
     </tr>
     <tr>
-      <td>액션 결과가 목표와 다름</td>
+      <td>Action 결과가 목표와 다름</td>
       <td><code class="language-plaintext highlighter-rouge">delta</code> 정의 + 추정 오차</td>
       <td>9장 참고 (정상 동작)</td>
     </tr>
@@ -1156,14 +1156,14 @@ Action servers: 1
     <tr>
       <td><code class="language-plaintext highlighter-rouge">rqt_graph</code>가 안 뜸</td>
       <td>GUI 환경 아님 / rqt 미설치</td>
-      <td>데스크톱 세션에서 실행, <code class="language-plaintext highlighter-rouge">sudo apt install ros-jazzy-rqt ros-jazzy-rqt-common-plugins</code></td>
+      <td>Desktop 세션에서 실행, <code class="language-plaintext highlighter-rouge">sudo apt install ros-jazzy-rqt ros-jazzy-rqt-common-plugins</code></td>
     </tr>
   </tbody>
 </table>
 
-<p>원인을 못 찾겠을 때는 <strong><code class="language-plaintext highlighter-rouge">rqt_console</code></strong> 을 열어 보세요. 모든 노드의 로그(INFO·WARN·ERROR)가 한 창에 모입니다.</p>
+<p>원인을 못 찾겠을 때는 <strong><code class="language-plaintext highlighter-rouge">rqt_console</code></strong> 을 열어 보세요. 모든 Node의 로그(INFO·WARN·ERROR)가 한 창에 모입니다.</p>
 
-<p><img src="https://velog.velcdn.com/images/aiexcelh/post/7694fb66-f456-4c51-852a-cc538a8ca020/image.png" alt="rqt_console 실제 화면 — 노드별 로그를 심각도별로 걸러 볼 수 있다" /></p>
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/7694fb66-f456-4c51-852a-cc538a8ca020/image.png" alt="rqt_console 실제 화면 — Node별 로그를 심각도별로 걸러 볼 수 있다" /></p>
 
 <p><em>아래 <code class="language-plaintext highlighter-rouge">Exclude Messages</code> / <code class="language-plaintext highlighter-rouge">Highlight Messages</code>에서 <code class="language-plaintext highlighter-rouge">severities: Debug Info Warn Error Fatal</code>을 지정해 원하는 로그만 남길 수 있습니다. (출처: ROS 2 공식 문서, CC BY 4.0)</em></p>
 
@@ -1171,24 +1171,24 @@ Action servers: 1
 
 <h2 id="11-정리">11. 정리</h2>
 
-<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: <strong>Terminal 2</strong> · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 노드</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Node</span>
 ros2 node list
 ros2 node info /turtlesim
 
-<span class="c"># 서비스</span>
+<span class="c"># Service</span>
 ros2 service list <span class="nt">-t</span>
 ros2 service <span class="nb">type</span> /turtle1/teleport_absolute
 ros2 interface show turtlesim/srv/Spawn
 ros2 service call /spawn turtlesim/srv/Spawn <span class="s2">"{x: 2.0, y: 2.0, theta: 0.2, name: ''}"</span>
 
-<span class="c"># 토픽</span>
+<span class="c"># Topic</span>
 ros2 topic list <span class="nt">-t</span>
 ros2 topic <span class="nb">echo</span> /turtle1/pose
 ros2 topic pub <span class="nt">--once</span> /turtle1/cmd_vel geometry_msgs/msg/Twist <span class="s2">"{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 1.8}}"</span>
 
-<span class="c"># 액션</span>
+<span class="c"># Action</span>
 ros2 action list <span class="nt">-t</span>
 ros2 interface show turtlesim/action/RotateAbsolute
 ros2 action send_goal /turtle1/rotate_absolute turtlesim/action/RotateAbsolute <span class="s2">"{theta: 1.57}"</span> <span class="nt">--feedback</span>
@@ -1198,19 +1198,19 @@ rqt_graph
 </code></pre></div></div>
 
 <ul>
-  <li><strong>노드</strong>는 기능 단위 프로그램, <strong>패키지</strong>는 그 묶음입니다.</li>
-  <li><strong>서비스</strong>는 요청-응답(1:1, 동기), <strong>토픽</strong>은 발행-구독(다대다, 비동기), <strong>액션</strong>은 목표-피드백-결과(+취소)입니다.</li>
+  <li><strong>Node</strong>는 기능 단위 프로그램, <strong>Package</strong>는 그 묶음입니다.</li>
+  <li><strong>Service</strong>는 요청-응답(1:1, 동기), <strong>Topic</strong>은 발행-구독(다대다, 비동기), <strong>Action</strong>은 목표-피드백-결과(+취소)입니다.</li>
   <li><strong>네임스페이스</strong>로 개체를 구분하고, <strong><code class="language-plaintext highlighter-rouge">ROS_DOMAIN_ID</code></strong> 로 네트워크를 분리합니다.</li>
   <li>로봇의 자세는 <code class="language-plaintext highlighter-rouge">x, y, theta</code>로 표현되고, 각도는 <strong>라디안</strong>을 씁니다.</li>
 </ul>
 
-<p>여기까지 오면 로봇 개발의 <strong>기본 어휘</strong>를 모두 손에 넣은 것입니다. 이제 남은 것은 이 어휘로 실제 로봇을 움직이는 일입니다 — 센서 데이터를 받아 처리하고, 경로를 계획하고, 모터에 명령을 내리는 노드를 직접 작성하는 단계입니다.</p>
+<p>여기까지 오면 로봇 개발의 <strong>기본 어휘</strong>를 모두 손에 넣은 것입니다. 이제 남은 것은 이 어휘로 실제 로봇을 움직이는 일입니다 — 센서 데이터를 받아 처리하고, 경로를 계획하고, 모터에 명령을 내리는 Node를 직접 작성하는 단계입니다.</p>
 
 <hr />
 
 <h2 id="이-글에-나온-명령어기호-풀이">이 글에 나온 명령어·기호 풀이</h2>
 
-<p><code class="language-plaintext highlighter-rouge">ros2</code> 명령은 <strong><code class="language-plaintext highlighter-rouge">ros2 &lt;무엇을&gt; &lt;동사&gt; &lt;대상&gt;</code></strong> 구조로 읽으면 쉽습니다. 예: <code class="language-plaintext highlighter-rouge">ros2 topic echo /turtle1/pose</code> = “ros2야, <strong>토픽</strong>을, <strong>출력</strong>해, <code class="language-plaintext highlighter-rouge">/turtle1/pose</code> 를”.</p>
+<p><code class="language-plaintext highlighter-rouge">ros2</code> 명령은 <strong><code class="language-plaintext highlighter-rouge">ros2 &lt;무엇을&gt; &lt;동사&gt; &lt;대상&gt;</code></strong> 구조로 읽으면 쉽습니다. 예: <code class="language-plaintext highlighter-rouge">ros2 topic echo /turtle1/pose</code> = “ros2야, <strong>Topic</strong>을, <strong>출력</strong>해, <code class="language-plaintext highlighter-rouge">/turtle1/pose</code> 를”.</p>
 
 <table>
   <thead>
@@ -1222,39 +1222,39 @@ rqt_graph
   </thead>
   <tbody>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">ros2 run 패키지 실행파일</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ros2 run &lt;Package&gt; &lt;실행파일&gt;</code></td>
       <td>run</td>
-      <td>노드(프로그램) 실행</td>
+      <td>Node(프로그램) 실행</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">ros2 pkg executables 패키지</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ros2 pkg executables &lt;Package&gt;</code></td>
       <td>package</td>
-      <td>그 패키지가 가진 <strong>실행 파일 목록</strong></td>
+      <td>그 Package가 가진 <strong>실행 파일 목록</strong></td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">ros2 node list</code></td>
       <td>—</td>
-      <td>지금 떠 있는 <strong>노드 목록</strong></td>
+      <td>지금 떠 있는 <strong>Node 목록</strong></td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">ros2 node info /이름</code></td>
       <td>—</td>
-      <td>그 노드의 토픽·서비스·액션을 <strong>자세히</strong></td>
+      <td>그 Node의 Topic·Service·Action을 <strong>자세히</strong></td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">ros2 service list -t</code></td>
       <td>—</td>
-      <td>서비스 목록 + <strong>타입</strong>(<code class="language-plaintext highlighter-rouge">-t</code> = <code class="language-plaintext highlighter-rouge">--show-types</code>)</td>
+      <td>Service 목록 + <strong>타입</strong>(<code class="language-plaintext highlighter-rouge">-t</code> = <code class="language-plaintext highlighter-rouge">--show-types</code>)</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">ros2 service type /이름</code></td>
       <td>—</td>
-      <td>그 서비스의 <strong>타입 이름</strong>만</td>
+      <td>그 Service의 <strong>타입 이름</strong>만</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">ros2 service call /이름 타입 "{값}"</code></td>
       <td>call</td>
-      <td>서비스를 <strong>호출</strong></td>
+      <td>Service를 <strong>호출</strong></td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">ros2 interface show 타입</code></td>
@@ -1264,17 +1264,17 @@ rqt_graph
     <tr>
       <td><code class="language-plaintext highlighter-rouge">ros2 topic list -t</code></td>
       <td>—</td>
-      <td>토픽 목록 + 타입</td>
+      <td>Topic 목록 + 타입</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">ros2 topic info /이름 --verbose</code></td>
       <td>—</td>
-      <td>발행자·구독자까지 <strong>자세히</strong></td>
+      <td>Publisher·Subscriber까지 <strong>자세히</strong></td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">ros2 topic echo /이름</code></td>
       <td>—</td>
-      <td>토픽에 흐르는 <strong>데이터를 계속 출력</strong> (<code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">C</code> 로 중단)</td>
+      <td>Topic에 흐르는 <strong>데이터를 계속 출력</strong> (<code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">C</code> 로 중단)</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">ros2 topic hz /이름</code></td>
@@ -1284,7 +1284,7 @@ rqt_graph
     <tr>
       <td><code class="language-plaintext highlighter-rouge">ros2 topic pub /이름 타입 "{값}"</code></td>
       <td>publish</td>
-      <td>토픽으로 <strong>데이터를 발행</strong></td>
+      <td>Topic으로 <strong>데이터를 발행</strong></td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">--once</code></td>
@@ -1299,12 +1299,12 @@ rqt_graph
     <tr>
       <td><code class="language-plaintext highlighter-rouge">ros2 action list -t</code></td>
       <td>—</td>
-      <td>액션 목록 + 타입</td>
+      <td>Action 목록 + 타입</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">ros2 action send_goal /이름 타입 "{값}"</code></td>
       <td>—</td>
-      <td>액션에 <strong>목표를 보냄</strong></td>
+      <td>Action에 <strong>목표를 보냄</strong></td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">--feedback</code></td>
@@ -1334,12 +1334,12 @@ rqt_graph
     <tr>
       <td><code class="language-plaintext highlighter-rouge">cmd_vel</code></td>
       <td>command velocity</td>
-      <td><strong>속도 명령</strong> 토픽 (<code class="language-plaintext highlighter-rouge">linear</code>=앞뒤, <code class="language-plaintext highlighter-rouge">angular</code>=회전)</td>
+      <td><strong>속도 명령</strong> Topic (<code class="language-plaintext highlighter-rouge">linear</code>=앞뒤, <code class="language-plaintext highlighter-rouge">angular</code>=회전)</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">rqt_graph</code></td>
       <td>—</td>
-      <td>노드·토픽 연결 그래프</td>
+      <td>Node·Topic 연결 그래프</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">/turtle1/...</code></td>
@@ -1355,21 +1355,21 @@ rqt_graph
 </table>
 
 <blockquote>
-  <p>값이 <code class="language-plaintext highlighter-rouge">{...}</code> 로 들어가는 명령은 <strong>중괄호와 따옴표를 그대로</strong> 입력해야 합니다. 따옴표를 빼면 셸이 먼저 해석해 오류가 납니다.</p>
+  <p>값이 <code class="language-plaintext highlighter-rouge">{...}</code> 로 들어가는 명령은 <strong>중괄호와 따옴표를 그대로</strong> 입력해야 합니다. 따옴표를 빼면 Shell이 먼저 해석해 오류가 납니다.</p>
 </blockquote>
 
 <h2 id="공식-문서-참고">공식 문서 참고</h2>
 
 <ul>
   <li>turtlesim, <code class="language-plaintext highlighter-rouge">ros2</code>, <code class="language-plaintext highlighter-rouge">rqt</code> 사용하기: <a href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Introducing-Turtlesim/Introducing-Turtlesim.html">https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Introducing-Turtlesim/Introducing-Turtlesim.html</a></li>
-  <li>ROS 2 노드 이해하기: <a href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Nodes/Understanding-ROS2-Nodes.html">https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Nodes/Understanding-ROS2-Nodes.html</a></li>
-  <li>ROS 2 토픽 이해하기: <a href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Topics/Understanding-ROS2-Topics.html">https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Topics/Understanding-ROS2-Topics.html</a></li>
-  <li>ROS 2 서비스 이해하기: <a href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Services/Understanding-ROS2-Services.html">https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Services/Understanding-ROS2-Services.html</a></li>
-  <li>ROS 2 액션 이해하기: <a href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Actions/Understanding-ROS2-Actions.html">https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Actions/Understanding-ROS2-Actions.html</a></li>
-  <li><code class="language-plaintext highlighter-rouge">rqt_graph</code>로 노드·토픽 그래프 보기(토픽 튜토리얼 내 rqt_graph 절): <a href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Topics/Understanding-ROS2-Topics.html">https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Topics/Understanding-ROS2-Topics.html</a></li>
-  <li>turtlesim 소스 코드(서비스·액션 정의 확인): <a href="https://github.com/ros/ros_tutorials/tree/jazzy/turtlesim">https://github.com/ros/ros_tutorials/tree/jazzy/turtlesim</a></li>
+  <li>ROS 2 Node 이해하기: <a href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Nodes/Understanding-ROS2-Nodes.html">https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Nodes/Understanding-ROS2-Nodes.html</a></li>
+  <li>ROS 2 Topic 이해하기: <a href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Topics/Understanding-ROS2-Topics.html">https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Topics/Understanding-ROS2-Topics.html</a></li>
+  <li>ROS 2 Service 이해하기: <a href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Services/Understanding-ROS2-Services.html">https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Services/Understanding-ROS2-Services.html</a></li>
+  <li>ROS 2 Action 이해하기: <a href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Actions/Understanding-ROS2-Actions.html">https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Actions/Understanding-ROS2-Actions.html</a></li>
+  <li><code class="language-plaintext highlighter-rouge">rqt_graph</code>로 Node·Topic 그래프 보기(Topic 튜토리얼 내 rqt_graph 절): <a href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Topics/Understanding-ROS2-Topics.html">https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Topics/Understanding-ROS2-Topics.html</a></li>
+  <li>turtlesim 소스 코드(Service·Action 정의 확인): <a href="https://github.com/ros/ros_tutorials/tree/jazzy/turtlesim">https://github.com/ros/ros_tutorials/tree/jazzy/turtlesim</a></li>
   <li><code class="language-plaintext highlighter-rouge">geometry_msgs/Twist</code> 정의: <a href="https://github.com/ros2/common_interfaces/blob/jazzy/geometry_msgs/msg/Twist.msg">https://github.com/ros2/common_interfaces/blob/jazzy/geometry_msgs/msg/Twist.msg</a></li>
-  <li>ROS 2 개념 개요(노드·토픽·서비스·액션): <a href="https://docs.ros.org/en/jazzy/Concepts.html">https://docs.ros.org/en/jazzy/Concepts.html</a></li>
+  <li>ROS 2 개념 개요(Node·Topic·Service·Action): <a href="https://docs.ros.org/en/jazzy/Concepts.html">https://docs.ros.org/en/jazzy/Concepts.html</a></li>
 </ul>
 
 <h2 id="이미지-출처">이미지 출처</h2>

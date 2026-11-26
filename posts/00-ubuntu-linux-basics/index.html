@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>로봇 공부를 시작하기 전에 알아야 할 우분투·리눅스 기초 · aiexcelh</title>
-  <meta name="description" content="운영체제·커널·셸·PATH·sudo·apt가 로봇 개발에서 어디에 쓰이는지, 코드보다 먼저 만나는 벽을 정리합니다.">
+  <title>로봇 공부를 시작하기 전에 알아야 할 Ubuntu·Linux 기초 · aiexcelh</title>
+  <meta name="description" content="운영체제·Kernel·Shell·PATH·sudo·apt가 로봇 개발에서 어디에 쓰이는지, 코드보다 먼저 만나는 벽을 정리합니다.">
   <meta name="author" content="excelh11">
   <link rel="canonical" href="https://excelh11.github.io/posts/00-ubuntu-linux-basics/">
   <meta property="og:type" content="article">
-  <meta property="og:title" content="로봇 공부를 시작하기 전에 알아야 할 우분투·리눅스 기초">
-  <meta property="og:description" content="운영체제·커널·셸·PATH·sudo·apt가 로봇 개발에서 어디에 쓰이는지, 코드보다 먼저 만나는 벽을 정리합니다.">
+  <meta property="og:title" content="로봇 공부를 시작하기 전에 알아야 할 Ubuntu·Linux 기초">
+  <meta property="og:description" content="운영체제·Kernel·Shell·PATH·sudo·apt가 로봇 개발에서 어디에 쓰이는지, 코드보다 먼저 만나는 벽을 정리합니다.">
   <meta property="og:url" content="https://excelh11.github.io/posts/00-ubuntu-linux-basics/">
   <meta property="og:site_name" content="aiexcelh">
   <meta name="twitter:card" content="summary">
@@ -44,7 +44,7 @@
 <article class="post">
   <header class="post-header">
     <a class="series-tag" href="/#series">로봇을 공부하기 위한 가장 처음 해야 하는 세팅</a>
-    <h1 class="post-title">로봇 공부를 시작하기 전에 알아야 할 우분투·리눅스 기초</h1>
+    <h1 class="post-title">로봇 공부를 시작하기 전에 알아야 할 Ubuntu·Linux 기초</h1>
     <div class="post-meta">
       <span class="post-part">00 / 07</span>
     </div>
@@ -53,31 +53,31 @@
   <details class="series-nav">
     <summary>
       <span class="series-nav-label">시리즈 목차</span>
-      <span class="series-nav-current">00. 로봇 공부를 시작하기 전에 알아야 할 우분투·리눅스 기초</span>
+      <span class="series-nav-current">00. 로봇 공부를 시작하기 전에 알아야 할 Ubuntu·Linux 기초</span>
     </summary>
     <ol class="series-nav-list">
       
       <li class="is-current">
         
-        <span>00. 로봇 공부를 시작하기 전에 알아야 할 우분투·리눅스 기초</span>
+        <span>00. 로봇 공부를 시작하기 전에 알아야 할 Ubuntu·Linux 기초</span>
         
       </li>
       
       <li class="">
         
-        <a href="/posts/01-ubuntu-install/">01. 우분투 24.04 설치와 첫 세팅 (부팅 USB부터 한글 입력까지)</a>
+        <a href="/posts/01-ubuntu-install/">01. Ubuntu 24.04 설치와 첫 세팅 (부팅 USB부터 한글 입력까지)</a>
         
       </li>
       
       <li class="">
         
-        <a href="/posts/02-python-venv/">02. 파이썬 가상환경(venv) 완벽 정리 — 로봇 프로젝트를 위한 격리</a>
+        <a href="/posts/02-python-venv/">02. Python Virtual Environment(venv) 완벽 정리 — 로봇 프로젝트를 위한 격리</a>
         
       </li>
       
       <li class="">
         
-        <a href="/posts/03-vscode/">03. VS Code 설치와 파이썬 인터프리터·주피터 커널 연결</a>
+        <a href="/posts/03-vscode/">03. VS Code 설치와 Python Interpreter·Jupyter Kernel 연결</a>
         
       </li>
       
@@ -95,7 +95,7 @@
       
       <li class="">
         
-        <a href="/posts/06-ros2-cli/">06. ROS 2 기초 명령 — 터틀심으로 노드·토픽·서비스·액션 익히기</a>
+        <a href="/posts/06-ros2-cli/">06. ROS 2 기초 명령 — Turtlesim으로 Node·Topic·Service·Action 익히기</a>
         
       </li>
       
@@ -103,18 +103,18 @@
   </details>
 
   <div class="post-body">
-    <p>로봇 공부를 시작하면 가장 먼저 만나는 벽은 코드가 아니라 <strong>운영체제</strong>입니다. 튜토리얼을 따라가려고 보면 <code class="language-plaintext highlighter-rouge">sudo</code>, <code class="language-plaintext highlighter-rouge">apt</code>, <code class="language-plaintext highlighter-rouge">~/.bashrc</code>, <code class="language-plaintext highlighter-rouge">/opt/ros/...</code> 같은 것들이 먼저 튀어나오고, 윈도우만 써 본 사람에게는 이 낯선 단어들이 진입 장벽이 됩니다.</p>
+    <p>로봇 공부를 시작하면 가장 먼저 만나는 벽은 코드가 아니라 <strong>운영체제</strong>입니다. 튜토리얼을 따라가려고 보면 <code class="language-plaintext highlighter-rouge">sudo</code>, <code class="language-plaintext highlighter-rouge">apt</code>, <code class="language-plaintext highlighter-rouge">~/.bashrc</code>, <code class="language-plaintext highlighter-rouge">/opt/ros/...</code> 같은 것들이 먼저 튀어나오고, Windows만 써 본 사람에게는 이 낯선 단어들이 진입 장벽이 됩니다.</p>
 
-<p>그래서 이 시리즈의 0편에서는 <strong>로봇을 공부하기 전에 반드시 알아야 하는 우분투·리눅스 기초 개념</strong>만 골라 정리합니다. 명령어를 외우는 글이 아니라, “이게 왜 필요한지”, “실제 로봇 개발에서 어디에 쓰이는지”를 이해하는 글로 만들었습니다.</p>
+<p>그래서 이 시리즈의 0편에서는 <strong>로봇을 공부하기 전에 반드시 알아야 하는 Ubuntu·Linux 기초 개념</strong>만 골라 정리합니다. 명령어를 외우는 글이 아니라, “이게 왜 필요한지”, “실제 로봇 개발에서 어디에 쓰이는지”를 이해하는 글로 만들었습니다.</p>
 
 <p>이 글에서 다루는 것</p>
 
 <ul>
-  <li>운영체제, 커널, 셸, 터미널이 각각 무엇이고 어떻게 연결되는지</li>
-  <li>우분투와 LTS 버전을 쓰는 이유</li>
-  <li>리눅스 파일 구조와 경로 개념</li>
+  <li>운영체제, Kernel(커널), Shell(셸), Terminal(터미널)이 각각 무엇이고 어떻게 연결되는지</li>
+  <li>Ubuntu와 LTS 버전을 쓰는 이유</li>
+  <li>Linux 파일 구조와 경로 개념</li>
   <li>사용자 권한과 <code class="language-plaintext highlighter-rouge">sudo</code></li>
-  <li>패키지 관리자 <code class="language-plaintext highlighter-rouge">apt</code>와 <code class="language-plaintext highlighter-rouge">update</code>/<code class="language-plaintext highlighter-rouge">upgrade</code>의 차이</li>
+  <li>Package Manager <code class="language-plaintext highlighter-rouge">apt</code>와 <code class="language-plaintext highlighter-rouge">update</code>/<code class="language-plaintext highlighter-rouge">upgrade</code>의 차이</li>
   <li>환경변수와 <code class="language-plaintext highlighter-rouge">PATH</code></li>
   <li>이 개념들이 실제 로봇 개발에서 등장하는 지점</li>
 </ul>
@@ -123,28 +123,28 @@
 
 <h2 id="한눈에-보는-전체-흐름">한눈에 보는 전체 흐름</h2>
 
-<p><img src="https://velog.velcdn.com/images/aiexcelh/post/25be7e37-7ff0-454a-b4bb-eec8f17c888a/image.png" alt="명령 한 줄이 실행되는 순서 — 터미널, 셸, 커널, 하드웨어와 PATH" /></p>
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/25be7e37-7ff0-454a-b4bb-eec8f17c888a/image.png" alt="명령 한 줄이 실행되는 순서 — Terminal, Shell, Kernel, 하드웨어와 PATH" /></p>
 
 <p><em>명령은 위에서 아래로 내려가고, 결과는 반대로 돌아옵니다. 맨 아래 상자는 ROS 2의 <code class="language-plaintext highlighter-rouge">source</code>가 <code class="language-plaintext highlighter-rouge">PATH</code>를 채우는 장면입니다. (이 그림만 개념을 정리한 도해이고, 아래부터는 Ubuntu 24.04 화면입니다.)</em></p>
 
 <ol>
   <li><strong>입력</strong> — 키보드로 <code class="language-plaintext highlighter-rouge">ls -al</code> 입력</li>
-  <li><strong>터미널</strong> — 입력과 출력을 주고받는 창</li>
-  <li><strong>셸(bash)</strong> — 명령을 해석하고 <code class="language-plaintext highlighter-rouge">PATH</code>에서 실행 파일을 찾음</li>
-  <li><strong>커널</strong> — CPU·메모리·디스크·장치에 실제로 일을 시킴</li>
+  <li><strong>Terminal</strong> — 입력과 출력을 주고받는 창</li>
+  <li><strong>Shell(bash)</strong> — 명령을 해석하고 <code class="language-plaintext highlighter-rouge">PATH</code>에서 실행 파일을 찾음</li>
+  <li><strong>Kernel</strong> — CPU·메모리·디스크·장치에 실제로 일을 시킴</li>
   <li><strong>하드웨어</strong> — 디스크를 읽고 USB 카메라·모터에 접근</li>
-  <li><strong>출력</strong> — 결과가 커널 → 셸 → 터미널 순서로 되돌아와 화면에 표시</li>
+  <li><strong>출력</strong> — 결과가 Kernel → Shell → Terminal 순서로 되돌아와 화면에 표시</li>
 </ol>
 
 <blockquote>
-  <p>로봇 개발에서 이 흐름이 막히는 지점은 3번입니다. <code class="language-plaintext highlighter-rouge">ros2</code> 실행 파일이 <code class="language-plaintext highlighter-rouge">/opt/ros/jazzy/bin</code>에 있어도 <code class="language-plaintext highlighter-rouge">PATH</code>에 없으면 셸이 찾지 못해 <code class="language-plaintext highlighter-rouge">ros2: command not found</code>가 됩니다. 그때 필요한 한 줄이 <code class="language-plaintext highlighter-rouge">source /opt/ros/jazzy/setup.bash</code>입니다.</p>
+  <p>로봇 개발에서 이 흐름이 막히는 지점은 3번입니다. <code class="language-plaintext highlighter-rouge">ros2</code> 실행 파일이 <code class="language-plaintext highlighter-rouge">/opt/ros/jazzy/bin</code>에 있어도 <code class="language-plaintext highlighter-rouge">PATH</code>에 없으면 Shell이 찾지 못해 <code class="language-plaintext highlighter-rouge">ros2: command not found</code>가 됩니다. 그때 필요한 한 줄이 <code class="language-plaintext highlighter-rouge">source /opt/ros/jazzy/setup.bash</code>입니다.</p>
 </blockquote>
 
 <hr />
 
 <h2 id="명령은-어디에-입력하나요">명령은 어디에 입력하나요?</h2>
 
-<p>이 시리즈에 나오는 모든 명령은 <strong>터미널(터미널 창)</strong> 에 입력합니다. 윈도우의 ‘명령 프롬프트’와 같은 것입니다.</p>
+<p>이 시리즈에 나오는 모든 명령은 <strong>Terminal</strong>에 입력합니다. Windows의 ‘명령 프롬프트’와 같은 것입니다.</p>
 
 <p><strong>여는 방법 (Ubuntu 24.04)</strong></p>
 
@@ -153,13 +153,13 @@
   <li>또는 화면 왼쪽 아래 <strong>앱 표시(점 9개)</strong> → “Terminal” 또는 “터미널”을 검색해 실행합니다.</li>
 </ol>
 
-<p><img src="https://velog.velcdn.com/images/aiexcelh/post/d224ba60-491e-4ab5-a6c9-bd87be9aaa59/image.jpg" alt="우분투 24.04 LTS 기본 데스크톱 화면 — 왼쪽 세로 막대가 독(Dock), 맨 아래 점 9개가 앱 표시" /></p>
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/d224ba60-491e-4ab5-a6c9-bd87be9aaa59/image.jpg" alt="Ubuntu 24.04 LTS 기본 Desktop 화면 — 왼쪽 세로 막대가 독(Dock), 맨 아래 점 9개가 앱 표시" /></p>
 
 <p><em>실제 Ubuntu 24.04 LTS를 설치하고 처음 켰을 때 보이는 화면입니다. 왼쪽 아래 <strong>점 9개(Show Applications)</strong> 를 누르면 앱 목록이 열리고, 거기서 “Terminal”을 찾습니다.</em></p>
 
-<p><img src="https://velog.velcdn.com/images/aiexcelh/post/aed2e6d7-b819-4cdb-98d1-0cb520a8d75a/image.png" alt="터미널에서 ls -al을 실행한 화면 — 프롬프트, 명령, 결과가 한 화면에 이어서 찍힌다" /></p>
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/aed2e6d7-b819-4cdb-98d1-0cb520a8d75a/image.png" alt="Terminal에서 ls -al을 실행한 화면 — 프롬프트, 명령, 결과가 한 화면에 이어서 찍힌다" /></p>
 
-<p><em>프롬프트(<code class="language-plaintext highlighter-rouge">user@robot-pc:~$</code>) 뒤에 <code class="language-plaintext highlighter-rouge">ls -al</code>을 입력하고 Enter를 누른 결과입니다. 파일 권한(<code class="language-plaintext highlighter-rouge">-rw-r--r--</code>), 소유자, 크기, 이름 순서로 한 줄씩 출력됩니다. (Ubuntu 24.04 기본 터미널 화면 — <code class="language-plaintext highlighter-rouge">user@robot-pc</code>는 예시 계정 이름이고, 각자 PC에서는 자기 계정 이름이 표시됩니다.)</em></p>
+<p><em>프롬프트(<code class="language-plaintext highlighter-rouge">user@robot-pc:~$</code>) 뒤에 <code class="language-plaintext highlighter-rouge">ls -al</code>을 입력하고 Enter를 누른 결과입니다. 파일 권한(<code class="language-plaintext highlighter-rouge">-rw-r--r--</code>), 소유자, 크기, 이름 순서로 한 줄씩 출력됩니다. (Ubuntu 24.04 기본 Terminal 화면 — <code class="language-plaintext highlighter-rouge">user@robot-pc</code>는 예시 계정 이름이고, 각자 PC에서는 자기 계정 이름이 표시됩니다.)</em></p>
 
 <p><strong>입력하는 위치</strong></p>
 <ul>
@@ -190,74 +190,74 @@
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">(robot_venv)</code></td>
-      <td>가상환경이 켜진 상태 (2편)</td>
+      <td>Virtual Environment이 켜진 상태 (2편)</td>
     </tr>
   </tbody>
 </table>
 
 <blockquote>
-  <p>터미널에서는 <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">C</code> 가 <strong>“실행 중인 명령 중단”</strong> 입니다. 복사는 <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">Shift</code>+<code class="language-plaintext highlighter-rouge">C</code>, 붙여넣기는 <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">Shift</code>+<code class="language-plaintext highlighter-rouge">V</code> 를 씁니다.</p>
+  <p>Terminal에서는 <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">C</code> 가 <strong>“실행 중인 명령 중단”</strong> 입니다. 복사는 <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">Shift</code>+<code class="language-plaintext highlighter-rouge">C</code>, 붙여넣기는 <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">Shift</code>+<code class="language-plaintext highlighter-rouge">V</code> 를 씁니다.</p>
 </blockquote>
 
-<h2 id="1-왜-로봇-공부는-리눅스부터-시작할까">1. 왜 로봇 공부는 리눅스부터 시작할까</h2>
+<h2 id="1-왜-로봇-공부는-linux부터-시작할까">1. 왜 로봇 공부는 Linux부터 시작할까</h2>
 
-<p>로봇 소프트웨어의 표준은 사실상 리눅스입니다. ROS 2(로봇 운영체제 2)는 공식 문서에서 <strong>우분투(Ubuntu)를 1순위 지원 플랫폼</strong>으로 두고 있고, 연구실의 로봇 PC, 자율주행 키트, 협동로봇 제어기, 라즈베리파이 같은 임베디드 보드까지 대부분 우분투나 그 계열 리눅스를 씁니다.</p>
+<p>로봇 소프트웨어의 표준은 사실상 Linux(리눅스)입니다. ROS 2(로봇 운영체제 2)는 공식 문서에서 <strong>Ubuntu(우분투)를 1순위 지원 플랫폼</strong>으로 두고 있고, 연구실의 로봇 PC, 자율주행 키트, 협동로봇 제어기, 라즈베리파이 같은 임베디드 보드까지 대부분 Ubuntu나 그 계열 Linux를 씁니다.</p>
 
 <p>이유는 세 가지로 정리할 수 있습니다.</p>
 
 <ol>
-  <li><strong>필요한 라이브러리가 리눅스에 먼저 옵니다.</strong> 로봇은 카메라, 라이다, IMU, 모터 드라이버 같은 하드웨어를 아주 세밀하게 다뤄야 하는데, 이런 저수준 장치 제어 라이브러리와 드라이버가 리눅스 생태계에 가장 촘촘하게 준비되어 있습니다.</li>
-  <li><strong>수정하고 배포하기 쉽습니다.</strong> 오픈소스이기 때문에 커널 옵션부터 패키지 버전까지 내 로봇에 맞게 바꿀 수 있습니다.</li>
+  <li><strong>필요한 라이브러리가 Linux에 먼저 옵니다.</strong> 로봇은 카메라, 라이다, IMU, 모터 드라이버 같은 하드웨어를 아주 세밀하게 다뤄야 하는데, 이런 저수준 장치 제어 라이브러리와 드라이버가 Linux 생태계에 가장 촘촘하게 준비되어 있습니다.</li>
+  <li><strong>수정하고 배포하기 쉽습니다.</strong> 오픈소스이기 때문에 Kernel 옵션부터 Package 버전까지 내 로봇에 맞게 바꿀 수 있습니다.</li>
   <li><strong>실시간성과 네트워크 도구가 강합니다.</strong> 로봇은 센서 데이터를 정해진 주기로 정확히 주고받아야 하므로, 프로세스 우선순위·네트워크·네임스페이스 같은 운영체제 기능을 그대로 쓸 수 있다는 점이 큽니다.</li>
 </ol>
 
 <blockquote>
-  <p>정리: 로봇 공부 = (로봇 소프트웨어 생태계가 사는) 리눅스 위에서 살아남는 법을 배우는 일입니다.</p>
+  <p>정리: 로봇 공부 = (로봇 소프트웨어 생태계가 사는) Linux 위에서 살아남는 법을 배우는 일입니다.</p>
 </blockquote>
 
 <hr />
 
-<h2 id="2-운영체제-구조-커널-셸-터미널">2. 운영체제 구조: 커널, 셸, 터미널</h2>
+<h2 id="2-운영체제-구조-kernel-shell-terminal">2. 운영체제 구조: Kernel, Shell, Terminal</h2>
 
-<p>리눅스에서 명령을 처리하는 구조는 4단으로 생각하면 깔끔합니다.</p>
+<p>Linux에서 명령을 처리하는 구조는 4단으로 생각하면 깔끔합니다.</p>
 
 <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[사용자]  키보드로 명령 입력
    │
    ▼
-[터미널]  명령과 출력을 주고받는 창(콘솔)
+[Terminal]  명령과 출력을 주고받는 창(콘솔)
    │
    ▼
-[셸]      입력을 해석해 "실행할 프로그램"을 결정 (bash가 대표)
+[Shell]     입력을 해석해 "실행할 프로그램"을 결정 (bash가 대표)
    │
    ▼
-[커널]    하드웨어를 실제로 움직임 (CPU·메모리·디스크·장치)
+[Kernel]    하드웨어를 실제로 움직임 (CPU·메모리·디스크·장치)
    │
    ▼
-결과를 다시 터미널로 출력
+결과를 다시 Terminal으로 출력
 </code></pre></div></div>
 
 <ul>
-  <li><strong>커널(Kernel)</strong>: 운영체제의 심장입니다. 하드웨어와 직접 맞닿아 CPU 연산, 메모리 할당, 디스크 읽기/쓰기, 장치 제어를 담당합니다. 시스템 전체에 <strong>하나만</strong> 존재합니다.</li>
-  <li><strong>셸(Shell)</strong>: 사용자가 입력한 문자열을 해석해 커널에 일을 시키는 프로그램입니다. 우분투 기본 셸은 <strong>bash</strong>(Bourne Again SHell)입니다.</li>
-  <li><strong>터미널(Terminal)</strong>: 셸과 사용자를 이어 주는 창입니다. 터미널을 새로 열 때마다 그 안에 <strong>셸이 새로 하나</strong> 실행됩니다. 그래서 터미널 창 3개를 열면 셸도 3개이고, 각 창은 서로 독립된 환경(디렉터리 위치, 환경변수)을 가집니다.</li>
+  <li><strong>Kernel</strong>: 운영체제의 심장입니다. 하드웨어와 직접 맞닿아 CPU 연산, 메모리 할당, 디스크 읽기/쓰기, 장치 제어를 담당합니다. 시스템 전체에 <strong>하나만</strong> 존재합니다.</li>
+  <li><strong>Shell</strong>: 사용자가 입력한 문자열을 해석해 Kernel에 일을 시키는 프로그램입니다. Ubuntu 기본 Shell은 <strong>bash</strong>(Bourne Again SHell)입니다.</li>
+  <li><strong>Terminal</strong>: Shell과 사용자를 이어 주는 창입니다. Terminal을 새로 열 때마다 그 안에 <strong>Shell이 새로 하나</strong> 실행됩니다. 그래서 Terminal 창 3개를 열면 Shell도 3개이고, 각 창은 서로 독립된 환경(디렉터리 위치, 환경변수)을 가집니다.</li>
 </ul>
 
-<p>이 구조는 로봇 개발에서 곧바로 체감됩니다. 예를 들어 로봇을 띄울 때는 터미널을 여러 개 열어 <strong>한 창에서는 로봇 구동 노드</strong>, <strong>다른 창에서는 센서 확인</strong>, <strong>또 다른 창에서는 주행 명령</strong>을 보냅니다. 각 창이 독립된 셸을 가지기 때문에 한 창에서 환경변수를 바꿔도 다른 창에 영향을 주지 않고, 반대로 새 창마다 환경 설정을 다시 해 줘야 하는 번거로움도 생깁니다(이 문제를 5편에서 <code class="language-plaintext highlighter-rouge">.bashrc</code>로 해결합니다).</p>
+<p>이 구조는 로봇 개발에서 곧바로 체감됩니다. 예를 들어 로봇을 띄울 때는 Terminal을 여러 개 열어 <strong>한 창에서는 로봇 구동 Node</strong>, <strong>다른 창에서는 센서 확인</strong>, <strong>또 다른 창에서는 주행 명령</strong>을 보냅니다. 각 창이 독립된 Shell을 가지기 때문에 한 창에서 환경변수를 바꿔도 다른 창에 영향을 주지 않고, 반대로 새 창마다 환경 설정을 다시 해 줘야 하는 번거로움도 생깁니다(이 문제를 5편에서 <code class="language-plaintext highlighter-rouge">.bashrc</code>로 해결합니다).</p>
 
-<p>현재 셸을 확인하는 명령은 다음과 같습니다.</p>
+<p>현재 Shell을 확인하는 명령은 다음과 같습니다.</p>
 
-<p><em>⌨️ 입력 위치: 터미널(새로 연 창) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: Terminal(새로 연 창) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="nv">$SHELL</span>
 </code></pre></div></div>
 
 <hr />
 
-<h2 id="3-우분투와-lts-버전을-고르는-기준">3. 우분투와 LTS: 버전을 고르는 기준</h2>
+<h2 id="3-ubuntu와-lts-버전을-고르는-기준">3. Ubuntu와 LTS: 버전을 고르는 기준</h2>
 
-<p><strong>우분투(Ubuntu)</strong> 는 리눅스 커널에 데스크톱 환경(GNOME), 패키지 관리 도구, 설치 프로그램 등을 묶어 배포하는 <strong>리눅스 배포판</strong>입니다. 로봇 개발에서 우분투를 쓰는 가장 실용적인 이유는 <strong>ROS 2의 공식 지원 대상</strong>이라는 점입니다.</p>
+<p><strong>Ubuntu(우분투)</strong>는 Linux Kernel에 Desktop 환경(GNOME), Package Manager, 설치 프로그램 등을 묶어 배포하는 <strong>Linux 배포판</strong>입니다. 로봇 개발에서 Ubuntu를 쓰는 가장 실용적인 이유는 <strong>ROS 2의 공식 지원 대상</strong>이라는 점입니다.</p>
 
-<p>우분투는 <strong>LTS(Long Term Support)</strong> 버전을 2년마다 내놓고, 일반 버전은 9개월만 지원합니다. 로봇 프로젝트는 한 번 환경을 잡으면 몇 달~몇 년을 쓰기 때문에 무조건 LTS를 고릅니다.</p>
+<p>Ubuntu는 <strong>LTS(Long Term Support)</strong> 버전을 2년마다 내놓고, 일반 버전은 9개월만 지원합니다. 로봇 프로젝트는 한 번 환경을 잡으면 몇 달~몇 년을 쓰기 때문에 무조건 LTS를 고릅니다.</p>
 
 <p>이 시리즈가 기준으로 삼는 버전은 <strong>Ubuntu 24.04 LTS (Noble Numbat)</strong> 입니다.</p>
 
@@ -282,11 +282,11 @@
       <td>3.12</td>
     </tr>
     <tr>
-      <td>기본 커널</td>
+      <td>기본 Kernel</td>
       <td>6.8</td>
     </tr>
     <tr>
-      <td>데스크톱 환경</td>
+      <td>Desktop 환경</td>
       <td>GNOME 46</td>
     </tr>
     <tr>
@@ -296,17 +296,17 @@
   </tbody>
 </table>
 
-<p>이 조합이 중요한 이유는 <strong>ROS 2 배포판과 우분투 버전의 짝이 정해져 있기 때문</strong>입니다. ROS 2 Jazzy는 우분투 24.04를 기준으로 빌드·검증되며, 반대로 ROS 2 Humble은 우분투 22.04 대상입니다. 버전 짝이 어긋나면 바이너리 패키지가 설치되지 않거나 의존성이 깨집니다. 로봇 공부를 시작할 때 “우분투 24.04 + ROS 2 Jazzy”를 한 세트로 기억해 두면 이후 모든 튜토리얼이 편해집니다.</p>
+<p>이 조합이 중요한 이유는 <strong>ROS 2 배포판과 Ubuntu 버전의 짝이 정해져 있기 때문</strong>입니다. ROS 2 Jazzy는 Ubuntu 24.04를 기준으로 빌드·검증되며, 반대로 ROS 2 Humble은 Ubuntu 22.04 대상입니다. 버전 짝이 어긋나면 바이너리 Package가 설치되지 않거나 의존성이 깨집니다. 로봇 공부를 시작할 때 “Ubuntu 24.04 + ROS 2 Jazzy”를 한 세트로 기억해 두면 이후 모든 튜토리얼이 편해집니다.</p>
 
 <hr />
 
-<h2 id="4-리눅스-파일-구조-모든-것은-에서-시작한다">4. 리눅스 파일 구조: 모든 것은 <code class="language-plaintext highlighter-rouge">/</code>에서 시작한다</h2>
+<h2 id="4-linux-파일-구조-모든-것은-에서-시작한다">4. Linux 파일 구조: 모든 것은 <code class="language-plaintext highlighter-rouge">/</code>에서 시작한다</h2>
 
-<p>윈도우는 <code class="language-plaintext highlighter-rouge">C:</code> <code class="language-plaintext highlighter-rouge">D:</code> 처럼 드라이브 문자로 시작하지만, 리눅스는 <strong>하나의 거대한 트리</strong>입니다. 최상위는 <code class="language-plaintext highlighter-rouge">/</code>(루트)이고 모든 장치와 파티션조차 이 트리 어딘가에 매달립니다.</p>
+<p>Windows는 <code class="language-plaintext highlighter-rouge">C:</code> <code class="language-plaintext highlighter-rouge">D:</code> 처럼 드라이브 문자로 시작하지만, Linux는 <strong>하나의 거대한 트리</strong>입니다. 최상위는 <code class="language-plaintext highlighter-rouge">/</code>(루트)이고 모든 장치와 파티션조차 이 트리 어딘가에 매달립니다.</p>
 
-<p><img src="https://velog.velcdn.com/images/aiexcelh/post/a959c42c-ee2b-49e4-b023-bb305ee795a9/image.png" alt="유닉스/리눅스 표준 파일 시스템 계층 — / 아래에 bin, boot, dev, etc, home, usr, var가 매달린다" /></p>
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/a959c42c-ee2b-49e4-b023-bb305ee795a9/image.png" alt="Unix/Linux 표준 파일 시스템 계층 — / 아래에 bin, boot, dev, etc, home, usr, var가 매달린다" /></p>
 
-<p><em>실제 우분투의 <code class="language-plaintext highlighter-rouge">/</code> 구조를 그린 공개 자료입니다. <code class="language-plaintext highlighter-rouge">bin</code>→<code class="language-plaintext highlighter-rouge">usr/bin</code>, <code class="language-plaintext highlighter-rouge">lib</code>→<code class="language-plaintext highlighter-rouge">usr/lib</code> 같은 링크(→ 표시)도 보입니다. (출처: Wikimedia Commons, CC BY-SA 4.0)</em></p>
+<p><em>실제 Ubuntu의 <code class="language-plaintext highlighter-rouge">/</code> 구조를 그린 공개 자료입니다. <code class="language-plaintext highlighter-rouge">bin</code>→<code class="language-plaintext highlighter-rouge">usr/bin</code>, <code class="language-plaintext highlighter-rouge">lib</code>→<code class="language-plaintext highlighter-rouge">usr/lib</code> 같은 링크(→ 표시)도 보입니다. (출처: Wikimedia Commons, CC BY-SA 4.0)</em></p>
 
 <p><img src="https://velog.velcdn.com/images/aiexcelh/post/2dc5f544-cb5f-4922-875a-43b8f709ed3d/image.png" alt="`ls /`를 실행한 화면 — bin, boot, dev, etc, home, opt, usr, var가 실제로 들어 있다" /></p>
 
@@ -369,9 +369,9 @@
 <p>특히 세 곳을 눈여겨보세요.</p>
 
 <ul>
-  <li><strong><code class="language-plaintext highlighter-rouge">/opt/ros/jazzy</code></strong>: ROS 2를 패키지로 설치하면 여기에 들어갑니다. <code class="language-plaintext highlighter-rouge">source /opt/ros/jazzy/setup.bash</code> 명령이 이 경로를 가리키는 이유입니다(4편).</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">/opt/ros/jazzy</code></strong>: ROS 2를 Package로 설치하면 여기에 들어갑니다. <code class="language-plaintext highlighter-rouge">source /opt/ros/jazzy/setup.bash</code> 명령이 이 경로를 가리키는 이유입니다(4편).</li>
   <li><strong><code class="language-plaintext highlighter-rouge">/dev/ttyUSB0</code></strong>: USB로 연결한 모터 드라이버·아두이노·라이다가 이 이름으로 나타납니다. 로봇이 “포트를 못 찾는다”는 오류의 대부분이 여기서 시작합니다.</li>
-  <li><strong><code class="language-plaintext highlighter-rouge">~/.bashrc</code></strong>: 터미널을 열 때마다 자동으로 읽히는 설정 파일. ROS 환경 설정을 여기에 넣습니다(5편).</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">~/.bashrc</code></strong>: Terminal을 열 때마다 자동으로 읽히는 설정 파일. ROS 환경 설정을 여기에 넣습니다(5편).</li>
 </ul>
 
 <h3 id="경로를-읽는-법">경로를 읽는 법</h3>
@@ -382,7 +382,7 @@
   <li><code class="language-plaintext highlighter-rouge">.</code> = 현재 디렉터리, <code class="language-plaintext highlighter-rouge">..</code> = 상위 디렉터리, <code class="language-plaintext highlighter-rouge">~</code> = 내 홈 디렉터리</li>
 </ul>
 
-<p><em>⌨️ 입력 위치: 터미널(새로 연 창) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: Terminal(새로 연 창) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">pwd</span>          <span class="c"># 현재 위치(print working directory)</span>
 <span class="nb">ls</span>           <span class="c"># 현재 폴더 내용</span>
@@ -391,15 +391,15 @@
 <span class="nb">cd</span> ..        <span class="c"># 상위로 이동</span>
 </code></pre></div></div>
 
-<p>터미널을 새로 열면 항상 <strong>홈 디렉터리(<code class="language-plaintext highlighter-rouge">~</code>)</strong> 에서 시작합니다. 이 사실을 모르면 “분명히 파일을 만들었는데 없다”는 상황이 자주 생깁니다. <code class="language-plaintext highlighter-rouge">pwd</code>로 위치를 확인하는 습관이 첫걸음입니다.</p>
+<p>Terminal을 새로 열면 항상 <strong>홈 디렉터리(<code class="language-plaintext highlighter-rouge">~</code>)</strong> 에서 시작합니다. 이 사실을 모르면 “분명히 파일을 만들었는데 없다”는 상황이 자주 생깁니다. <code class="language-plaintext highlighter-rouge">pwd</code>로 위치를 확인하는 습관이 첫걸음입니다.</p>
 
 <hr />
 
 <h2 id="5-사용자-권한-그리고-sudo">5. 사용자, 권한, 그리고 sudo</h2>
 
-<p>리눅스는 여러 사용자가 한 시스템을 나눠 쓰는 것을 전제로 만들어졌습니다. 그래서 파일마다 <strong>소유자</strong>와 <strong>권한</strong>이 붙습니다.</p>
+<p>Linux는 여러 사용자가 한 시스템을 나눠 쓰는 것을 전제로 만들어졌습니다. 그래서 파일마다 <strong>소유자</strong>와 <strong>권한</strong>이 붙습니다.</p>
 
-<p><em>⌨️ 입력 위치: 터미널(새로 연 창) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: Terminal(새로 연 창) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ls</span> <span class="nt">-l</span>
 </code></pre></div></div>
@@ -419,21 +419,21 @@
   <li>권한을 바꾸는 명령이 <code class="language-plaintext highlighter-rouge">chmod</code>입니다.</li>
 </ul>
 
-<p><em>⌨️ 입력 위치: 터미널(새로 연 창) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: Terminal(새로 연 창) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">chmod</span> +x run_robot.sh     <span class="c"># 실행 권한 추가</span>
 <span class="nb">chmod </span>755 run_robot.sh    <span class="c"># 소유자 rwx, 그룹 r-x, 기타 r-x</span>
 </code></pre></div></div>
 
-<p>로봇 개발에서 이 개념이 실제로 필요한 순간은 <strong>스크립트 실행</strong>입니다. 내가 만든 런치 스크립트나 파이썬 스크립트에 실행 권한이 없으면 <code class="language-plaintext highlighter-rouge">Permission denied</code>가 나고, 이때 <code class="language-plaintext highlighter-rouge">chmod +x</code>로 해결합니다.</p>
+<p>로봇 개발에서 이 개념이 실제로 필요한 순간은 <strong>스크립트 실행</strong>입니다. 내가 만든 Launch 스크립트나 Python 스크립트에 실행 권한이 없으면 <code class="language-plaintext highlighter-rouge">Permission denied</code>가 나고, 이때 <code class="language-plaintext highlighter-rouge">chmod +x</code>로 해결합니다.</p>
 
 <h3 id="sudo-관리자-권한을-잠깐-빌리기">sudo: 관리자 권한을 잠깐 빌리기</h3>
 
-<p>시스템 전체에 영향을 주는 작업(패키지 설치, <code class="language-plaintext highlighter-rouge">/etc</code> 수정, 장치 설정)은 <strong>root(관리자)</strong> 권한이 필요합니다. 그렇다고 평소에 root로 작업하면 실수 한 번에 시스템이 망가지므로, 리눅스는 <strong><code class="language-plaintext highlighter-rouge">sudo</code></strong> 로 필요한 명령만 잠깐 관리자 권한으로 실행합니다.</p>
+<p>시스템 전체에 영향을 주는 작업(Package 설치, <code class="language-plaintext highlighter-rouge">/etc</code> 수정, 장치 설정)은 <strong>root(관리자)</strong> 권한이 필요합니다. 그렇다고 평소에 root로 작업하면 실수 한 번에 시스템이 망가지므로, Linux는 <strong><code class="language-plaintext highlighter-rouge">sudo</code></strong> 로 필요한 명령만 잠깐 관리자 권한으로 실행합니다.</p>
 
-<p><em>⌨️ 입력 위치: 터미널(새로 연 창) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: Terminal(새로 연 창) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update       <span class="c"># 관리자 권한으로 패키지 목록 갱신</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update       <span class="c"># 관리자 권한으로 Package 목록 갱신</span>
 </code></pre></div></div>
 
 <blockquote>
@@ -442,22 +442,22 @@
 
 <hr />
 
-<h2 id="6-패키지-관리자-apt-앱-스토어를-명령어로">6. 패키지 관리자 apt: 앱 스토어를 명령어로</h2>
+<h2 id="6-package-manager-apt-앱-스토어를-명령어로">6. Package Manager apt: 앱 스토어를 명령어로</h2>
 
-<p>윈도우에서 프로그램을 설치할 때 설치 파일을 받아 실행하듯, 리눅스는 <strong>패키지 관리자</strong>로 프로그램을 설치합니다. 우분투의 기본 도구가 <strong>APT(Advanced Package Tool)</strong> 이고, 명령은 <code class="language-plaintext highlighter-rouge">apt</code>입니다.</p>
+<p>Windows에서 프로그램을 설치할 때 설치 파일을 받아 실행하듯, Linux는 <strong>Package Manager</strong>로 프로그램을 설치합니다. Ubuntu의 기본 도구가 <strong>APT(Advanced Package Tool)</strong> 이고, 명령은 <code class="language-plaintext highlighter-rouge">apt</code>입니다.</p>
 
 <ul>
-  <li>저장소(repository): 패키지가 모여 있는 서버</li>
-  <li>패키지(package): 프로그램 + 설정 + 의존성 정보를 묶은 단위</li>
-  <li>의존성(dependency): 어떤 패키지가 동작하기 위해 필요한 다른 패키지</li>
+  <li>저장소(repository): Package가 모여 있는 Server</li>
+  <li>Package(package): 프로그램 + 설정 + 의존성 정보를 묶은 단위</li>
+  <li>의존성(dependency): 어떤 Package가 동작하기 위해 필요한 다른 Package</li>
 </ul>
 
 <h3 id="update와-upgrade는-다릅니다">update와 upgrade는 다릅니다</h3>
 
-<p><em>⌨️ 입력 위치: 터미널 — <code class="language-plaintext highlighter-rouge">sudo</code> 는 관리자 권한을 빌리는 표시입니다 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: Terminal — <code class="language-plaintext highlighter-rouge">sudo</code> 는 관리자 권한을 빌리는 표시입니다 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update      <span class="c"># 저장소에서 "최신 버전 목록"만 새로 받아옴 (설치 X)</span>
-<span class="nb">sudo </span>apt upgrade     <span class="c"># 그 목록을 기준으로 실제 설치된 패키지를 업그레이드</span>
+<span class="nb">sudo </span>apt upgrade     <span class="c"># 그 목록을 기준으로 실제 설치된 Package를 업그레이드</span>
 </code></pre></div></div>
 
 <ul>
@@ -469,43 +469,43 @@
 
 <p>자주 쓰는 형태는 다음과 같습니다.</p>
 
-<p><em>⌨️ 입력 위치: 터미널(새로 연 창) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: Terminal(새로 연 창) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update
 <span class="nb">sudo </span>apt upgrade
 <span class="nb">sudo </span>apt <span class="nb">install </span>terminator        <span class="c"># 설치</span>
 <span class="nb">sudo </span>apt remove terminator         <span class="c"># 삭제</span>
 apt search ros-jazzy               <span class="c"># 검색</span>
-apt show ros-jazzy-desktop         <span class="c"># 패키지 정보 확인</span>
+apt show ros-jazzy-desktop         <span class="c"># Package 정보 확인</span>
 </code></pre></div></div>
 
-<h3 id="왜-우분투는-버전-충돌이-자주-생길까">왜 우분투는 “버전 충돌”이 자주 생길까</h3>
+<h3 id="왜-ubuntu는-버전-충돌이-자주-생길까">왜 Ubuntu는 “버전 충돌”이 자주 생길까</h3>
 
-<p>오픈소스 생태계는 같은 기능의 패키지가 여러 버전으로 존재합니다. 프로그램 A가 라이브러리 B의 특정 버전을 요구하는데 B가 업데이트되면서 동작이 바뀌면 A가 깨집니다. 이를 <strong>의존성 충돌</strong>이라고 합니다.</p>
+<p>오픈소스 생태계는 같은 기능의 Package가 여러 버전으로 존재합니다. 프로그램 A가 라이브러리 B의 특정 버전을 요구하는데 B가 업데이트되면서 동작이 바뀌면 A가 깨집니다. 이를 <strong>의존성 충돌</strong>이라고 합니다.</p>
 
-<p>로봇 개발에서 이 문제는 특히 민감합니다. ROS 2 패키지들은 서로 촘촘하게 의존하고, NVIDIA 그래픽 드라이버나 커널 모듈은 조금만 어긋나도 부팅이나 센서 인식이 안 될 수 있습니다. 그래서 실무에서는 함부로 전체 업그레이드를 하지 않고, <strong>ROS 배포판이 검증한 조합을 유지</strong>하는 쪽을 택합니다. (이 문제의 절반을 해결해 주는 것이 2편의 파이썬 가상환경입니다.)</p>
+<p>로봇 개발에서 이 문제는 특히 민감합니다. ROS 2 Package들은 서로 촘촘하게 의존하고, NVIDIA 그래픽 드라이버나 Kernel 모듈은 조금만 어긋나도 부팅이나 센서 인식이 안 될 수 있습니다. 그래서 실무에서는 함부로 전체 업그레이드를 하지 않고, <strong>ROS 배포판이 검증한 조합을 유지</strong>하는 쪽을 택합니다. (이 문제의 절반을 해결해 주는 것이 2편의 Python Virtual Environment입니다.)</p>
 
 <hr />
 
 <h2 id="7-환경변수와-path-명령이-어디서-발견되는가">7. 환경변수와 PATH: 명령이 어디서 발견되는가</h2>
 
-<p>셸에는 <strong>환경변수</strong>라는 이름-값 저장소가 있습니다. 그중 로봇 개발에서 가장 중요한 것이 <code class="language-plaintext highlighter-rouge">PATH</code>입니다.</p>
+<p>Shell에는 <strong>환경변수</strong>라는 이름-값 저장소가 있습니다. 그중 로봇 개발에서 가장 중요한 것이 <code class="language-plaintext highlighter-rouge">PATH</code>입니다.</p>
 
-<p><em>⌨️ 입력 위치: 터미널(새로 연 창) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: Terminal(새로 연 창) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="nv">$PATH</span>
 </code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">PATH</code>는 콜론(<code class="language-plaintext highlighter-rouge">:</code>)으로 구분된 디렉터리 목록이고, 셸은 명령을 입력받으면 <strong>이 목록을 순서대로 뒤져 실행 파일을 찾습니다</strong>. <code class="language-plaintext highlighter-rouge">/usr/bin</code>에 <code class="language-plaintext highlighter-rouge">python3</code>가 있으니 <code class="language-plaintext highlighter-rouge">python3</code>라고만 쳐도 실행되는 것입니다.</p>
+<p><code class="language-plaintext highlighter-rouge">PATH</code>는 콜론(<code class="language-plaintext highlighter-rouge">:</code>)으로 구분된 디렉터리 목록이고, Shell은 명령을 입력받으면 <strong>이 목록을 순서대로 뒤져 실행 파일을 찾습니다</strong>. <code class="language-plaintext highlighter-rouge">/usr/bin</code>에 <code class="language-plaintext highlighter-rouge">python3</code>가 있으니 <code class="language-plaintext highlighter-rouge">python3</code>라고만 쳐도 실행되는 것입니다.</p>
 
 <p>이해를 돕는 사고 실험: <code class="language-plaintext highlighter-rouge">PATH</code>에 없는 곳에 있는 프로그램은 파일이 분명히 존재해도 <code class="language-plaintext highlighter-rouge">command not found</code>가 납니다. ROS 2를 설치한 직후 <code class="language-plaintext highlighter-rouge">ros2: command not found</code>가 뜨는 대표적인 이유가 바로 이것입니다. <code class="language-plaintext highlighter-rouge">ros2</code> 실행 파일은 <code class="language-plaintext highlighter-rouge">/opt/ros/jazzy/bin</code>에 있는데, 그 경로가 <code class="language-plaintext highlighter-rouge">PATH</code>에 아직 추가되지 않았기 때문입니다. 이때 필요한 명령이 다음 한 줄입니다.</p>
 
-<p><em>⌨️ 입력 위치: 터미널 (ROS 2를 설치한 뒤라면) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: Terminal (ROS 2를 설치한 뒤라면) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">source</span> /opt/ros/jazzy/setup.bash
 </code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">setup.bash</code>는 <code class="language-plaintext highlighter-rouge">PATH</code>를 비롯한 여러 환경변수를 현재 셸에 등록해 줍니다. 어떤 변수가 생기는지는 직접 확인할 수 있습니다.</p>
+<p><code class="language-plaintext highlighter-rouge">setup.bash</code>는 <code class="language-plaintext highlighter-rouge">PATH</code>를 비롯한 여러 환경변수를 현재 Shell에 등록해 줍니다. 어떤 변수가 생기는지는 직접 확인할 수 있습니다.</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">printenv</span> | <span class="nb">grep</span> <span class="nt">-i</span> ros
 </code></pre></div></div>
@@ -524,7 +524,7 @@ apt show ros-jazzy-desktop         <span class="c"># 패키지 정보 확인</sp
     <tr>
       <td><code class="language-plaintext highlighter-rouge">printenv</code></td>
       <td><strong>print</strong> + <strong>env</strong>ironment</td>
-      <td>지금 이 터미널에 설정된 <strong>환경변수를 전부 출력</strong>합니다</td>
+      <td>지금 이 Terminal에 설정된 <strong>환경변수를 전부 출력</strong>합니다</td>
     </tr>
     <tr>
       <td>|</td>
@@ -551,15 +551,15 @@ apt show ros-jazzy-desktop         <span class="c"># 패키지 정보 확인</sp
 
 <p>즉 “환경변수를 전부 뿌린 다음, 그중 <code class="language-plaintext highlighter-rouge">ros</code> 가 들어간 줄만 남겨라”는 뜻입니다. <code class="language-plaintext highlighter-rouge">-i</code> 덕분에 <code class="language-plaintext highlighter-rouge">ROS_DOMAIN_ID</code>, <code class="language-plaintext highlighter-rouge">ros_version</code>, <code class="language-plaintext highlighter-rouge">ROS_VERSION</code> 이 한꺼번에 잡힙니다.</p>
 
-<p>로봇 개발에서 환경변수는 단순한 설정이 아니라 <strong>“이 터미널이 어느 ROS 버전·어느 로봇 그룹에 속하는가”를 결정하는 스위치</strong>입니다. 5편에서 다루는 <code class="language-plaintext highlighter-rouge">ROS_DOMAIN_ID</code>도 환경변수입니다.</p>
+<p>로봇 개발에서 환경변수는 단순한 설정이 아니라 <strong>“이 Terminal이 어느 ROS 버전·어느 로봇 그룹에 속하는가”를 결정하는 스위치</strong>입니다. 5편에서 다루는 <code class="language-plaintext highlighter-rouge">ROS_DOMAIN_ID</code>도 환경변수입니다.</p>
 
 <hr />
 
-<h2 id="8-알아-두면-편한-셸-기능-세-가지">8. 알아 두면 편한 셸 기능 세 가지</h2>
+<h2 id="8-알아-두면-편한-shell-기능-세-가지">8. 알아 두면 편한 Shell 기능 세 가지</h2>
 
 <p>로봇 로그를 다루다 보면 명령을 조합하는 일이 많아집니다.</p>
 
-<p><em>⌨️ 입력 위치: 터미널 — 여러 명령을 조합해 봅니다 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+<p><em>⌨️ 입력 위치: Terminal — 여러 명령을 조합해 봅니다 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1) 파이프: 앞 명령의 출력을 뒤 명령의 입력으로</span>
 <span class="nb">printenv</span> | <span class="nb">grep</span> <span class="nt">-i</span> ros
@@ -621,12 +621,12 @@ ros2 top&lt;Tab&gt;        <span class="c"># 명령 자동완성</span>
   </thead>
   <tbody>
     <tr>
-      <td>커널·셸·터미널</td>
-      <td>로봇 노드를 여러 터미널에 나눠 띄우고, 각 창에서 로그를 본다</td>
+      <td>Kernel·Shell·Terminal</td>
+      <td>로봇 Node를 여러 Terminal에 나눠 띄우고, 각 창에서 로그를 본다</td>
     </tr>
     <tr>
       <td>LTS·버전 짝</td>
-      <td>Ubuntu 24.04 + ROS 2 Jazzy처럼 배포판-우분투 조합을 맞춘다</td>
+      <td>Ubuntu 24.04 + ROS 2 Jazzy처럼 배포판-Ubuntu 조합을 맞춘다</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">/opt/ros/...</code></td>
@@ -638,11 +638,11 @@ ros2 top&lt;Tab&gt;        <span class="c"># 명령 자동완성</span>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">chmod</code></td>
-      <td>ROS 2 파이썬 노드/스크립트에 실행 권한 부여</td>
+      <td>ROS 2 Python Node/스크립트에 실행 권한 부여</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">sudo</code></td>
-      <td>ROS 2 패키지 설치, 장치 권한 설정</td>
+      <td>ROS 2 Package 설치, 장치 권한 설정</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">apt update/upgrade</code></td>
@@ -650,11 +650,11 @@ ros2 top&lt;Tab&gt;        <span class="c"># 명령 자동완성</span>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">PATH</code>, <code class="language-plaintext highlighter-rouge">source</code></td>
-      <td>새 터미널에서 ROS 2 명령을 인식시키는 첫 단계</td>
+      <td>새 Terminal에서 ROS 2 명령을 인식시키는 첫 단계</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">.bashrc</code></td>
-      <td>매 터미널마다 ROS 환경 자동 활성화</td>
+      <td>매 Terminal마다 ROS 환경 자동 활성화</td>
     </tr>
   </tbody>
 </table>
@@ -664,14 +664,14 @@ ros2 top&lt;Tab&gt;        <span class="c"># 명령 자동완성</span>
 <h2 id="10-정리">10. 정리</h2>
 
 <ul>
-  <li>로봇 소프트웨어 생태계의 표준은 리눅스이고, 그 중심에 <strong>Ubuntu LTS</strong>가 있습니다.</li>
-  <li>리눅스는 <strong>터미널 → 셸 → 커널</strong> 구조로 명령을 처리하며, 터미널마다 독립된 셸이 생깁니다.</li>
+  <li>로봇 소프트웨어 생태계의 표준은 Linux이고, 그 중심에 <strong>Ubuntu LTS</strong>가 있습니다.</li>
+  <li>Linux는 <strong>Terminal → Shell → Kernel</strong> 구조로 명령을 처리하며, Terminal마다 독립된 Shell이 생깁니다.</li>
   <li>파일은 <code class="language-plaintext highlighter-rouge">/</code> 아래 하나의 트리로 관리되고, <code class="language-plaintext highlighter-rouge">/opt/ros</code>, <code class="language-plaintext highlighter-rouge">/dev</code>, <code class="language-plaintext highlighter-rouge">~</code> 세 곳이 로봇 개발의 단골입니다.</li>
   <li>시스템을 바꾸는 일은 <code class="language-plaintext highlighter-rouge">sudo</code>, 프로그램 설치는 <code class="language-plaintext highlighter-rouge">apt</code>, 그리고 <code class="language-plaintext highlighter-rouge">update</code>와 <code class="language-plaintext highlighter-rouge">upgrade</code>는 세트입니다.</li>
   <li>명령이 실행되려면 <code class="language-plaintext highlighter-rouge">PATH</code>에 있어야 하고, 그 <code class="language-plaintext highlighter-rouge">PATH</code>를 채워 주는 것이 <code class="language-plaintext highlighter-rouge">source</code>입니다.</li>
 </ul>
 
-<p>다음 글에서는 이 개념을 실제 환경으로 옮깁니다. 부팅 USB를 만들어 <strong>Ubuntu 24.04 Desktop</strong>을 설치하고, 터미널·한글 입력·브라우저까지 첫 세팅을 끝내겠습니다.</p>
+<p>다음 글에서는 이 개념을 실제 환경으로 옮깁니다. 부팅 USB를 만들어 <strong>Ubuntu 24.04 Desktop</strong>을 설치하고, Terminal·한글 입력·브라우저까지 첫 세팅을 끝내겠습니다.</p>
 
 <hr />
 
@@ -761,7 +761,7 @@ ros2 top&lt;Tab&gt;        <span class="c"># 명령 자동완성</span>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">apt</code></td>
       <td><strong>A</strong>dvanced <strong>P</strong>ackage <strong>T</strong>ool</td>
-      <td>우분투의 패키지 관리자(앱 스토어의 명령어 판)</td>
+      <td>Ubuntu의 Package Manager(앱 스토어의 명령어 판)</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">apt update</code></td>
@@ -781,7 +781,7 @@ ros2 top&lt;Tab&gt;        <span class="c"># 명령 자동완성</span>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">apt search</code> / <code class="language-plaintext highlighter-rouge">show</code></td>
       <td>—</td>
-      <td>검색 / 패키지 정보 보기</td>
+      <td>검색 / Package 정보 보기</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">-y</code></td>
@@ -791,12 +791,12 @@ ros2 top&lt;Tab&gt;        <span class="c"># 명령 자동완성</span>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">source</code></td>
       <td>—</td>
-      <td>스크립트를 <strong>현재 셸에서</strong> 실행해 환경변수를 적용합니다</td>
+      <td>스크립트를 <strong>현재 Shell에서</strong> 실행해 환경변수를 적용합니다</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">printenv</code></td>
       <td><strong>print</strong> + <strong>env</strong>ironment</td>
-      <td>현재 셸의 <strong>환경변수 전체</strong>를 출력합니다</td>
+      <td>현재 Shell의 <strong>환경변수 전체</strong>를 출력합니다</td>
     </tr>
     <tr>
       <td>|</td>
@@ -868,7 +868,7 @@ ros2 top&lt;Tab&gt;        <span class="c"># 명령 자동완성</span>
   <tbody>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">printenv</code></td>
-      <td><code class="language-plaintext highlighter-rouge">print</code> + <code class="language-plaintext highlighter-rouge">environment</code>. 지금 이 터미널에 설정된 <strong>환경변수를 전부 출력</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">print</code> + <code class="language-plaintext highlighter-rouge">environment</code>. 지금 이 Terminal에 설정된 <strong>환경변수를 전부 출력</strong></td>
     </tr>
     <tr>
       <td>|</td>
@@ -921,11 +921,11 @@ ros2 top&lt;Tab&gt;        <span class="c"># 명령 자동완성</span>
 <h2 id="공식-문서-참고">공식 문서 참고</h2>
 
 <ul>
-  <li>Ubuntu 24.04 LTS 릴리스 노트(지원 기간, 커널 6.8, GNOME 46, Python 3.12): <a href="https://documentation.ubuntu.com/release-notes/24.04/">https://documentation.ubuntu.com/release-notes/24.04/</a></li>
+  <li>Ubuntu 24.04 LTS 릴리스 노트(지원 기간, Kernel 6.8, GNOME 46, Python 3.12): <a href="https://documentation.ubuntu.com/release-notes/24.04/">https://documentation.ubuntu.com/release-notes/24.04/</a></li>
   <li>Ubuntu 릴리스 주기(LTS 지원 정책): <a href="https://ubuntu.com/about/release-cycle">https://ubuntu.com/about/release-cycle</a></li>
   <li>Ubuntu Desktop 문서(설치·언어·소프트웨어): <a href="https://documentation.ubuntu.com/desktop/">https://documentation.ubuntu.com/desktop/</a></li>
-  <li>GNU Bash 매뉴얼(셸과 시작 파일): <a href="https://www.gnu.org/software/bash/manual/bash.html">https://www.gnu.org/software/bash/manual/bash.html</a></li>
-  <li>APT 패키지 관리(Ubuntu Server 문서): <a href="https://ubuntu.com/server/docs/how-to/software/package-management/">https://ubuntu.com/server/docs/how-to/software/package-management/</a></li>
+  <li>GNU Bash 매뉴얼(Shell과 시작 파일): <a href="https://www.gnu.org/software/bash/manual/bash.html">https://www.gnu.org/software/bash/manual/bash.html</a></li>
+  <li>APT Package Manager(Ubuntu Server 문서): <a href="https://ubuntu.com/server/docs/how-to/software/package-management/">https://ubuntu.com/server/docs/how-to/software/package-management/</a></li>
   <li>ROS 2 Jazzy가 지원하는 플랫폼(REP 2000): <a href="https://reps.openrobotics.org/rep-2000/">https://reps.openrobotics.org/rep-2000/</a></li>
   <li>ROS 2 Jazzy 문서: <a href="https://docs.ros.org/en/jazzy/">https://docs.ros.org/en/jazzy/</a></li>
 </ul>
@@ -942,13 +942,13 @@ ros2 top&lt;Tab&gt;        <span class="c"># 명령 자동완성</span>
   </thead>
   <tbody>
     <tr>
-      <td>우분투 24.04 데스크톱 화면</td>
+      <td>Ubuntu 24.04 Desktop 화면</td>
       <td>Wikimedia Commons <a href="https://commons.wikimedia.org/wiki/File:Ubuntu_24.04_LTS_default_desktop_-_English.png">Ubuntu 24.04 LTS default desktop</a> (Canonical)</td>
       <td>GPL (자유 소프트웨어 라이선스)</td>
     </tr>
     <tr>
-      <td>터미널 <code class="language-plaintext highlighter-rouge">ls -al</code> 화면</td>
-      <td>직접 제작 — Ubuntu 24.04 기본 터미널(GNOME Terminal) 재현 화면 (<code class="language-plaintext highlighter-rouge">user@robot-pc</code>)</td>
+      <td>Terminal <code class="language-plaintext highlighter-rouge">ls -al</code> 화면</td>
+      <td>직접 제작 — Ubuntu 24.04 기본 Terminal(GNOME Terminal) 재현 화면 (<code class="language-plaintext highlighter-rouge">user@robot-pc</code>)</td>
       <td>—</td>
     </tr>
     <tr>
@@ -958,7 +958,7 @@ ros2 top&lt;Tab&gt;        <span class="c"># 명령 자동완성</span>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">ls /</code> 화면</td>
-      <td>직접 제작 — Ubuntu 24.04 기본 터미널(GNOME Terminal) 재현 화면 (<code class="language-plaintext highlighter-rouge">user@robot-pc</code>)</td>
+      <td>직접 제작 — Ubuntu 24.04 기본 Terminal(GNOME Terminal) 재현 화면 (<code class="language-plaintext highlighter-rouge">user@robot-pc</code>)</td>
       <td>—</td>
     </tr>
   </tbody>
@@ -973,7 +973,7 @@ ros2 top&lt;Tab&gt;        <span class="c"># 명령 자동완성</span>
     
     <a class="post-nav-item post-nav-next" href="/posts/01-ubuntu-install/">
       <span class="post-nav-dir">다음 글 →</span>
-      <span class="post-nav-title">우분투 24.04 설치와 첫 세팅 (부팅 USB부터 한글 입력까지)</span>
+      <span class="post-nav-title">Ubuntu 24.04 설치와 첫 세팅 (부팅 USB부터 한글 입력까지)</span>
     </a>
     
   </nav>
