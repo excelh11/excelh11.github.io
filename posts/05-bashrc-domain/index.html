@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>.bashrc로 ROS 2 환경 자동화 + ROS_DOMAIN_ID 격리 · excelh11</title>
+  <meta name="description" content="매 터미널마다 source를 치지 않도록, 그리고 다른 로봇과 통신이 섞이지 않도록 설정합니다.">
+  <meta name="author" content="excelh11">
+  <link rel="canonical" href="https://excelh11.github.io/hello-robotics/posts/05-bashrc-domain/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content=".bashrc로 ROS 2 환경 자동화 + ROS_DOMAIN_ID 격리">
+  <meta property="og:description" content="매 터미널마다 source를 치지 않도록, 그리고 다른 로봇과 통신이 섞이지 않도록 설정합니다.">
+  <meta property="og:url" content="https://excelh11.github.io/hello-robotics/posts/05-bashrc-domain/">
+  <meta property="og:site_name" content="excelh11">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232563eb'/%3E%3Ctext x='50' y='70' font-family='system-ui,sans-serif' font-size='58' font-weight='700' fill='white' text-anchor='middle'%3Ee%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/hello-robotics/assets/css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 바로 가기</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="/hello-robotics/">
+        <span class="brand-mark">e</span>
+        <span class="brand-text">excelh11<span class="brand-dot">.log</span></span>
+      </a>
+      <nav class="site-nav" aria-label="사이트 메뉴">
+        <a href="/hello-robotics/#series" >시리즈</a>
+        <a href="/hello-robotics/#posts">글 목록</a>
+        <a href="https://github.com/excelh11" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    
+
+
+
+
+
+
+<article class="post">
+  <header class="post-header">
+    <a class="series-tag" href="/hello-robotics/#series">로봇을 공부하기 위한 가장 처음 해야 하는 세팅</a>
+    <h1 class="post-title">.bashrc로 ROS 2 환경 자동화 + ROS_DOMAIN_ID 격리</h1>
+    <div class="post-meta">
+      <span class="post-part">05 / 07</span>
+      <span class="dot">·</span>
+      <time datetime="2026-11-26T09:05:00+09:00">2026년 11월 26일</time>
+      <span class="dot">·</span>
+      <span>약 22분</span>
+    </div>
+  </header>
+
+  <details class="series-nav">
+    <summary>
+      <span class="series-nav-label">시리즈 목차</span>
+      <span class="series-nav-current">05. .bashrc로 ROS 2 환경 자동화 + ROS_DOMAIN_ID 격리</span>
+    </summary>
+    <ol class="series-nav-list">
+      
+      <li class="">
+        
+        <a href="/hello-robotics/posts/00-ubuntu-linux-basics/">00. 로봇 공부를 시작하기 전에 알아야 할 우분투·리눅스 기초</a>
+        
+      </li>
+      
+      <li class="">
+        
+        <a href="/hello-robotics/posts/01-ubuntu-install/">01. 우분투 24.04 설치와 첫 세팅 (부팅 USB부터 한글 입력까지)</a>
+        
+      </li>
+      
+      <li class="">
+        
+        <a href="/hello-robotics/posts/02-python-venv/">02. 파이썬 가상환경(venv) 완벽 정리 — 로봇 프로젝트를 위한 격리</a>
+        
+      </li>
+      
+      <li class="">
+        
+        <a href="/hello-robotics/posts/03-vscode/">03. VS Code 설치와 파이썬 인터프리터·주피터 커널 연결</a>
+        
+      </li>
+      
+      <li class="">
+        
+        <a href="/hello-robotics/posts/04-ros2-install/">04. ROS 2 Jazzy 설치 — Ubuntu 24.04에서 talker/listener까지</a>
+        
+      </li>
+      
+      <li class="is-current">
+        
+        <span>05. .bashrc로 ROS 2 환경 자동화 + ROS_DOMAIN_ID 격리</span>
+        
+      </li>
+      
+      <li class="">
+        
+        <a href="/hello-robotics/posts/06-ros2-cli/">06. ROS 2 기초 명령 — 터틀심으로 노드·토픽·서비스·액션 익히기</a>
+        
+      </li>
+      
+    </ol>
+  </details>
+
+  <div class="post-body">
+    <p>ROS 2를 설치하고 나면 이런 생각이 듭니다.</p>
+
+<blockquote>
+  <p>“매 터미널마다 <code class="language-plaintext highlighter-rouge">source /opt/ros/jazzy/setup.bash</code>를 쳐야 하나?”</p>
+</blockquote>
+
+<p>네, 쳐야 합니다. 셸은 터미널마다 새로 뜨고, 환경변수는 셸에 속하기 때문입니다. 하지만 이 반복은 <strong><code class="language-plaintext highlighter-rouge">.bashrc</code></strong> 에 한 줄 넣는 것으로 끝낼 수 있습니다.</p>
+
+<p>이 글은 세 가지를 다룹니다.</p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">.bashrc</code>로 ROS 2 환경을 <strong>자동화</strong>하기</li>
+  <li><code class="language-plaintext highlighter-rouge">alias</code>로 긴 명령을 <strong>짧게 줄이기</strong></li>
+  <li><code class="language-plaintext highlighter-rouge">ROS_DOMAIN_ID</code>로 <strong>다른 로봇과 통신이 섞이지 않게 격리</strong>하기</li>
+</ol>
+
+<p>세 가지 모두 “터미널을 조금 더 똑똑하게 쓰는 법”이지만, 로봇 개발에서는 편의를 넘어 <strong>사고를 막는 안전장치</strong>이기도 합니다.</p>
+
+<hr />
+
+<h2 id="명령은-어디에-입력하나요">명령은 어디에 입력하나요?</h2>
+
+<p>이 글의 명령은 <strong>일반 터미널</strong>에서 입력합니다. <code class="language-plaintext highlighter-rouge">.bashrc</code> 를 편집할 때만 편집기가 하나 더 필요합니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>입력할 곳</th>
+      <th>여는 방법</th>
+      <th>무엇을 하나</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>터미널</td>
+      <td><code class="language-plaintext highlighter-rouge">Ctrl</code> + <code class="language-plaintext highlighter-rouge">Alt</code> + <code class="language-plaintext highlighter-rouge">T</code></td>
+      <td>모든 확인·설정 명령</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">.bashrc</code> 편집 창</td>
+      <td><code class="language-plaintext highlighter-rouge">code ~/.bashrc</code> 또는 <code class="language-plaintext highlighter-rouge">nano ~/.bashrc</code></td>
+      <td>파일 내용 추가·저장</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>편집기에서 저장한 뒤에는 <strong><code class="language-plaintext highlighter-rouge">source ~/.bashrc</code></strong> 를 입력해야 현재 창에 반영됩니다. (새 창을 열면 자동 반영)</li>
+  <li><code class="language-plaintext highlighter-rouge">~</code> 는 내 홈 폴더이므로 <code class="language-plaintext highlighter-rouge">~/.bashrc</code> 는 <code class="language-plaintext highlighter-rouge">/home/사용자명/.bashrc</code> 와 같은 파일입니다.</li>
+  <li>복사는 <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">Shift</code>+<code class="language-plaintext highlighter-rouge">C</code>, 붙여넣기는 <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">Shift</code>+<code class="language-plaintext highlighter-rouge">V</code> 입니다.</li>
+</ul>
+
+<h2 id="한눈에-보는-전체-흐름-터미널--bashrc--ros-환경--도메인">한눈에 보는 전체 흐름: 터미널 → .bashrc → ROS 환경 → 도메인</h2>
+
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/4c469935-d208-4ebb-8c72-7f75da8d5242/image.png" alt="새 터미널에서 .bashrc가 실행되어 ROS 환경이 적용되는 흐름" /></p>
+
+<p><em><code class="language-plaintext highlighter-rouge">.bashrc</code>는 터미널을 열 때마다 자동으로 실행되므로, 여기에 넣으면 매번 <code class="language-plaintext highlighter-rouge">source</code>를 치지 않아도 됩니다.</em></p>
+
+<ol>
+  <li><strong>새 터미널</strong> — bash가 새로 시작</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">.bashrc</code> 자동 실행</strong> — 파일 맨 아래 줄까지 실행</li>
+  <li><strong>ROS 2 환경 등록</strong> — <code class="language-plaintext highlighter-rouge">source /opt/ros/jazzy/setup.bash</code></li>
+  <li><strong><code class="language-plaintext highlighter-rouge">alias</code> · <code class="language-plaintext highlighter-rouge">ROS_DOMAIN_ID</code></strong> — 짧은 명령과 로봇 그룹 번호</li>
+  <li><strong>같은 도메인끼리 통신</strong> — <code class="language-plaintext highlighter-rouge">ros2 node list</code>에 상대 노드가 보임</li>
+</ol>
+
+<hr />
+
+<h2 id="1-셸과-시작-파일">1. 셸과 시작 파일</h2>
+
+<h3 id="현재-셸-확인">현재 셸 확인</h3>
+
+<p><em>⌨️ 입력 위치: 터미널 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="nv">$SHELL</span>
+</code></pre></div></div>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/bash
+</code></pre></div></div>
+
+<p>우분투의 기본 셸은 <strong>bash</strong>입니다. <code class="language-plaintext highlighter-rouge">$SHELL</code>은 “로그인 셸”을 가리키는 환경변수입니다.</p>
+
+<h3 id="bash는-언제-어떤-파일을-읽나">bash는 언제 어떤 파일을 읽나</h3>
+
+<p>bash는 실행될 때 상황에 따라 다른 파일을 읽습니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>실행 형태</th>
+      <th>읽는 파일</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>로그인 셸 (예: 콘솔 로그인, <code class="language-plaintext highlighter-rouge">ssh</code> 접속)</td>
+      <td><code class="language-plaintext highlighter-rouge">/etc/profile</code> → <code class="language-plaintext highlighter-rouge">~/.bash_profile</code> → <code class="language-plaintext highlighter-rouge">~/.bash_login</code> → <code class="language-plaintext highlighter-rouge">~/.profile</code> 중 첫 번째 존재하는 것</td>
+    </tr>
+    <tr>
+      <td><strong>대화형 비로그인 셸 (터미널 앱을 열 때)</strong></td>
+      <td><strong><code class="language-plaintext highlighter-rouge">~/.bashrc</code></strong></td>
+    </tr>
+    <tr>
+      <td>비대화형 (스크립트 실행)</td>
+      <td><code class="language-plaintext highlighter-rouge">$BASH_ENV</code>가 있으면 그것</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>우리가 GUI에서 터미널을 열 때는 <strong>대화형 비로그인 셸</strong>이므로 <code class="language-plaintext highlighter-rouge">~/.bashrc</code>가 읽힙니다. 그래서 ROS 2 환경 설정은 <code class="language-plaintext highlighter-rouge">.bashrc</code>에 넣는 것이 맞습니다.</p>
+
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/837f4c11-1f67-499a-bb20-75ebbc6e5f65/image.png" alt="터미널을 4개로 나눠 쓴 실제 화면 — 칸마다 bash가 따로 떠 있다" /></p>
+
+<p><em>Terminator 같은 터미널을 분할해 쓰면 <strong>칸마다 별개의 bash</strong>가 실행됩니다. 그래서 <code class="language-plaintext highlighter-rouge">.bashrc</code>도 칸마다 한 번씩 읽히고, <code class="language-plaintext highlighter-rouge">source ~/.bashrc</code>도 지금 커서가 있는 칸에만 적용됩니다. “옆 창에서는 되는데 이 창에서는 <code class="language-plaintext highlighter-rouge">ros2</code>가 안 된다”는 상황이 바로 이것입니다. (출처: Wikimedia Commons, GPLv2)</em></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">~</code>는 홈 디렉터리(<code class="language-plaintext highlighter-rouge">/home/사용자명</code>)이고, 파일 이름 앞의 <code class="language-plaintext highlighter-rouge">.</code>은 <strong>숨김 파일</strong>이라는 표시입니다. <code class="language-plaintext highlighter-rouge">ls</code>로는 보이지 않고 <code class="language-plaintext highlighter-rouge">ls -a</code>로 확인할 수 있습니다.</p>
+</blockquote>
+
+<h3 id="bashrc-확인하기"><code class="language-plaintext highlighter-rouge">.bashrc</code> 확인하기</h3>
+
+<p><em>⌨️ 입력 위치: 터미널 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ls</span> <span class="nt">-a</span> ~ | <span class="nb">grep </span>bashrc
+<span class="nb">wc</span> <span class="nt">-l</span> ~/.bashrc
+<span class="nb">tail</span> <span class="nt">-20</span> ~/.bashrc
+</code></pre></div></div>
+
+<p>편집은 아무 편집기나 가능합니다.</p>
+
+<p><em>⌨️ 입력 위치: 터미널 — 편집기를 여는 명령 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>code ~/.bashrc      <span class="c"># VS Code로 열기</span>
+nano ~/.bashrc      <span class="c"># 터미널 편집기</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>편집기에서 저장만 한다고 바로 적용되지 않습니다. <strong>새 터미널을 열거나 <code class="language-plaintext highlighter-rouge">source ~/.bashrc</code>를 실행</strong>해야 반영됩니다.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="2-ros-2-환경-자동-활성화">2. ROS 2 환경 자동 활성화</h2>
+
+<p><code class="language-plaintext highlighter-rouge">.bashrc</code> <strong>맨 마지막</strong>에 다음 두 줄을 추가합니다.</p>
+
+<p><em>⌨️ 입력 위치: <strong><code class="language-plaintext highlighter-rouge">.bashrc</code> 파일 안</strong> — 편집기에서 맨 아래에 추가 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ROS 2 Jazzy 환경 자동 설정</span>
+<span class="nb">echo</span> <span class="s2">"ROS2 Jazzy is activated"</span>
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>줄</th>
+      <th>역할</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">echo "..."</code></td>
+      <td>터미널을 열 때 문구를 출력해 “ROS 2가 켜졌다”는 것을 눈으로 확인</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">source /opt/ros/jazzy/setup.bash</code></td>
+      <td>ROS 2 환경변수를 현재 셸에 등록</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>왜 <code class="language-plaintext highlighter-rouge">echo</code>를 넣나요? 자동 활성화는 <strong>조용히</strong> 일어나기 때문에, 실제로 적용됐는지 알기 어렵습니다. 문구 하나로 확인할 수 있어 디버깅이 쉬워집니다.</p>
+</blockquote>
+
+<h3 id="source가-정확히-하는-일"><code class="language-plaintext highlighter-rouge">source</code>가 정확히 하는 일</h3>
+
+<p><code class="language-plaintext highlighter-rouge">source</code>(또는 <code class="language-plaintext highlighter-rouge">.</code>)는 <strong>지정한 파일의 내용을 현재 셸에서 실행</strong>하는 명령입니다. 스크립트를 별도 프로세스로 실행하는 것과 다릅니다.</p>
+
+<p><em>⌨️ 입력 위치: 터미널 — 왜 안 되는지 비교하는 예 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bash setup.bash     <span class="c"># 자식 프로세스에서 실행 → 끝나면 환경변수 사라짐 (X)</span>
+<span class="nb">source </span>setup.bash   <span class="c"># 현재 셸에서 실행 → 환경변수 유지 (O)</span>
+</code></pre></div></div>
+
+<p>이 차이 때문에 ROS 2 환경 설정에는 반드시 <code class="language-plaintext highlighter-rouge">source</code>를 써야 합니다. <code class="language-plaintext highlighter-rouge">bash</code>로 실행하면 스크립트가 끝나는 순간 환경이 사라집니다.</p>
+
+<h3 id="적용-확인">적용 확인</h3>
+
+<p><em>⌨️ 입력 위치: 터미널 — 수정한 뒤 반영 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">source</span> ~/.bashrc
+ros2 <span class="nt">--help</span>
+<span class="nb">echo</span> <span class="nv">$ROS_DISTRO</span>
+</code></pre></div></div>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jazzy
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="3-alias-긴-명령을-짧게">3. <code class="language-plaintext highlighter-rouge">alias</code>: 긴 명령을 짧게</h2>
+
+<p><code class="language-plaintext highlighter-rouge">source</code>를 <code class="language-plaintext highlighter-rouge">.bashrc</code>에 넣으면 자동으로 켜지지만, 경우에 따라 <strong>필요할 때만</strong> ROS 2를 켜고 싶을 수 있습니다. 이때 쓰는 것이 <strong><code class="language-plaintext highlighter-rouge">alias</code>(별칭)</strong> 입니다.</p>
+
+<h3 id="기본-문법">기본 문법</h3>
+
+<p><em>⌨️ 입력 위치: 터미널 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias </span>이름<span class="o">=</span><span class="s1">'명령'</span>
+</code></pre></div></div>
+
+<p>예:</p>
+
+<p><em>⌨️ 입력 위치: <strong><code class="language-plaintext highlighter-rouge">.bashrc</code> 파일 안</strong> 에 추가 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias </span><span class="nv">jazzy</span><span class="o">=</span><span class="s1">'source /opt/ros/jazzy/setup.bash'</span>
+</code></pre></div></div>
+
+<p>이제 <code class="language-plaintext highlighter-rouge">jazzy</code>라고만 입력해도 같은 일이 일어납니다.</p>
+
+<blockquote>
+  <p>⚠️ <strong>등호(<code class="language-plaintext highlighter-rouge">=</code>) 양옆에 공백을 넣으면 안 됩니다.</strong></p>
+
+  <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias </span>jazzy <span class="o">=</span> <span class="s1">'source /opt/ros/jazzy/setup.bash'</span>   <span class="c"># ✗ 오류</span>
+<span class="nb">alias </span><span class="nv">jazzy</span><span class="o">=</span><span class="s1">'source /opt/ros/jazzy/setup.bash'</span>     <span class="c"># ✓</span>
+</code></pre></div>  </div>
+
+  <p>이 실수는 정말 자주 나옵니다. 오류 메시지가 “command not found”로 나와서 원인을 찾기 어렵습니다.</p>
+</blockquote>
+
+<h3 id="등록된-alias-확인">등록된 alias 확인</h3>
+
+<p><em>⌨️ 입력 위치: 터미널 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias</span>
+</code></pre></div></div>
+
+<p>인자 없이 <code class="language-plaintext highlighter-rouge">alias</code>만 실행하면 현재 등록된 별칭 목록이 <strong>다시 실행 가능한 형태</strong>로 출력됩니다.</p>
+
+<h3 id="자주-쓰는-alias-예시">자주 쓰는 alias 예시</h3>
+
+<p><em>⌨️ 입력 위치: 터미널 — 편집기를 여는 명령 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ROS 2 환경 켜기</span>
+<span class="nb">alias </span><span class="nv">jazzy</span><span class="o">=</span><span class="s1">'source /opt/ros/jazzy/setup.bash'</span>
+
+<span class="c"># .bashrc 수정 후 즉시 적용</span>
+<span class="nb">alias </span><span class="nv">sb</span><span class="o">=</span><span class="s1">'source ~/.bashrc'</span>
+
+<span class="c"># .bashrc 바로 편집</span>
+<span class="nb">alias </span><span class="nv">eb</span><span class="o">=</span><span class="s1">'code ~/.bashrc'</span>
+
+<span class="c"># 자주 쓰는 ROS 2 조회 명령</span>
+<span class="nb">alias </span><span class="nv">rn</span><span class="o">=</span><span class="s1">'ros2 node list'</span>
+<span class="nb">alias </span><span class="nv">rt</span><span class="o">=</span><span class="s1">'ros2 topic list -t'</span>
+<span class="nb">alias </span><span class="nv">rs</span><span class="o">=</span><span class="s1">'ros2 service list -t'</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">alias</code>는 <strong>현재 셸에만</strong> 적용됩니다. 터미널을 새로 열면 사라지므로, 계속 쓰려면 <code class="language-plaintext highlighter-rouge">.bashrc</code>에 적어 둡니다.</p>
+</blockquote>
+
+<h3 id="alias-vs-bashrc-자동-source-무엇을-쓸까">alias vs <code class="language-plaintext highlighter-rouge">.bashrc</code> 자동 source: 무엇을 쓸까</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>방식</th>
+      <th>장점</th>
+      <th>단점</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">.bashrc</code>에 <code class="language-plaintext highlighter-rouge">source</code> 직접</td>
+      <td>항상 켜져 있어 편함</td>
+      <td>모든 터미널이 ROS 2 환경을 물고 시작 (일반 작업 시 약간의 부담)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">alias</code>로 필요할 때만</td>
+      <td>선택적으로 켤 수 있음, 기본 셸이 가벼움</td>
+      <td>매번 <code class="language-plaintext highlighter-rouge">jazzy</code> 입력 필요</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>학습·실습 단계에서는 <code class="language-plaintext highlighter-rouge">.bashrc</code>에 넣는 편이 편하고, 한 PC로 문서 작업과 ROS 2 개발을 오간다면 alias 방식이 깔끔합니다. <strong>둘을 함께 써도 됩니다.</strong> (예: 자동 활성화 + 자주 쓰는 조회 명령 alias)</p>
+
+<hr />
+
+<h2 id="4-ros_domain_id-통신을-격리하는-스위치">4. <code class="language-plaintext highlighter-rouge">ROS_DOMAIN_ID</code>: 통신을 격리하는 스위치</h2>
+
+<h3 id="문제-상황">문제 상황</h3>
+
+<p>ROS 2는 <strong>DDS(Data Distribution Service)</strong> 라는 통신 미들웨어를 씁니다. DDS는 IP 주소를 일일이 지정하지 않고, <strong>같은 네트워크에서 자동으로 서로를 발견</strong>해 메시지를 주고받습니다.</p>
+
+<ul>
+  <li>장점: 설정 없이 바로 통신. 로봇과 PC를 같은 공유기에 연결하면 끝.</li>
+  <li>단점: <strong>같은 네트워크의 모든 ROS 2 노드가 서로 보입니다.</strong></li>
+</ul>
+
+<p>실습실에서 열 명이 동시에 터틀심을 켜면, 내 거북이에게 보낸 명령이 옆자리 거북이에도 적용될 수 있습니다. 실제 로봇이라면 “내 로봇, 앞으로”가 다른 사람 로봇에 전달되어 <strong>물리적 사고</strong>로 이어질 수 있습니다.</p>
+
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/5a243f8c-f203-4984-96ff-4fdb52d4d00d/image.png" alt="ROS_DOMAIN_ID가 다르면 같은 네트워크에서도 서로 보이지 않는다" /></p>
+
+<p><em>도메인 번호가 다르면 같은 공유기에 연결돼 있어도 발견조차 되지 않습니다.</em></p>
+
+<h3 id="해결-같은-도메인끼리만-통신">해결: 같은 도메인끼리만 통신</h3>
+
+<p>DDS는 <strong>도메인(Domain)</strong> 이라는 논리적 구역을 나눌 수 있고, ROS 2는 이를 <strong><code class="language-plaintext highlighter-rouge">ROS_DOMAIN_ID</code></strong> 환경변수로 제어합니다.</p>
+
+<p><em>⌨️ 입력 위치: 터미널 (지금 창에만 적용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">ROS_DOMAIN_ID</span><span class="o">=</span>13
+</code></pre></div></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>사실</th>
+      <th>내용</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>기본값</td>
+      <td><strong>0</strong> (모든 ROS 2 노드는 기본적으로 도메인 0)</td>
+    </tr>
+    <tr>
+      <td>같은 도메인</td>
+      <td>서로 발견하고 통신 가능</td>
+    </tr>
+    <tr>
+      <td>다른 도메인</td>
+      <td>서로 <strong>발견조차 하지 못함</strong></td>
+    </tr>
+    <tr>
+      <td>권장 범위(리눅스)</td>
+      <td><strong>0~101</strong></td>
+    </tr>
+    <tr>
+      <td>이론적 최대</td>
+      <td>232</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="왜-0101인가">왜 0~101인가</h3>
+
+<p>도메인 ID는 DDS가 사용하는 <strong>UDP 포트 번호</strong>를 계산하는 데 쓰입니다. 포트 번호는 16비트(0~65535)이므로 도메인 ID의 상한이 계산으로 정해지고(최대 232), 동시에 <strong>운영체제가 임시로 쓰는 포트 범위</strong>와 겹치지 않아야 합니다. 리눅스 커널은 기본적으로 32768~60999를 임시 포트로 쓰기 때문에, 공식 문서는 <strong>0~101을 안전 구간</strong>으로 안내합니다.</p>
+
+<blockquote>
+  <p>⚠️ 102~214 구간은 임시 포트와 충돌할 수 있어 권장되지 않습니다. (215~232는 리눅스에서 사용 가능하지만, 특수한 경우에만 쓰는 편이 안전합니다.)</p>
+</blockquote>
+
+<h3 id="설정-방법">설정 방법</h3>
+
+<p><strong>일시적(현재 셸만):</strong></p>
+
+<p><em>⌨️ 입력 위치: 터미널 (지금 창에만 적용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">ROS_DOMAIN_ID</span><span class="o">=</span>13
+</code></pre></div></div>
+
+<p><strong>영구적(<code class="language-plaintext highlighter-rouge">.bashrc</code>에 추가):</strong></p>
+
+<p><em>⌨️ 입력 위치: 터미널 — 수정한 뒤 반영 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="s2">"export ROS_DOMAIN_ID=13"</span> <span class="o">&gt;&gt;</span> ~/.bashrc
+<span class="nb">source</span> ~/.bashrc
+</code></pre></div></div>
+
+<p>확인:</p>
+
+<p><em>⌨️ 입력 위치: 터미널 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="nv">$ROS_DOMAIN_ID</span>
+</code></pre></div></div>
+
+<h3 id="운영-팁">운영 팁</h3>
+
+<ul>
+  <li><strong>팀/로봇별로 번호를 정해 두세요.</strong> 예: 1번 로봇 11, 2번 로봇 12, 시뮬레이션 21.</li>
+  <li><strong>PC와 로봇이 통신해야 한다면 같은 번호</strong>를 써야 합니다. 반대로 <strong>분리하고 싶으면 다른 번호</strong>를 씁니다.</li>
+  <li>도메인을 바꾼 뒤에는 <strong>모든 노드를 재시작</strong>해야 합니다. 이미 실행 중인 노드는 이전 도메인에 남아 있습니다.</li>
+</ul>
+
+<p><em>⌨️ 입력 위치: 터미널 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 통신이 안 될 때 점검 순서</span>
+<span class="nb">echo</span> <span class="nv">$ROS_DOMAIN_ID</span>          <span class="c"># 두 터미널의 값이 같은가</span>
+ros2 topic list              <span class="c"># 상대 노드의 토픽이 보이는가</span>
+ros2 daemon stop <span class="o">&amp;&amp;</span> ros2 daemon start   <span class="c"># 발견 캐시 초기화</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">ros2 daemon</code>은 CLI가 노드 정보를 캐시하는 백그라운드 프로세스입니다. 도메인을 바꿨는데 목록이 그대로라면 데몬을 재시작하면 해결되는 경우가 많습니다.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="5-bashrc를-안전하게-다루는-법">5. <code class="language-plaintext highlighter-rouge">.bashrc</code>를 안전하게 다루는 법</h2>
+
+<p><code class="language-plaintext highlighter-rouge">.bashrc</code>는 셸이 시작될 때마다 실행되는 파일입니다. 잘못 고치면 <strong>터미널이 아예 열리지 않거나</strong> 오류 메시지가 쏟아질 수 있습니다.</p>
+
+<h3 id="원칙-1-백업-먼저">원칙 1: 백업 먼저</h3>
+
+<p><em>⌨️ 입력 위치: 터미널 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cp</span> ~/.bashrc ~/.bashrc.backup
+</code></pre></div></div>
+
+<h3 id="원칙-2-맨-아래에-주석과-함께">원칙 2: 맨 아래에, 주석과 함께</h3>
+
+<p>기존 내용 중간에 끼워 넣으면 다른 설정과 얽힙니다. <strong>파일 끝에 블록으로 추가</strong>하세요.</p>
+
+<p><em>⌨️ 입력 위치: 터미널 — 수정한 뒤 반영 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># ===== ROS 2 =====</span>
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash
+<span class="nb">export </span><span class="nv">ROS_DOMAIN_ID</span><span class="o">=</span>13
+<span class="nb">alias </span><span class="nv">sb</span><span class="o">=</span><span class="s1">'source ~/.bashrc'</span>
+</code></pre></div></div>
+
+<h3 id="원칙-3-저장-후-반드시-적용">원칙 3: 저장 후 반드시 적용</h3>
+
+<p><em>⌨️ 입력 위치: 터미널 — 수정한 뒤 반영 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">source</span> ~/.bashrc
+</code></pre></div></div>
+
+<h3 id="원칙-4-문제가-생기면-되돌리기">원칙 4: 문제가 생기면 되돌리기</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cp</span> ~/.bashrc.backup ~/.bashrc
+<span class="nb">source</span> ~/.bashrc
+</code></pre></div></div>
+
+<blockquote>
+  <p>터미널이 열리지 않을 정도로 깨졌다면, <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">Alt</code>+<code class="language-plaintext highlighter-rouge">F3</code>으로 가상 콘솔에 로그인해 파일을 고치거나, 복구 모드로 진입해 백업을 복원합니다. 백업이 있으면 1분, 없으면 1시간입니다.</p>
+</blockquote>
+
+<h3 id="bashrc가-실행되지-않는-경우"><code class="language-plaintext highlighter-rouge">.bashrc</code>가 실행되지 않는 경우</h3>
+
+<p>스크립트(비대화형)에서는 <code class="language-plaintext highlighter-rouge">.bashrc</code>가 읽히지 않습니다. 예를 들어 크론(cron)이나 systemd 서비스에서 ROS 2 노드를 실행할 때는 환경이 자동으로 잡히지 않습니다. 이 경우에는 스크립트 안에서 명시적으로 <code class="language-plaintext highlighter-rouge">source</code>를 호출해야 합니다.</p>
+
+<p><em>⌨️ 입력 위치: 터미널 (지금 창에만 적용) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash
+<span class="nb">export </span><span class="nv">ROS_DOMAIN_ID</span><span class="o">=</span>13
+<span class="nb">exec </span>ros2 launch my_robot bringup.launch.py
+</code></pre></div></div>
+
+<blockquote>
+  <p>로봇을 부팅하자마자 자동으로 노드를 띄우는 구성(자동 시작 서비스)을 만들 때 반드시 필요한 패턴입니다.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="6-자주-겪는-문제">6. 자주 겪는 문제</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>증상</th>
+      <th>원인</th>
+      <th>해결</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">.bashrc</code> 수정이 반영 안 됨</td>
+      <td><code class="language-plaintext highlighter-rouge">source</code> 안 함 / 새 터미널 안 열음</td>
+      <td><code class="language-plaintext highlighter-rouge">source ~/.bashrc</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">alias: =: not found</code></td>
+      <td>등호 양옆 공백</td>
+      <td>공백 제거</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ros2: command not found</code></td>
+      <td><code class="language-plaintext highlighter-rouge">source</code> 누락 또는 경로 오타</td>
+      <td><code class="language-plaintext highlighter-rouge">tail ~/.bashrc</code>로 확인, <code class="language-plaintext highlighter-rouge">ls /opt/ros/jazzy/setup.bash</code></td>
+    </tr>
+    <tr>
+      <td>터미널 열 때마다 오류 메시지</td>
+      <td><code class="language-plaintext highlighter-rouge">.bashrc</code> 문법 오류</td>
+      <td>백업 복원, <code class="language-plaintext highlighter-rouge">bash -n ~/.bashrc</code>로 문법 검사</td>
+    </tr>
+    <tr>
+      <td>다른 사람과 토픽이 섞임</td>
+      <td><code class="language-plaintext highlighter-rouge">ROS_DOMAIN_ID</code> 미설정(둘 다 0)</td>
+      <td>서로 다른 번호 지정</td>
+    </tr>
+    <tr>
+      <td>도메인 바꿨는데 목록이 그대로</td>
+      <td><code class="language-plaintext highlighter-rouge">ros2 daemon</code> 캐시</td>
+      <td><code class="language-plaintext highlighter-rouge">ros2 daemon stop &amp;&amp; ros2 daemon start</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">alias</code>가 새 터미널에서 사라짐</td>
+      <td><code class="language-plaintext highlighter-rouge">.bashrc</code>에 안 적음</td>
+      <td><code class="language-plaintext highlighter-rouge">.bashrc</code>에 추가 후 <code class="language-plaintext highlighter-rouge">source</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="7-정리">7. 정리</h2>
+
+<p><em>⌨️ 입력 위치: 터미널 — 수정한 뒤 반영 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1) 백업</span>
+<span class="nb">cp</span> ~/.bashrc ~/.bashrc.backup
+
+<span class="c"># 2) 파일 끝에 추가</span>
+<span class="nb">cat</span> <span class="o">&gt;&gt;</span> ~/.bashrc <span class="o">&lt;&lt;</span> <span class="sh">'</span><span class="no">EOF</span><span class="sh">'
+
+# ===== ROS 2 =====
+source /opt/ros/jazzy/setup.bash
+export ROS_DOMAIN_ID=13
+alias jazzy='source /opt/ros/jazzy/setup.bash'
+alias sb='source ~/.bashrc'
+</span><span class="no">EOF
+
+</span><span class="c"># 3) 적용</span>
+<span class="nb">source</span> ~/.bashrc
+
+<span class="c"># 4) 확인</span>
+<span class="nb">echo</span> <span class="nv">$ROS_DISTRO</span> <span class="nv">$ROS_DOMAIN_ID</span>
+</code></pre></div></div>
+
+<ul>
+  <li>터미널을 열면 bash가 <strong><code class="language-plaintext highlighter-rouge">~/.bashrc</code>를 읽습니다</strong>. 여기에 <code class="language-plaintext highlighter-rouge">source</code>를 넣으면 ROS 2가 자동으로 켜집니다.</li>
+  <li><code class="language-plaintext highlighter-rouge">alias</code>는 긴 명령을 줄여 주지만, <strong>등호 양옆 공백 금지</strong>를 잊지 마세요.</li>
+  <li><code class="language-plaintext highlighter-rouge">ROS_DOMAIN_ID</code>는 <strong>같은 값끼리만 통신</strong>하게 만드는 격리 장치이고, 리눅스에서는 <strong>0~101</strong>을 쓰는 것이 안전합니다.</li>
+  <li>로봇이 여러 대인 환경에서 이 한 줄을 빠뜨리면, 명령이 다른 로봇에 전달되는 사고가 날 수 있습니다.</li>
+</ul>
+
+<p>다음 글에서는 드디어 ROS 2의 핵심인 <strong>노드·서비스·토픽·액션</strong>을 터틀심으로 직접 다뤄 봅니다. 명령어를 하나씩 실행하면서 “로봇이 어떻게 움직이는가”를 눈으로 확인합니다.</p>
+
+<hr />
+
+<h2 id="이-글에-나온-명령어기호-풀이">이 글에 나온 명령어·기호 풀이</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>표기</th>
+      <th>원래 말 / 읽는 법</th>
+      <th>하는 일</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">echo $SHELL</code></td>
+      <td>—</td>
+      <td>지금 쓰는 셸의 경로(<code class="language-plaintext highlighter-rouge">/bin/bash</code>)를 출력</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ls -a ~</code> | <code class="language-plaintext highlighter-rouge">grep bashrc</code></td>
+      <td>—</td>
+      <td>홈 폴더의 숨김 파일 중 <code class="language-plaintext highlighter-rouge">bashrc</code> 가 든 것만 표시</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-a</code></td>
+      <td>all</td>
+      <td>숨김 파일까지 표시</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">~</code></td>
+      <td>tilde</td>
+      <td>내 홈 폴더</td>
+    </tr>
+    <tr>
+      <td>|</td>
+      <td>파이프</td>
+      <td>앞 출력을 뒤 명령의 입력으로</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">grep</code></td>
+      <td>—</td>
+      <td>특정 글자가 든 줄만 걸러 냄</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">code ~/.bashrc</code></td>
+      <td>—</td>
+      <td><code class="language-plaintext highlighter-rouge">.bashrc</code> 를 VS Code로 열기</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">source ~/.bashrc</code></td>
+      <td>—</td>
+      <td>수정한 <code class="language-plaintext highlighter-rouge">.bashrc</code> 를 <strong>지금 창에 즉시 적용</strong></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">bash setup.bash</code></td>
+      <td>—</td>
+      <td><strong>자식 프로세스</strong>로 실행 → 끝나면 환경이 사라짐 (그래서 <code class="language-plaintext highlighter-rouge">source</code> 를 씀)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">alias 이름='명령'</code></td>
+      <td>—</td>
+      <td>긴 명령에 <strong>별명</strong>을 붙임</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">alias</code></td>
+      <td>—</td>
+      <td>지금 등록된 별명 목록</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">export 이름=값</code></td>
+      <td>—</td>
+      <td>환경변수를 <strong>정의하고 자식에게도 전달</strong></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">echo "..." &gt;&gt; ~/.bashrc</code></td>
+      <td><code class="language-plaintext highlighter-rouge">&gt;&gt;</code></td>
+      <td>파일 <strong>끝에 한 줄 추가</strong> (덮어쓰지 않음)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">echo $ROS_DOMAIN_ID</code></td>
+      <td>—</td>
+      <td>지금 값 확인 (비어 있으면 0으로 동작)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">cp A B</code></td>
+      <td>copy</td>
+      <td>A를 B로 복사 (백업)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ROS_DOMAIN_ID</code></td>
+      <td>—</td>
+      <td>로봇 그룹 번호. <strong>같은 번호끼리만</strong> 통신</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">O</code>, <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">X</code></td>
+      <td>—</td>
+      <td><code class="language-plaintext highlighter-rouge">nano</code> 편집기에서 저장 / 종료</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">chmod +x 파일</code></td>
+      <td>change mode</td>
+      <td>스크립트에 실행 권한 부여</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">#!/bin/bash</code></td>
+      <td>셔뱅(shebang)</td>
+      <td>“이 파일은 bash로 실행하라”는 첫 줄 표시</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">.bashrc</code> 는 <strong>터미널을 새로 열 때마다 자동 실행</strong>되는 파일입니다. 여기에 넣은 <code class="language-plaintext highlighter-rouge">export</code>·<code class="language-plaintext highlighter-rouge">alias</code>·<code class="language-plaintext highlighter-rouge">source</code> 는 그 뒤로 여는 모든 창에 자동 적용됩니다.</p>
+</blockquote>
+
+<h2 id="공식-문서-참고">공식 문서 참고</h2>
+
+<ul>
+  <li>GNU Bash 매뉴얼 — 시작 파일(Bash Startup Files): <a href="https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html">https://www.gnu.org/software/bash/manual/html_node/Bash-Startup-Files.html</a></li>
+  <li>GNU Bash 매뉴얼 — <code class="language-plaintext highlighter-rouge">alias</code> 빌트인: <a href="https://www.gnu.org/software/bash/manual/html_node/Aliases.html">https://www.gnu.org/software/bash/manual/html_node/Aliases.html</a></li>
+  <li>GNU Bash 매뉴얼 — <code class="language-plaintext highlighter-rouge">source</code>/<code class="language-plaintext highlighter-rouge">.</code> 빌트인: <a href="https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html">https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html</a></li>
+  <li>ROS 2 환경 설정(셸 시작 파일에 source 추가, ROS_DOMAIN_ID): <a href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Configuring-ROS2-Environment.html">https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Configuring-ROS2-Environment.html</a></li>
+  <li>ROS_DOMAIN_ID 개념(권장 범위 0~101): <a href="https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Domain-ID.html">https://docs.ros.org/en/jazzy/Concepts/Intermediate/About-Domain-ID.html</a></li>
+</ul>
+
+<h2 id="이미지-출처">이미지 출처</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>그림</th>
+      <th>출처</th>
+      <th>라이선스</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Terminator 분할 터미널</td>
+      <td>Wikimedia Commons <a href="https://commons.wikimedia.org/wiki/File:Terminator_sample.png">Terminator sample.png</a></td>
+      <td>GPLv2</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">.bashrc</code> 실행 흐름 / ROS_DOMAIN_ID</td>
+      <td>직접 그린 도해</td>
+      <td>—</td>
+    </tr>
+  </tbody>
+</table>
+
+  </div>
+
+  <nav class="post-nav" aria-label="이전 다음 글">
+    
+    <a class="post-nav-item post-nav-prev" href="/hello-robotics/posts/04-ros2-install/">
+      <span class="post-nav-dir">← 이전 글</span>
+      <span class="post-nav-title">ROS 2 Jazzy 설치 — Ubuntu 24.04에서 talker/listener까지</span>
+    </a>
+    
+    
+    <a class="post-nav-item post-nav-next" href="/hello-robotics/posts/06-ros2-cli/">
+      <span class="post-nav-dir">다음 글 →</span>
+      <span class="post-nav-title">ROS 2 기초 명령 — 터틀심으로 노드·토픽·서비스·액션 익히기</span>
+    </a>
+    
+  </nav>
+
+  <p class="post-back"><a href="/hello-robotics/#series">전체 목차로 돌아가기</a></p>
+</article>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p class="footer-brand">excelh11<span class="brand-dot">.log</span></p>
+      <p class="footer-note">우분투 · 파이썬 · ROS 2, 로봇을 공부하며 정리한 기록</p>
+      <p class="footer-meta">© 2026 excelh11 · Built with Jekyll on GitHub Pages</p>
+    </div>
+  </footer>
+
+  <script src="/hello-robotics/assets/js/main.js"></script>
+</body>
+</html>

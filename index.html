@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>로봇을 공부하기 위한 가장 처음 해야 하는 세팅 · excelh11</title>
+  <meta name="description" content="우분투 설치부터 파이썬 가상환경, ROS 2 Jazzy 기초 명령까지 — 로봇 공부를 시작할 때 필요한 세팅을 순서대로 정리한 기록">
+  <meta name="author" content="excelh11">
+  <link rel="canonical" href="https://excelh11.github.io/hello-robotics/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="로봇을 공부하기 위한 가장 처음 해야 하는 세팅">
+  <meta property="og:description" content="우분투 설치부터 파이썬 가상환경, ROS 2 Jazzy 기초 명령까지 — 로봇 공부를 시작할 때 필요한 세팅을 순서대로 정리한 기록">
+  <meta property="og:url" content="https://excelh11.github.io/hello-robotics/">
+  <meta property="og:site_name" content="excelh11">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232563eb'/%3E%3Ctext x='50' y='70' font-family='system-ui,sans-serif' font-size='58' font-weight='700' fill='white' text-anchor='middle'%3Ee%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/hello-robotics/assets/css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 바로 가기</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="/hello-robotics/">
+        <span class="brand-mark">e</span>
+        <span class="brand-text">excelh11<span class="brand-dot">.log</span></span>
+      </a>
+      <nav class="site-nav" aria-label="사이트 메뉴">
+        <a href="/hello-robotics/#series" class="is-active">시리즈</a>
+        <a href="/hello-robotics/#posts">글 목록</a>
+        <a href="https://github.com/excelh11" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    
+
+<section class="hero">
+  <p class="hero-eyebrow">기술 블로그 · 시리즈</p>
+  <h1 class="hero-title">로봇을 공부하기 위한 가장 처음 해야 하는 세팅</h1>
+  <p class="hero-desc">우분투 24.04 설치에서 ROS 2 기초 명령까지, 7편으로 따라 하는 로봇 개발 첫 세팅</p>
+  <div class="hero-chips">
+    <span class="chip">7편</span>
+    <span class="chip">Ubuntu 24.04 LTS</span>
+    <span class="chip">ROS 2 Jazzy</span>
+    <span class="chip">Python · VS Code</span>
+  </div>
+</section>
+
+<section id="series" class="section">
+  <div class="section-head">
+    <h2 class="section-title">시리즈 목차</h2>
+    <p class="section-sub">순서대로 따라 하면 빈 노트북이 로봇 개발 환경이 됩니다.</p>
+  </div>
+
+  <ol class="series-list">
+    
+    <li class="series-item">
+      <a class="series-link" href="/hello-robotics/posts/00-ubuntu-linux-basics/">
+        <span class="series-num">00</span>
+        <span class="series-body">
+          <span class="series-name">로봇 공부를 시작하기 전에 알아야 할 우분투·리눅스 기초</span>
+          <span class="series-desc">운영체제·커널·셸·PATH·sudo·apt가 로봇 개발에서 어디에 쓰이는지, 코드보다 먼저 만나는 벽을 정리합니다.</span>
+        </span>
+        <span class="series-arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+    
+    <li class="series-item">
+      <a class="series-link" href="/hello-robotics/posts/01-ubuntu-install/">
+        <span class="series-num">01</span>
+        <span class="series-body">
+          <span class="series-name">우분투 24.04 설치와 첫 세팅 (부팅 USB부터 한글 입력까지)</span>
+          <span class="series-desc">ISO 다운로드, 부팅 USB 제작, BIOS 설정, 설치 마법사 13개 화면을 화면 순서 그대로 따라갑니다.</span>
+        </span>
+        <span class="series-arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+    
+    <li class="series-item">
+      <a class="series-link" href="/hello-robotics/posts/02-python-venv/">
+        <span class="series-num">02</span>
+        <span class="series-body">
+          <span class="series-name">파이썬 가상환경(venv) 완벽 정리 — 로봇 프로젝트를 위한 격리</span>
+          <span class="series-desc">라이브러리 버전 충돌을 막는 venv. 생성·활성화부터 requirements.txt로 재현하기까지.</span>
+        </span>
+        <span class="series-arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+    
+    <li class="series-item">
+      <a class="series-link" href="/hello-robotics/posts/03-vscode/">
+        <span class="series-num">03</span>
+        <span class="series-body">
+          <span class="series-name">VS Code 설치와 파이썬 인터프리터·주피터 커널 연결</span>
+          <span class="series-desc">ModuleNotFoundError가 반복되는 이유는 편집기가 다른 파이썬을 보고 있기 때문입니다. 정확히 연결하는 법.</span>
+        </span>
+        <span class="series-arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+    
+    <li class="series-item">
+      <a class="series-link" href="/hello-robotics/posts/04-ros2-install/">
+        <span class="series-num">04</span>
+        <span class="series-body">
+          <span class="series-name">ROS 2 Jazzy 설치 — Ubuntu 24.04에서 talker/listener까지</span>
+          <span class="series-desc">locale·저장소 준비부터 ros-jazzy-desktop 설치, 두 노드가 메시지를 주고받는 것까지 확인합니다.</span>
+        </span>
+        <span class="series-arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+    
+    <li class="series-item">
+      <a class="series-link" href="/hello-robotics/posts/05-bashrc-domain/">
+        <span class="series-num">05</span>
+        <span class="series-body">
+          <span class="series-name">.bashrc로 ROS 2 환경 자동화 + ROS_DOMAIN_ID 격리</span>
+          <span class="series-desc">매 터미널마다 source를 치지 않도록, 그리고 다른 로봇과 통신이 섞이지 않도록 설정합니다.</span>
+        </span>
+        <span class="series-arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+    
+    <li class="series-item">
+      <a class="series-link" href="/hello-robotics/posts/06-ros2-cli/">
+        <span class="series-num">06</span>
+        <span class="series-body">
+          <span class="series-name">ROS 2 기초 명령 — 터틀심으로 노드·토픽·서비스·액션 익히기</span>
+          <span class="series-desc">터틀심으로 노드·서비스·토픽·액션을 하나씩 실행하며 ROS 2 통신 구조를 손으로 익힙니다.</span>
+        </span>
+        <span class="series-arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+    
+  </ol>
+</section>
+
+<section id="posts" class="section">
+  <div class="section-head">
+    <h2 class="section-title">모든 글</h2>
+    <p class="section-sub">최근에 올린 글부터 보여 줍니다.</p>
+  </div>
+
+  <ul class="post-list">
+    
+    <li class="post-item">
+      <a class="post-link" href="/hello-robotics/posts/06-ros2-cli/">
+        <span class="post-title">ROS 2 기초 명령 — 터틀심으로 노드·토픽·서비스·액션 익히기</span>
+        <span class="post-meta">
+          <time datetime="2026-11-26T09:06:00+09:00">2026.11.26</time>
+          <span class="dot">·</span>
+          <span>약 44분</span>
+        </span>
+      </a>
+    </li>
+    
+    <li class="post-item">
+      <a class="post-link" href="/hello-robotics/posts/05-bashrc-domain/">
+        <span class="post-title">.bashrc로 ROS 2 환경 자동화 + ROS_DOMAIN_ID 격리</span>
+        <span class="post-meta">
+          <time datetime="2026-11-26T09:05:00+09:00">2026.11.26</time>
+          <span class="dot">·</span>
+          <span>약 22분</span>
+        </span>
+      </a>
+    </li>
+    
+    <li class="post-item">
+      <a class="post-link" href="/hello-robotics/posts/04-ros2-install/">
+        <span class="post-title">ROS 2 Jazzy 설치 — Ubuntu 24.04에서 talker/listener까지</span>
+        <span class="post-meta">
+          <time datetime="2026-11-26T09:04:00+09:00">2026.11.26</time>
+          <span class="dot">·</span>
+          <span>약 27분</span>
+        </span>
+      </a>
+    </li>
+    
+    <li class="post-item">
+      <a class="post-link" href="/hello-robotics/posts/03-vscode/">
+        <span class="post-title">VS Code 설치와 파이썬 인터프리터·주피터 커널 연결</span>
+        <span class="post-meta">
+          <time datetime="2026-11-26T09:03:00+09:00">2026.11.26</time>
+          <span class="dot">·</span>
+          <span>약 22분</span>
+        </span>
+      </a>
+    </li>
+    
+    <li class="post-item">
+      <a class="post-link" href="/hello-robotics/posts/02-python-venv/">
+        <span class="post-title">파이썬 가상환경(venv) 완벽 정리 — 로봇 프로젝트를 위한 격리</span>
+        <span class="post-meta">
+          <time datetime="2026-11-26T09:02:00+09:00">2026.11.26</time>
+          <span class="dot">·</span>
+          <span>약 23분</span>
+        </span>
+      </a>
+    </li>
+    
+    <li class="post-item">
+      <a class="post-link" href="/hello-robotics/posts/01-ubuntu-install/">
+        <span class="post-title">우분투 24.04 설치와 첫 세팅 (부팅 USB부터 한글 입력까지)</span>
+        <span class="post-meta">
+          <time datetime="2026-11-26T09:01:00+09:00">2026.11.26</time>
+          <span class="dot">·</span>
+          <span>약 52분</span>
+        </span>
+      </a>
+    </li>
+    
+    <li class="post-item">
+      <a class="post-link" href="/hello-robotics/posts/00-ubuntu-linux-basics/">
+        <span class="post-title">로봇 공부를 시작하기 전에 알아야 할 우분투·리눅스 기초</span>
+        <span class="post-meta">
+          <time datetime="2026-11-26T09:00:00+09:00">2026.11.26</time>
+          <span class="dot">·</span>
+          <span>약 31분</span>
+        </span>
+      </a>
+    </li>
+    
+  </ul>
+</section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p class="footer-brand">excelh11<span class="brand-dot">.log</span></p>
+      <p class="footer-note">우분투 · 파이썬 · ROS 2, 로봇을 공부하며 정리한 기록</p>
+      <p class="footer-meta">© 2026 excelh11 · Built with Jekyll on GitHub Pages</p>
+    </div>
+  </footer>
+
+  <script src="/hello-robotics/assets/js/main.js"></script>
+</body>
+</html>

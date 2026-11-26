@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>파이썬 가상환경(venv) 완벽 정리 — 로봇 프로젝트를 위한 격리 · excelh11</title>
+  <meta name="description" content="라이브러리 버전 충돌을 막는 venv. 생성·활성화부터 requirements.txt로 재현하기까지.">
+  <meta name="author" content="excelh11">
+  <link rel="canonical" href="https://excelh11.github.io/hello-robotics/posts/02-python-venv/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="파이썬 가상환경(venv) 완벽 정리 — 로봇 프로젝트를 위한 격리">
+  <meta property="og:description" content="라이브러리 버전 충돌을 막는 venv. 생성·활성화부터 requirements.txt로 재현하기까지.">
+  <meta property="og:url" content="https://excelh11.github.io/hello-robotics/posts/02-python-venv/">
+  <meta property="og:site_name" content="excelh11">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232563eb'/%3E%3Ctext x='50' y='70' font-family='system-ui,sans-serif' font-size='58' font-weight='700' fill='white' text-anchor='middle'%3Ee%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/hello-robotics/assets/css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 바로 가기</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="/hello-robotics/">
+        <span class="brand-mark">e</span>
+        <span class="brand-text">excelh11<span class="brand-dot">.log</span></span>
+      </a>
+      <nav class="site-nav" aria-label="사이트 메뉴">
+        <a href="/hello-robotics/#series" >시리즈</a>
+        <a href="/hello-robotics/#posts">글 목록</a>
+        <a href="https://github.com/excelh11" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    
+
+
+
+
+
+
+<article class="post">
+  <header class="post-header">
+    <a class="series-tag" href="/hello-robotics/#series">로봇을 공부하기 위한 가장 처음 해야 하는 세팅</a>
+    <h1 class="post-title">파이썬 가상환경(venv) 완벽 정리 — 로봇 프로젝트를 위한 격리</h1>
+    <div class="post-meta">
+      <span class="post-part">02 / 07</span>
+      <span class="dot">·</span>
+      <time datetime="2026-11-26T09:02:00+09:00">2026년 11월 26일</time>
+      <span class="dot">·</span>
+      <span>약 23분</span>
+    </div>
+  </header>
+
+  <details class="series-nav">
+    <summary>
+      <span class="series-nav-label">시리즈 목차</span>
+      <span class="series-nav-current">02. 파이썬 가상환경(venv) 완벽 정리 — 로봇 프로젝트를 위한 격리</span>
+    </summary>
+    <ol class="series-nav-list">
+      
+      <li class="">
+        
+        <a href="/hello-robotics/posts/00-ubuntu-linux-basics/">00. 로봇 공부를 시작하기 전에 알아야 할 우분투·리눅스 기초</a>
+        
+      </li>
+      
+      <li class="">
+        
+        <a href="/hello-robotics/posts/01-ubuntu-install/">01. 우분투 24.04 설치와 첫 세팅 (부팅 USB부터 한글 입력까지)</a>
+        
+      </li>
+      
+      <li class="is-current">
+        
+        <span>02. 파이썬 가상환경(venv) 완벽 정리 — 로봇 프로젝트를 위한 격리</span>
+        
+      </li>
+      
+      <li class="">
+        
+        <a href="/hello-robotics/posts/03-vscode/">03. VS Code 설치와 파이썬 인터프리터·주피터 커널 연결</a>
+        
+      </li>
+      
+      <li class="">
+        
+        <a href="/hello-robotics/posts/04-ros2-install/">04. ROS 2 Jazzy 설치 — Ubuntu 24.04에서 talker/listener까지</a>
+        
+      </li>
+      
+      <li class="">
+        
+        <a href="/hello-robotics/posts/05-bashrc-domain/">05. .bashrc로 ROS 2 환경 자동화 + ROS_DOMAIN_ID 격리</a>
+        
+      </li>
+      
+      <li class="">
+        
+        <a href="/hello-robotics/posts/06-ros2-cli/">06. ROS 2 기초 명령 — 터틀심으로 노드·토픽·서비스·액션 익히기</a>
+        
+      </li>
+      
+    </ol>
+  </details>
+
+  <div class="post-body">
+    <p>파이썬으로 로봇을 다루다 보면 반드시 한 번은 만나는 지옥이 있습니다.</p>
+
+<blockquote>
+  <p>“어제까지 잘 돌던 코드가 오늘 갑자기 안 됩니다.”</p>
+</blockquote>
+
+<p>원인의 대부분은 <strong>라이브러리 버전 충돌</strong>입니다. 어떤 프로젝트는 <code class="language-plaintext highlighter-rouge">numpy 1.x</code>를 요구하고, 다른 프로젝트는 <code class="language-plaintext highlighter-rouge">numpy 2.x</code>를 요구합니다. 한 컴퓨터에 파이썬을 하나만 두고 전부 설치하면, 두 요구를 동시에 만족시킬 수 없습니다.</p>
+
+<p>이 글은 그 문제를 근본적으로 막는 <strong>파이썬 가상환경(venv)</strong> 을 다룹니다. 로봇 프로젝트는 라이브러리 의존성이 유난히 복잡하기 때문에, 이 습관 하나가 이후 몇 달의 디버깅 시간을 결정합니다.</p>
+
+<p>이 글에서 다루는 것</p>
+
+<ul>
+  <li>가상환경이 왜 필요한지, 무엇을 격리하는지</li>
+  <li>우분투 24.04의 시스템 파이썬과 <code class="language-plaintext highlighter-rouge">externally-managed-environment</code> 오류</li>
+  <li><code class="language-plaintext highlighter-rouge">venv</code> 생성·활성화·종료의 정확한 명령</li>
+  <li>가상환경 안에서 pip 관리하기, <code class="language-plaintext highlighter-rouge">requirements.txt</code>로 재현하기</li>
+  <li>로봇 프로젝트에서 쓰는 폴더 구조와 주의점</li>
+</ul>
+
+<hr />
+
+<h2 id="명령은-어디에-입력하나요">명령은 어디에 입력하나요?</h2>
+
+<p>이 글의 명령은 <strong>터미널</strong>에서 입력합니다. 다만 2편부터는 <strong>“어느 터미널이냐”</strong> 가 중요해집니다.</p>
+
+<p><strong>여는 방법</strong>: 바탕화면에서 <code class="language-plaintext highlighter-rouge">Ctrl</code> + <code class="language-plaintext highlighter-rouge">Alt</code> + <code class="language-plaintext highlighter-rouge">T</code> (또는 앱 표시 → Terminal)</p>
+
+<p><strong>이 글에서 구분하는 세 가지 상태</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>표시</th>
+      <th>뜻</th>
+      <th>이 글에서</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">user@robot-pc:~$</code></td>
+      <td>일반 터미널, 시스템 파이썬을 씀</td>
+      <td>가상환경 <strong>만들 때</strong></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">(robot_venv) user@robot-pc:~$</code></td>
+      <td>가상환경이 <strong>켜진</strong> 터미널</td>
+      <td>패키지 설치·실행할 때</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">deactivate</code> 후</td>
+      <td>다시 일반 상태로 돌아옴</td>
+      <td>작업이 끝났을 때</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>프롬프트 앞의 <code class="language-plaintext highlighter-rouge">(robot_venv)</code> 가 <strong>“지금 이 창은 가상환경 안”</strong> 이라는 표시입니다.</li>
+  <li>같은 명령이라도 활성화 전/후에 결과가 달라지므로, 코드 블록마다 <strong>어느 상태에서 치는지</strong> 적어 두었습니다.</li>
+  <li>복사는 <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">Shift</code>+<code class="language-plaintext highlighter-rouge">C</code>, 붙여넣기는 <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">Shift</code>+<code class="language-plaintext highlighter-rouge">V</code> 입니다.</li>
+</ul>
+
+<h2 id="한눈에-보는-전체-흐름-만들고--켜고--설치">한눈에 보는 전체 흐름: 만들고 → 켜고 → 설치</h2>
+
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/532ebc00-2395-4af6-a327-967cd70e3f9b/image.png" alt="가상환경 만드는 순서 — 생성, 활성화, 설치, 비활성화" /></p>
+
+<p><em>만들기는 프로젝트마다 한 번, 활성화는 터미널을 열 때마다입니다.</em></p>
+
+<ol>
+  <li><strong>폴더 이동</strong> — <code class="language-plaintext highlighter-rouge">cd ~/robot_ws</code></li>
+  <li><strong>생성</strong> — <code class="language-plaintext highlighter-rouge">python3 -m venv .venv</code></li>
+  <li><strong>활성화</strong> — <code class="language-plaintext highlighter-rouge">source .venv/bin/activate</code> (프롬프트에 <code class="language-plaintext highlighter-rouge">(.venv)</code> 표시)</li>
+  <li><strong>설치</strong> — <code class="language-plaintext highlighter-rouge">pip install numpy opencv-python</code></li>
+  <li><strong>종료</strong> — <code class="language-plaintext highlighter-rouge">deactivate</code></li>
+</ol>
+
+<hr />
+
+<h2 id="1-가상환경이-격리하는-것">1. 가상환경이 격리하는 것</h2>
+
+<p>파이썬은 패키지를 <strong>site-packages</strong> 라는 디렉터리에 설치합니다. 가상환경은 이 디렉터리를 <strong>프로젝트별로 따로</strong> 만들어 줍니다.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[가상환경 없이]
+시스템 파이썬 (하나)
+  └─ site-packages: numpy 2.x, opencv 4.10, ...
+
+[가상환경 사용]
+시스템 파이썬 (건드리지 않음)
+  ├─ ~/venv/robot_venv   → numpy 2.x, opencv 4.10
+  └─ ~/venv/vision_venv  → numpy 1.26, opencv 4.5
+</code></pre></div></div>
+
+<p>가상환경은 시스템 파이썬을 <strong>기반으로 하되</strong>, 패키지 공간(<code class="language-plaintext highlighter-rouge">site-packages</code>)만 따로 가집니다. 아래는 실제 편집기 화면에서 이 관계가 어떻게 보이는지입니다.</p>
+
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/8184da0f-d499-403a-a53f-bede82796d05/image.png" alt="VS Code의 Select Interpreter 목록 — 프로젝트 폴더의 venv가 Recommended로 표시된다" /></p>
+
+<p><em>VS Code 공식 문서의 실제 화면입니다. 목록 맨 위 <code class="language-plaintext highlighter-rouge">Python 3.10.5 ('venv': venv) … Recommended</code>가 <strong>이 프로젝트의 가상환경</strong>이고, 그 아래 <code class="language-plaintext highlighter-rouge">Global</code>/<code class="language-plaintext highlighter-rouge">Conda</code> 항목이 시스템에 깔린 다른 파이썬입니다. 가상환경을 쓰면 편집기도 이렇게 “프로젝트 전용 인터프리터”를 구분해서 보여 줍니다. (출처: VS Code 공식 문서, CC BY 3.0)</em></p>
+
+<p>핵심은 세 가지입니다.</p>
+
+<ol>
+  <li><strong>프로젝트마다 다른 버전을 쓸 수 있습니다.</strong></li>
+  <li><strong>시스템(운영체제)이 쓰는 파이썬을 건드리지 않습니다.</strong> 우분투 자체도 파이썬으로 만들어진 도구를 쓰기 때문에, 시스템 파이썬을 망가뜨리면 OS 업데이트나 GUI 도구가 깨질 수 있습니다.</li>
+  <li><strong>환경을 지우고 다시 만들 수 있습니다.</strong> 가상환경은 “재생 가능한 소모품”입니다. 이상해지면 폴더째 지우고 다시 만들면 됩니다.</li>
+</ol>
+
+<blockquote>
+  <p>공식 문서에서는 가상환경을 “프로젝트에 필요한 특정 파이썬 인터프리터와 라이브러리를 담는 디렉터리”로 설명하며, <strong>소스 관리(Git)에 넣지 말고</strong>, <strong>옮기거나 복사하지 말고 필요하면 다시 만들라</strong>고 안내합니다.</p>
+</blockquote>
+
+<h3 id="로봇-개발에서-왜-유난히-중요한가">로봇 개발에서 왜 유난히 중요한가</h3>
+
+<p>로봇 소프트웨어는 다음 같은 라이브러리를 함께 씁니다.</p>
+
+<ul>
+  <li>수치 연산: <code class="language-plaintext highlighter-rouge">numpy</code>, <code class="language-plaintext highlighter-rouge">scipy</code></li>
+  <li>영상 처리: <code class="language-plaintext highlighter-rouge">opencv-python</code></li>
+  <li>딥러닝: <code class="language-plaintext highlighter-rouge">torch</code>, <code class="language-plaintext highlighter-rouge">onnxruntime</code></li>
+  <li>로봇 통신: <code class="language-plaintext highlighter-rouge">rclpy</code>(ROS 2), <code class="language-plaintext highlighter-rouge">pymodbus</code>, <code class="language-plaintext highlighter-rouge">pyserial</code></li>
+</ul>
+
+<p>이들은 서로 촘촘하게 물려 있습니다. 예를 들어 <code class="language-plaintext highlighter-rouge">opencv-python</code>의 특정 버전은 <code class="language-plaintext highlighter-rouge">numpy</code>의 상한 버전을 요구하고, <code class="language-plaintext highlighter-rouge">torch</code>는 또 다른 조합을 요구합니다. 시스템 전체에 하나의 조합만 두면, 새 라이브러리를 하나 설치할 때 기존 프로젝트가 깨집니다.</p>
+
+<hr />
+
+<h2 id="2-우분투-2404의-시스템-파이썬-함부로-pip-install-하지-마세요">2. 우분투 24.04의 시스템 파이썬: 함부로 pip install 하지 마세요</h2>
+
+<p>우분투 24.04는 <strong>Python 3.12</strong>를 기본으로 제공합니다. 그런데 여기서 <code class="language-plaintext highlighter-rouge">pip install</code>을 그냥 실행하면 다음과 같은 오류를 만나게 됩니다.</p>
+
+<p><em>⌨️ 입력 위치: 터미널(일반 상태) — 일부러 실패를 보는 예 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip3 <span class="nb">install </span>requests
+</code></pre></div></div>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>error: externally-managed-environment
+
+× This environment is externally managed
+╰─&gt; To install Python packages system-wide, try apt install
+    python3-xyz, where xyz is the package you are trying to install.
+    ...
+note: If you believe this is a mistake, please contact your Python installation
+or OS distribution provider. You can override this, at the risk of breaking
+your Python installation or OS, by passing --break-system-packages.
+</code></pre></div></div>
+
+<p>이것은 고장이 아니라 <strong>보호 장치</strong>입니다. PEP 668은 배포판이 “이 파이썬의 패키지는 OS 패키지 관리자가 관리한다”고 선언할 수 있게 만든 표준이고, 우분투는 이 정책을 켜 두었습니다. 목적은 명확합니다.</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">pip</code>로 설치한 패키지가 OS가 설치한 패키지를 덮어써서 시스템 도구를 망가뜨리는 것을 막음</li>
+  <li>대신 <strong>가상환경을 쓰도록</strong> 유도</li>
+</ul>
+
+<h3 id="그래서-선택지는-세-가지">그래서 선택지는 세 가지</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>상황</th>
+      <th>권장 방법</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>프로젝트용 라이브러리 설치</td>
+      <td><strong>가상환경(venv) 안에서</strong> <code class="language-plaintext highlighter-rouge">pip install</code></td>
+    </tr>
+    <tr>
+      <td>OS 전역에 필요한 도구</td>
+      <td><code class="language-plaintext highlighter-rouge">sudo apt install python3-패키지명</code></td>
+    </tr>
+    <tr>
+      <td>CLI 도구 하나만 설치</td>
+      <td><code class="language-plaintext highlighter-rouge">pipx</code> (도구별 가상환경을 자동 관리)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><code class="language-plaintext highlighter-rouge">--break-system-packages</code> 옵션은 표준 문서에도 “위험을 감수하고 우회”하는 플래그로 정의되어 있습니다. <strong>시스템 파이썬에는 가급적 쓰지 마세요.</strong> 정말 필요한 상황(격리된 컨테이너, 일회성 CI 등)이 아니라면, 가상환경을 만드는 편이 언제나 낫습니다.</p>
+
+<blockquote>
+  <p>💡 시스템 파이썬 버전은 언제든 확인할 수 있습니다.</p>
+
+  <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 <span class="nt">--version</span>
+<span class="c"># Python 3.12.x</span>
+</code></pre></div>  </div>
+</blockquote>
+
+<hr />
+
+<h2 id="3-준비-필요한-도구-확인">3. 준비: 필요한 도구 확인</h2>
+
+<h3 id="pip-확인">pip 확인</h3>
+
+<p><em>⌨️ 입력 위치: 터미널(일반 상태) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip3 <span class="nt">--version</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">command not found</code>가 나오면 설치합니다.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update
+<span class="nb">sudo </span>apt <span class="nb">install </span>python3-pip
+</code></pre></div></div>
+
+<h3 id="venv-도구-확인">venv 도구 확인</h3>
+
+<p>우분투에서는 <code class="language-plaintext highlighter-rouge">venv</code> 구성 요소가 기본 이미지에 항상 들어 있지는 않습니다. 아래 명령이 실패하면 해당 패키지를 설치합니다.</p>
+
+<p><em>⌨️ 입력 위치: 터미널(일반 상태) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 파이썬 버전에 맞는 venv 패키지 설치 (Ubuntu 24.04 기준)</span>
+<span class="nb">sudo </span>apt <span class="nb">install </span>python3.12-venv
+</code></pre></div></div>
+
+<blockquote>
+  <p>버전이 다른 우분투(예: 22.04)라면 <code class="language-plaintext highlighter-rouge">python3.10-venv</code>처럼 버전을 맞춰야 합니다. <code class="language-plaintext highlighter-rouge">python3 -m venv</code>가 “ensurepip is not available” 같은 메시지로 실패하면 이 패키지가 빠진 것입니다.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="4-가상환경-만들기">4. 가상환경 만들기</h2>
+
+<p>먼저 가상환경을 모아 둘 폴더를 만듭니다. 프로젝트마다 흩어지지 않게 <strong>한 곳에 모으는 것</strong>이 관리에 유리합니다.</p>
+
+<p><em>⌨️ 입력 위치: 터미널(일반 상태) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cd</span> ~
+<span class="nb">mkdir</span> <span class="nt">-p</span> venv
+<span class="nb">ls</span>
+</code></pre></div></div>
+
+<p>이제 가상환경을 생성합니다.</p>
+
+<p><em>⌨️ 입력 위치: 터미널(일반 상태) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 <span class="nt">-m</span> venv ~/venv/robot_venv
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">-m venv</code>: <code class="language-plaintext highlighter-rouge">venv</code> 모듈을 실행하라는 뜻</li>
+  <li>뒤의 경로: 생성할 디렉터리 (없으면 만들어 줍니다)</li>
+</ul>
+
+<p>생성된 구조는 대략 이렇습니다.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~/venv/robot_venv/
+├── bin/
+│   ├── python      # 이 환경의 파이썬 (시스템 파이썬을 가리킴)
+│   ├── pip
+│   └── activate    # 활성화 스크립트
+├── include/
+├── lib/python3.12/site-packages/   # 이 환경 전용 패키지 저장소
+└── pyvenv.cfg
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">pyvenv.cfg</code>에는 이 환경이 어느 파이썬을 기반으로 만들어졌는지(<code class="language-plaintext highlighter-rouge">home</code>)가 기록됩니다. 가상환경을 옮기면 이 경로가 깨지기 때문에, 공식 문서가 “이동·복사하지 말라”고 하는 것입니다.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="5-활성화와-종료">5. 활성화와 종료</h2>
+
+<h3 id="활성화">활성화</h3>
+
+<p><em>⌨️ 입력 위치: 터미널 — 가상환경을 켜는 명령 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">source</span> ~/venv/robot_venv/bin/activate
+</code></pre></div></div>
+
+<p>활성화되면 프롬프트 앞에 환경 이름이 붙습니다.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(robot_venv) user@robot-pc:~$
+</code></pre></div></div>
+
+<p>이 표시가 <strong>“지금 내가 가상환경 안에 있다”는 유일한 확실한 신호</strong>입니다. 작업 전에 항상 확인하는 습관을 들이세요.</p>
+
+<p>확인 명령:</p>
+
+<p><em>⌨️ 입력 위치: 터미널 — 방금 활성화한 창에서 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>which python
+<span class="c"># /home/user/venv/robot_venv/bin/python</span>
+
+python <span class="nt">-c</span> <span class="s2">"import sys; print(sys.prefix)"</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">which python</code>이 가상환경 경로를 가리키면 정상입니다.</p>
+
+<h3 id="종료">종료</h3>
+
+<p><em>⌨️ 입력 위치: 터미널 — 가상환경이 켜진 창에서 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>deactivate
+</code></pre></div></div>
+
+<p>프롬프트의 <code class="language-plaintext highlighter-rouge">(robot_venv)</code>가 사라지고 원래 시스템 셸로 돌아옵니다.</p>
+
+<blockquote>
+  <p>💡 <strong>새 터미널을 열면 활성화는 풀립니다.</strong> 터미널마다 셸이 새로 뜨기 때문입니다(0편). 터미널을 새로 열 때마다 <code class="language-plaintext highlighter-rouge">source .../activate</code>를 다시 실행해야 합니다. 이 반복이 싫다면 5편의 <code class="language-plaintext highlighter-rouge">alias</code>를 활용하세요.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="6-가상환경-안에서-pip-관리하기">6. 가상환경 안에서 pip 관리하기</h2>
+
+<p>가상환경을 켠 상태에서는 <code class="language-plaintext highlighter-rouge">pip</code>가 <strong>그 환경의 site-packages</strong>만 바라봅니다. 이때는 <code class="language-plaintext highlighter-rouge">--break-system-packages</code> 없이 자유롭게 설치할 수 있습니다.</p>
+
+<p><em>⌨️ 입력 위치: 터미널 — <strong><code class="language-plaintext highlighter-rouge">.venv</code> 가 켜진 상태</strong>에서 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 가상환경 안에서 pip 자체를 최신으로</span>
+python <span class="nt">-m</span> pip <span class="nb">install</span> <span class="nt">--upgrade</span> pip
+
+<span class="c"># 패키지 설치</span>
+python <span class="nt">-m</span> pip <span class="nb">install </span>numpy opencv-python
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">pip</code> 대신 <code class="language-plaintext highlighter-rouge">python -m pip</code>를 쓰는 이유: <code class="language-plaintext highlighter-rouge">pip</code> 실행 파일이 여러 개 있을 때 <strong>현재 파이썬에 확실히 묶인 pip</strong>를 쓰기 위해서입니다. 환경이 꼬였을 때 원인 파악이 쉬워집니다.</p>
+</blockquote>
+
+<p>환경을 만들 때 pip까지 최신으로 맞추고 싶다면 생성 옵션을 쓸 수 있습니다.</p>
+
+<p><em>⌨️ 입력 위치: 터미널(일반 상태) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 <span class="nt">-m</span> venv <span class="nt">--upgrade-deps</span> ~/venv/robot_venv
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">--upgrade-deps</code>는 venv 생성 시 pip 등 핵심 의존성을 최신으로 올려 줍니다(공식 문서의 <code class="language-plaintext highlighter-rouge">venv</code> 옵션). 단, Python 3.12부터는 <code class="language-plaintext highlighter-rouge">setuptools</code>가 venv의 기본 구성 요소에서 빠졌으므로, <code class="language-plaintext highlighter-rouge">setup.py</code> 기반 패키지를 다룬다면 별도로 설치해야 할 수 있습니다.</p>
+</blockquote>
+
+<hr />
+
+<h2 id="7-환경을-재현하는-법-requirementstxt">7. 환경을 “재현”하는 법: requirements.txt</h2>
+
+<p>가상환경 폴더 자체는 Git에 올리지 않습니다. 대신 <strong>어떤 패키지의 어떤 버전을 설치했는지</strong>를 파일로 남깁니다.</p>
+
+<p><em>⌨️ 입력 위치: 터미널 — <strong>가상환경이 켜진 상태</strong>에서 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 현재 환경의 패키지 목록 저장</span>
+python <span class="nt">-m</span> pip freeze <span class="o">&gt;</span> requirements.txt
+</code></pre></div></div>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>numpy==2.1.3
+opencv-python==4.10.0.84
+</code></pre></div></div>
+
+<p>다른 PC(또는 나중의 나)에서 같은 환경을 복원:</p>
+
+<p><em>⌨️ 입력 위치: 터미널 — 가상환경을 켜는 명령 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 <span class="nt">-m</span> venv ~/venv/robot_venv
+<span class="nb">source</span> ~/venv/robot_venv/bin/activate
+python <span class="nt">-m</span> pip <span class="nb">install</span> <span class="nt">-r</span> requirements.txt
+</code></pre></div></div>
+
+<blockquote>
+  <p>왜 폴더를 복사하지 않나? 가상환경은 절대 경로와 OS·파이썬 버전에 묶여 있어서, 복사해도 제대로 동작하지 않는 경우가 많습니다. <strong>“만드는 방법”을 저장하는 것</strong>이 정석입니다.</p>
+</blockquote>
+
+<p><code class="language-plaintext highlighter-rouge">.gitignore</code>에 다음을 넣어 두면 실수로 환경이 커밋되는 것을 막을 수 있습니다.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>venv/
+.venv/
+__pycache__/
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="8-로봇-프로젝트에서의-실전-팁">8. 로봇 프로젝트에서의 실전 팁</h2>
+
+<h3 id="1-환경-이름은-용도로-짓기">(1) 환경 이름은 용도로 짓기</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>이름</th>
+      <th>용도</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">robot_venv</code></td>
+      <td>로봇 제어 기본 실습용</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">vision_venv</code></td>
+      <td>영상 처리·딥러닝</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sim_venv</code></td>
+      <td>시뮬레이터 전용</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="2-작업-시작-전-3초-점검">(2) 작업 시작 전 3초 점검</h3>
+
+<p><em>⌨️ 입력 위치: 터미널 — 방금 활성화한 창에서 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="nv">$VIRTUAL_ENV</span>     <span class="c"># 비어 있으면 활성화 안 된 상태</span>
+which python
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">$VIRTUAL_ENV</code>는 가상환경이 활성화될 때 자동으로 설정되는 환경변수입니다.</p>
+
+<h3 id="3-전역-오염을-의심하는-신호">(3) 전역 오염을 의심하는 신호</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">which python</code>이 <code class="language-plaintext highlighter-rouge">/usr/bin/python3</code>를 가리킨다 → 활성화가 풀렸다</li>
+  <li><code class="language-plaintext highlighter-rouge">pip list</code>에 설치한 적 없는 패키지가 잔뜩 있다 → 시스템 pip를 보고 있다</li>
+  <li>패키지를 설치했는데 <code class="language-plaintext highlighter-rouge">import</code>가 안 된다 → 다른 파이썬(다른 환경)에 설치됐다</li>
+</ul>
+
+<h3 id="4-ros-2와-함께-쓸-때">(4) ROS 2와 함께 쓸 때</h3>
+
+<p>ROS 2의 파이썬 패키지(<code class="language-plaintext highlighter-rouge">rclpy</code> 등)는 우분투 패키지로 설치되며, <code class="language-plaintext highlighter-rouge">source /opt/ros/jazzy/setup.bash</code>가 관련 경로를 <code class="language-plaintext highlighter-rouge">PYTHONPATH</code>에 넣어 줍니다. 즉 <strong>가상환경을 쓰더라도 ROS 2 환경은 별도로 유지</strong>됩니다.</p>
+
+<p>여기서 주의할 점이 있습니다.</p>
+
+<ul>
+  <li>같은 라이브러리(예: <code class="language-plaintext highlighter-rouge">numpy</code>)를 양쪽에서 서로 다른 버전으로 요구하면, 어느 쪽이 먼저 인식되는지에 따라 동작이 달라질 수 있습니다.</li>
+  <li>ROS 2 노드를 개발할 때는 <strong>버전을 고정</strong>(<code class="language-plaintext highlighter-rouge">requirements.txt</code>)하고, 문제가 생기면 <code class="language-plaintext highlighter-rouge">python -c "import numpy; print(numpy.__version__)"</code>로 실제 로드된 버전을 확인하세요.</li>
+  <li>시스템 패키지와 섞어 쓰는 것이 부담스럽다면, ROS 2 개발은 시스템 파이썬 기준으로 두고 <strong>딥러닝·영상처리만 별도 가상환경</strong>으로 분리하는 구성도 흔히 씁니다.</li>
+</ul>
+
+<h3 id="5-venv-vs-conda-뭘-쓰나">(5) venv vs conda, 뭘 쓰나</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th><code class="language-plaintext highlighter-rouge">venv</code> (표준 라이브러리)</th>
+      <th><code class="language-plaintext highlighter-rouge">conda</code> (Anaconda/Miniconda)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>설치</td>
+      <td>파이썬에 기본 포함</td>
+      <td>별도 설치 필요</td>
+    </tr>
+    <tr>
+      <td>패키지 출처</td>
+      <td>PyPI (<code class="language-plaintext highlighter-rouge">pip</code>)</td>
+      <td>conda 채널 + PyPI</td>
+    </tr>
+    <tr>
+      <td>강점</td>
+      <td>가볍고 표준, OS 파이썬과 궁합이 명확</td>
+      <td>파이썬이 아닌 바이너리 의존성(CUDA 등)까지 관리</td>
+    </tr>
+    <tr>
+      <td>추천</td>
+      <td>일반 프로젝트, ROS 2 연동</td>
+      <td>딥러닝 환경을 여러 개 격리할 때</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>처음 시작한다면 <strong>venv로 충분</strong>합니다. 딥러닝 프레임워크 버전을 여러 개 오가며 실험해야 할 때 conda를 고려하면 됩니다.</p>
+
+<hr />
+
+<h2 id="9-자주-겪는-문제">9. 자주 겪는 문제</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>증상</th>
+      <th>원인</th>
+      <th>해결</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">externally-managed-environment</code></td>
+      <td>시스템 파이썬에 직접 설치 시도</td>
+      <td>가상환경 활성화 후 설치</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ensurepip is not available</code></td>
+      <td>venv 패키지 미설치</td>
+      <td><code class="language-plaintext highlighter-rouge">sudo apt install python3.12-venv</code></td>
+    </tr>
+    <tr>
+      <td>활성화했는데 <code class="language-plaintext highlighter-rouge">pip</code>가 시스템 것을 씀</td>
+      <td>PATH 우선순위/활성화 풀림</td>
+      <td><code class="language-plaintext highlighter-rouge">which pip</code>, <code class="language-plaintext highlighter-rouge">which python</code> 확인</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">deactivate</code>가 없다고 나옴</td>
+      <td>활성화 상태가 아님</td>
+      <td>프롬프트의 <code class="language-plaintext highlighter-rouge">(환경명)</code> 확인</td>
+    </tr>
+    <tr>
+      <td>패키지 설치 후에도 <code class="language-plaintext highlighter-rouge">import</code> 실패</td>
+      <td>다른 환경에 설치됨</td>
+      <td><code class="language-plaintext highlighter-rouge">python -m pip install ...</code>로 현재 파이썬 지정</td>
+    </tr>
+    <tr>
+      <td>환경을 지웠더니 프로젝트가 안 됨</td>
+      <td>venv 폴더 삭제</td>
+      <td><code class="language-plaintext highlighter-rouge">requirements.txt</code>로 재생성</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="10-정리">10. 정리</h2>
+
+<ul>
+  <li>파이썬 라이브러리 충돌은 <strong>프로젝트별 격리</strong>로 막습니다.</li>
+  <li>우분투 24.04의 시스템 파이썬은 <strong>PEP 668로 보호</strong>되어 있어 <code class="language-plaintext highlighter-rouge">pip install</code>이 거부됩니다. 우회하지 말고 가상환경을 쓰세요.</li>
+  <li>핵심 명령은 네 개입니다.</li>
+</ul>
+
+<p><em>⌨️ 입력 위치: 터미널 — 가상환경을 켜는 명령 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>python3 <span class="nt">-m</span> venv ~/venv/robot_venv          <span class="c"># 생성</span>
+<span class="nb">source</span> ~/venv/robot_venv/bin/activate      <span class="c"># 활성화</span>
+deactivate                                  <span class="c"># 종료</span>
+python <span class="nt">-m</span> pip freeze <span class="o">&gt;</span> requirements.txt     <span class="c"># 기록</span>
+</code></pre></div></div>
+
+<p>다음 글에서는 이 가상환경을 <strong>VS Code에 연결</strong>합니다. 편집기에서 코드를 실행할 때 “어느 파이썬으로 실행되는지”가 명확해지면, 라이브러리 문제의 절반이 사라집니다.</p>
+
+<hr />
+
+<h2 id="이-글에-나온-명령어기호-풀이">이 글에 나온 명령어·기호 풀이</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>표기</th>
+      <th>원래 말 / 읽는 법</th>
+      <th>하는 일</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">python3</code></td>
+      <td>—</td>
+      <td>우분투의 파이썬 3 실행 파일</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">pip3</code></td>
+      <td><strong>p</strong>ip <strong>i</strong>nstalls <strong>p</strong>ackages</td>
+      <td>파이썬 패키지 설치 도구</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">python3 --version</code></td>
+      <td>—</td>
+      <td>파이썬 버전 확인</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">pip3 --version</code></td>
+      <td>—</td>
+      <td>pip 버전과 <strong>어느 파이썬에 붙어 있는지</strong> 확인</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-m</code></td>
+      <td><strong>m</strong>odule</td>
+      <td>“모듈을 스크립트처럼 실행” 옵션 (<code class="language-plaintext highlighter-rouge">python3 -m venv</code> = venv 모듈 실행)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">venv</code></td>
+      <td><strong>v</strong>irtual <strong>env</strong>ironment</td>
+      <td>파이썬 표준 가상환경 만들기 모듈</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">~/venv/robot_venv</code></td>
+      <td>—</td>
+      <td>가상환경을 만들 <strong>경로</strong>(폴더)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">source</code></td>
+      <td>—</td>
+      <td>스크립트를 <strong>현재 셸에서</strong> 실행 (환경변수 적용)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">activate</code></td>
+      <td>—</td>
+      <td>가상환경을 <strong>켜는</strong> 스크립트 (<code class="language-plaintext highlighter-rouge">bin/activate</code>)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">(robot_venv)</code></td>
+      <td>—</td>
+      <td>프롬프트 앞 표시 = <strong>가상환경이 켜져 있음</strong></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">deactivate</code></td>
+      <td>—</td>
+      <td>가상환경을 <strong>끄고</strong> 시스템 파이썬으로 복귀</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">which python</code></td>
+      <td>—</td>
+      <td><code class="language-plaintext highlighter-rouge">python</code> 이라는 명령이 <strong>실제로 어느 파일</strong>인지 보여 줌</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">pip install 패키지</code></td>
+      <td>—</td>
+      <td>패키지 설치</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">pip install -r requirements.txt</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-r</code> = <strong>r</strong>equirement file</td>
+      <td>파일에 적힌 목록을 <strong>한 번에</strong> 설치</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">pip freeze</code></td>
+      <td>—</td>
+      <td>현재 설치된 패키지와 버전을 <strong>목록으로</strong> 출력</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">&gt; requirements.txt</code></td>
+      <td>리다이렉션</td>
+      <td>그 목록을 파일로 저장</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">--upgrade-deps</code></td>
+      <td>—</td>
+      <td><code class="language-plaintext highlighter-rouge">pip</code>·<code class="language-plaintext highlighter-rouge">setuptools</code> 같은 기본 도구까지 최신으로</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">echo $VIRTUAL_ENV</code></td>
+      <td>—</td>
+      <td>가상환경 경로 변수 출력 (<strong>비어 있으면 꺼진 상태</strong>)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sudo apt install python3.12-venv</code></td>
+      <td>—</td>
+      <td>파이썬 버전에 맞는 venv 도구 설치</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">externally-managed-environment</code></td>
+      <td>—</td>
+      <td>“시스템 파이썬은 보호 중” 이라는 우분투 24.04의 <strong>오류 메시지</strong> (정상 동작)</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">pip</code> 와 <code class="language-plaintext highlighter-rouge">pip3</code> 는 같은 도구입니다. 우분투에서는 <code class="language-plaintext highlighter-rouge">pip3</code> 라는 이름이 함께 등록되어 있어, <code class="language-plaintext highlighter-rouge">pip</code> 가 없으면 <code class="language-plaintext highlighter-rouge">pip3</code> 를 쓰면 됩니다.</p>
+</blockquote>
+
+<h2 id="공식-문서-참고">공식 문서 참고</h2>
+
+<ul>
+  <li>Python <code class="language-plaintext highlighter-rouge">venv</code> 공식 문서: <a href="https://docs.python.org/3/library/venv.html">https://docs.python.org/3/library/venv.html</a></li>
+  <li>PEP 668 — 외부 관리 환경(externally managed environments): <a href="https://peps.python.org/pep-0668/">https://peps.python.org/pep-0668/</a></li>
+  <li>PyPA 사양 — Externally Managed Environments: <a href="https://packaging.python.org/en/latest/specifications/externally-managed-environments/">https://packaging.python.org/en/latest/specifications/externally-managed-environments/</a></li>
+  <li>pip 사용자 가이드: <a href="https://pip.pypa.io/en/stable/user_guide/">https://pip.pypa.io/en/stable/user_guide/</a></li>
+  <li>Ubuntu 24.04 LTS 릴리스 노트(Python 3.12 기본): <a href="https://documentation.ubuntu.com/release-notes/24.04/">https://documentation.ubuntu.com/release-notes/24.04/</a></li>
+  <li>conda 공식 문서: <a href="https://docs.conda.io/projects/conda/en/latest/">https://docs.conda.io/projects/conda/en/latest/</a></li>
+</ul>
+
+<h2 id="이미지-출처">이미지 출처</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>그림</th>
+      <th>출처</th>
+      <th>라이선스</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>VS Code Select Interpreter (venv 표시)</td>
+      <td><a href="https://code.visualstudio.com/docs/python/python-tutorial">VS Code 공식 문서 Python tutorial</a> (Microsoft)</td>
+      <td>CC BY 3.0 US</td>
+    </tr>
+    <tr>
+      <td>가상환경 만드는 순서</td>
+      <td>직접 그린 도해</td>
+      <td>—</td>
+    </tr>
+  </tbody>
+</table>
+
+  </div>
+
+  <nav class="post-nav" aria-label="이전 다음 글">
+    
+    <a class="post-nav-item post-nav-prev" href="/hello-robotics/posts/01-ubuntu-install/">
+      <span class="post-nav-dir">← 이전 글</span>
+      <span class="post-nav-title">우분투 24.04 설치와 첫 세팅 (부팅 USB부터 한글 입력까지)</span>
+    </a>
+    
+    
+    <a class="post-nav-item post-nav-next" href="/hello-robotics/posts/03-vscode/">
+      <span class="post-nav-dir">다음 글 →</span>
+      <span class="post-nav-title">VS Code 설치와 파이썬 인터프리터·주피터 커널 연결</span>
+    </a>
+    
+  </nav>
+
+  <p class="post-back"><a href="/hello-robotics/#series">전체 목차로 돌아가기</a></p>
+</article>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p class="footer-brand">excelh11<span class="brand-dot">.log</span></p>
+      <p class="footer-note">우분투 · 파이썬 · ROS 2, 로봇을 공부하며 정리한 기록</p>
+      <p class="footer-meta">© 2026 excelh11 · Built with Jekyll on GitHub Pages</p>
+    </div>
+  </footer>
+
+  <script src="/hello-robotics/assets/js/main.js"></script>
+</body>
+</html>

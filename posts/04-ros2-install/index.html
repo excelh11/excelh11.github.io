@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="ko-KR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ROS 2 Jazzy 설치 — Ubuntu 24.04에서 talker/listener까지 · excelh11</title>
+  <meta name="description" content="locale·저장소 준비부터 ros-jazzy-desktop 설치, 두 노드가 메시지를 주고받는 것까지 확인합니다.">
+  <meta name="author" content="excelh11">
+  <link rel="canonical" href="https://excelh11.github.io/hello-robotics/posts/04-ros2-install/">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="ROS 2 Jazzy 설치 — Ubuntu 24.04에서 talker/listener까지">
+  <meta property="og:description" content="locale·저장소 준비부터 ros-jazzy-desktop 설치, 두 노드가 메시지를 주고받는 것까지 확인합니다.">
+  <meta property="og:url" content="https://excelh11.github.io/hello-robotics/posts/04-ros2-install/">
+  <meta property="og:site_name" content="excelh11">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232563eb'/%3E%3Ctext x='50' y='70' font-family='system-ui,sans-serif' font-size='58' font-weight='700' fill='white' text-anchor='middle'%3Ee%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/hello-robotics/assets/css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 바로 가기</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="/hello-robotics/">
+        <span class="brand-mark">e</span>
+        <span class="brand-text">excelh11<span class="brand-dot">.log</span></span>
+      </a>
+      <nav class="site-nav" aria-label="사이트 메뉴">
+        <a href="/hello-robotics/#series" >시리즈</a>
+        <a href="/hello-robotics/#posts">글 목록</a>
+        <a href="https://github.com/excelh11" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    
+
+
+
+
+
+
+<article class="post">
+  <header class="post-header">
+    <a class="series-tag" href="/hello-robotics/#series">로봇을 공부하기 위한 가장 처음 해야 하는 세팅</a>
+    <h1 class="post-title">ROS 2 Jazzy 설치 — Ubuntu 24.04에서 talker/listener까지</h1>
+    <div class="post-meta">
+      <span class="post-part">04 / 07</span>
+      <span class="dot">·</span>
+      <time datetime="2026-11-26T09:04:00+09:00">2026년 11월 26일</time>
+      <span class="dot">·</span>
+      <span>약 27분</span>
+    </div>
+  </header>
+
+  <details class="series-nav">
+    <summary>
+      <span class="series-nav-label">시리즈 목차</span>
+      <span class="series-nav-current">04. ROS 2 Jazzy 설치 — Ubuntu 24.04에서 talker/listener까지</span>
+    </summary>
+    <ol class="series-nav-list">
+      
+      <li class="">
+        
+        <a href="/hello-robotics/posts/00-ubuntu-linux-basics/">00. 로봇 공부를 시작하기 전에 알아야 할 우분투·리눅스 기초</a>
+        
+      </li>
+      
+      <li class="">
+        
+        <a href="/hello-robotics/posts/01-ubuntu-install/">01. 우분투 24.04 설치와 첫 세팅 (부팅 USB부터 한글 입력까지)</a>
+        
+      </li>
+      
+      <li class="">
+        
+        <a href="/hello-robotics/posts/02-python-venv/">02. 파이썬 가상환경(venv) 완벽 정리 — 로봇 프로젝트를 위한 격리</a>
+        
+      </li>
+      
+      <li class="">
+        
+        <a href="/hello-robotics/posts/03-vscode/">03. VS Code 설치와 파이썬 인터프리터·주피터 커널 연결</a>
+        
+      </li>
+      
+      <li class="is-current">
+        
+        <span>04. ROS 2 Jazzy 설치 — Ubuntu 24.04에서 talker/listener까지</span>
+        
+      </li>
+      
+      <li class="">
+        
+        <a href="/hello-robotics/posts/05-bashrc-domain/">05. .bashrc로 ROS 2 환경 자동화 + ROS_DOMAIN_ID 격리</a>
+        
+      </li>
+      
+      <li class="">
+        
+        <a href="/hello-robotics/posts/06-ros2-cli/">06. ROS 2 기초 명령 — 터틀심으로 노드·토픽·서비스·액션 익히기</a>
+        
+      </li>
+      
+    </ol>
+  </details>
+
+  <div class="post-body">
+    <p>여기까지 왔다면 운영체제와 개발 도구가 준비됐습니다. 이제 로봇 소프트웨어의 본체인 <strong>ROS 2</strong>를 설치합니다.</p>
+
+<p>이 글은 <strong>Ubuntu 24.04 LTS에 ROS 2 Jazzy Jalisco를 공식 배포판(deb 패키지) 방식으로 설치</strong>하고, 두 개의 노드가 실제로 메시지를 주고받는 것까지 확인하는 전 과정을 다룹니다. 설치 명령은 2026년 기준 ROS 공식 문서의 절차를 그대로 따르며, 예전 튜토리얼과 달라진 부분(GPG 키 수동 등록 → <code class="language-plaintext highlighter-rouge">ros2-apt-source</code> 패키지)도 함께 설명합니다.</p>
+
+<p>이 글에서 다루는 것</p>
+
+<ul>
+  <li>ROS 2와 배포판(Jazzy)의 개념, 우분투 버전과의 짝</li>
+  <li>locale, universe 저장소, ROS 2 apt 저장소 준비</li>
+  <li><code class="language-plaintext highlighter-rouge">ros-jazzy-desktop</code> 설치와 환경 설정</li>
+  <li>talker/listener로 설치 검증</li>
+  <li>자주 막히는 지점과 해결</li>
+</ul>
+
+<hr />
+
+<h2 id="명령은-어디에-입력하나요">명령은 어디에 입력하나요?</h2>
+
+<p>ROS 2 설치 명령은 모두 <strong>일반 터미널</strong>에서 입력합니다.</p>
+
+<p><strong>여는 방법</strong>: <code class="language-plaintext highlighter-rouge">Ctrl</code> + <code class="language-plaintext highlighter-rouge">Alt</code> + <code class="language-plaintext highlighter-rouge">T</code> (여러 개 필요하면 <code class="language-plaintext highlighter-rouge">Ctrl</code> + <code class="language-plaintext highlighter-rouge">Shift</code> + <code class="language-plaintext highlighter-rouge">T</code> 로 탭을 늘리거나 새 창을 엽니다)</p>
+
+<p><strong>이 글에서 쓰는 터미널 구성</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>이름</th>
+      <th>여는 법</th>
+      <th>역할</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>설치용 터미널</td>
+      <td><code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">Alt</code>+<code class="language-plaintext highlighter-rouge">T</code></td>
+      <td>2~4장의 설치·환경 설정 명령</td>
+    </tr>
+    <tr>
+      <td>터미널 1</td>
+      <td>새 창</td>
+      <td><code class="language-plaintext highlighter-rouge">talker</code> 실행 (계속 떠 있어야 함)</td>
+    </tr>
+    <tr>
+      <td>터미널 2</td>
+      <td>새 창</td>
+      <td><code class="language-plaintext highlighter-rouge">listener</code> 실행 (계속 떠 있어야 함)</td>
+    </tr>
+    <tr>
+      <td>터미널 3</td>
+      <td>새 창</td>
+      <td><code class="language-plaintext highlighter-rouge">ros2 topic list</code> 같은 확인 명령</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">ros2</code> 명령은 <code class="language-plaintext highlighter-rouge">source /opt/ros/jazzy/setup.bash</code> 를 한 창에서만 동작합니다.</strong> 새 창을 열 때마다 다시 입력해야 합니다(5편에서 자동화).</li>
+  <li>실행 중인 창(talker·listener)은 <strong>닫지 말고 그대로 두고</strong>, 다른 창에서 다음 명령을 칩니다.</li>
+  <li>복사는 <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">Shift</code>+<code class="language-plaintext highlighter-rouge">C</code>, 붙여넣기는 <code class="language-plaintext highlighter-rouge">Ctrl</code>+<code class="language-plaintext highlighter-rouge">Shift</code>+<code class="language-plaintext highlighter-rouge">V</code> 입니다.</li>
+</ul>
+
+<h2 id="한눈에-보는-전체-흐름-로케일--저장소--설치--환경--검증">한눈에 보는 전체 흐름: 로케일 → 저장소 → 설치 → 환경 → 검증</h2>
+
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/3901f6e0-7f3e-466d-8f79-9b39177cd186/image.png" alt="ROS 2 Jazzy 설치 5단계" /></p>
+
+<p><em>설치만 하고 끝내지 말고 5번(두 노드 통신)까지 확인해야 설치가 끝난 것입니다.</em></p>
+
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/8e44a95f-cb07-4ce5-ab66-4214b60c206a/image.png" alt="ROS 2 Jazzy Jalisco 로고 — 이 글에서 설치하는 배포판" /></p>
+
+<p><em>ROS 2 Jazzy Jalisco(2024년 5월 릴리스, 지원 기간 2029년 5월까지)의 공식 로고. (출처: ROS 2 공식 문서, CC BY 4.0)</em></p>
+
+<ol>
+  <li><strong>로케일</strong> — UTF-8 확인</li>
+  <li><strong>저장소 등록</strong> — <code class="language-plaintext highlighter-rouge">ros2-apt-source</code> 패키지 설치</li>
+  <li><strong>설치</strong> — <code class="language-plaintext highlighter-rouge">sudo apt install ros-jazzy-desktop</code></li>
+  <li><strong>환경 설정</strong> — <code class="language-plaintext highlighter-rouge">source /opt/ros/jazzy/setup.bash</code></li>
+  <li><strong>검증</strong> — talker / listener 두 터미널</li>
+</ol>
+
+<hr />
+
+<h2 id="1-ros-2가-무엇이고-왜-jazzy인가">1. ROS 2가 무엇이고, 왜 Jazzy인가</h2>
+
+<p><strong>ROS 2(Robot Operating System 2)</strong> 는 운영체제가 아니라 <strong>로봇 소프트웨어를 만들기 위한 미들웨어 + 도구 모음</strong>입니다. 핵심 발상은 이렇습니다.</p>
+
+<blockquote>
+  <p>로봇을 하나의 거대한 프로그램으로 만들지 말고, <strong>기능별로 잘게 나눈 프로그램(노드)</strong> 들이 <strong>정해진 방식으로 메시지를 주고받게</strong> 하자.</p>
+</blockquote>
+
+<p>카메라를 읽는 노드, 라이다를 처리하는 노드, 경로를 계획하는 노드, 모터를 돌리는 노드를 각각 따로 만들고 서로 통신하게 하면, 하나를 바꿔도 나머지가 그대로 동작합니다. ROS 2는 그 통신 규칙(토픽·서비스·액션), 실행 도구(<code class="language-plaintext highlighter-rouge">ros2</code> 명령), 시각화 도구(RViz, rqt), 빌드 시스템(colcon)을 제공합니다.</p>
+
+<h3 id="배포판과-우분투의-짝">배포판과 우분투의 짝</h3>
+
+<p>ROS 2는 1년마다 새 배포판을 내고, 짝수 해에 나오는 버전이 <strong>LTS(장기 지원)</strong> 입니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>배포판</th>
+      <th>공개</th>
+      <th>지원 종료</th>
+      <th>대응 우분투</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Humble Hawksbill</td>
+      <td>2022년 5월</td>
+      <td>2027년 5월</td>
+      <td>Ubuntu 22.04</td>
+    </tr>
+    <tr>
+      <td><strong>Jazzy Jalisco</strong></td>
+      <td><strong>2024년 5월</strong></td>
+      <td><strong>2029년 5월</strong></td>
+      <td><strong>Ubuntu 24.04</strong></td>
+    </tr>
+    <tr>
+      <td>Kilted Kaiju</td>
+      <td>2025년 5월</td>
+      <td>2026년 11월</td>
+      <td>Ubuntu 24.04</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>공식 플랫폼 정의(REP 2000)에서 Jazzy의 <strong>Tier 1</strong> 플랫폼은 <strong>Ubuntu 24.04 (amd64, arm64)</strong> 와 Windows 10입니다. Tier 1은 “지속적으로 테스트되고, 버그가 우선적으로 수정되는” 등급이므로, 로봇을 처음 시작한다면 Tier 1 조합을 쓰는 것이 가장 안전합니다.</p>
+
+<blockquote>
+  <p>정리: <strong>Ubuntu 24.04 LTS + ROS 2 Jazzy</strong>는 2029년 5월까지 함께 가는 조합입니다. 이 짝을 벗어나면 패키지가 없거나 의존성이 깨지는 일이 생깁니다.</p>
+</blockquote>
+
+<h3 id="설치-방법은-세-가지">설치 방법은 세 가지</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>방법</th>
+      <th>특징</th>
+      <th>추천</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>deb 패키지(바이너리)</strong></td>
+      <td>apt로 설치, 즉시 사용</td>
+      <td>✅ 처음 시작</td>
+    </tr>
+    <tr>
+      <td>소스 빌드</td>
+      <td>커스터마이징 가능, 오래 걸림</td>
+      <td>특수 요구가 있을 때</td>
+    </tr>
+    <tr>
+      <td>Docker 이미지</td>
+      <td>호스트 오염 없음, 재현성</td>
+      <td>서버·배포</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>이 글은 공식 문서가 “권장”으로 표시하는 <strong>deb 패키지 설치</strong>를 다룹니다.</p>
+
+<hr />
+
+<h2 id="2-설치-전-시스템-준비">2. 설치 전 시스템 준비</h2>
+
+<h3 id="2-1-locale-설정-utf-8">2-1. locale 설정 (UTF-8)</h3>
+
+<p>ROS 2는 문자열 처리에 UTF-8 로케일을 요구합니다. 먼저 현재 상태를 확인합니다.</p>
+
+<p><em>⌨️ 입력 위치: 터미널 — 설치용 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>locale
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">LANG=</code> 값이 <code class="language-plaintext highlighter-rouge">en_US.UTF-8</code>처럼 UTF-8을 가리키면 그대로 진행해도 됩니다. 최소 환경(도커 컨테이너 등)에서 <code class="language-plaintext highlighter-rouge">POSIX</code>로만 되어 있다면 아래를 실행합니다.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update <span class="o">&amp;&amp;</span> <span class="nb">sudo </span>apt <span class="nb">install </span>locales
+<span class="nb">sudo </span>locale-gen en_US en_US.UTF-8
+<span class="nb">sudo </span>update-locale <span class="nv">LC_ALL</span><span class="o">=</span>en_US.UTF-8 <span class="nv">LANG</span><span class="o">=</span>en_US.UTF-8
+<span class="nb">export </span><span class="nv">LANG</span><span class="o">=</span>en_US.UTF-8
+
+locale   <span class="c"># 다시 확인</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">sudo update-locale</code>은 시스템 기본값을, <code class="language-plaintext highlighter-rouge">export</code>는 <strong>현재 셸에만</strong> 적용합니다. 두 줄이 함께 있는 이유입니다.</p>
+</blockquote>
+
+<h3 id="2-2-universe-저장소-활성화">2-2. universe 저장소 활성화</h3>
+
+<p>ROS 2 패키지가 의존하는 도구들이 우분투의 <strong>universe</strong>(커뮤니티 패키지) 저장소에 있습니다.</p>
+
+<p><em>⌨️ 입력 위치: 터미널 — 설치용 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt <span class="nb">install </span>software-properties-common
+<span class="nb">sudo </span>add-apt-repository universe
+</code></pre></div></div>
+
+<h3 id="2-3-ros-2-apt-저장소-등록-현재-공식-방식">2-3. ROS 2 apt 저장소 등록 (현재 공식 방식)</h3>
+
+<p>예전 문서에는 GPG 키를 직접 내려받아 <code class="language-plaintext highlighter-rouge">/usr/share/keyrings</code>에 넣고 <code class="language-plaintext highlighter-rouge">sources.list.d/ros2.list</code>를 만드는 절차가 있었습니다. <strong>지금 공식 문서는 이 과정을 패키지 하나로 대신합니다.</strong> <code class="language-plaintext highlighter-rouge">ros2-apt-source</code> 패키지가 저장소 설정과 서명 키를 알아서 구성하고, 이후 저장소 설정이 바뀌어도 자동으로 갱신해 줍니다.</p>
+
+<p><em>⌨️ 입력 위치: 터미널 — 설치용 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update <span class="o">&amp;&amp;</span> <span class="nb">sudo </span>apt <span class="nb">install </span>curl <span class="nt">-y</span>
+
+<span class="nb">export </span><span class="nv">ROS_APT_SOURCE_VERSION</span><span class="o">=</span><span class="si">$(</span>curl <span class="nt">-fsSL</span> <span class="nt">-o</span> /dev/null <span class="nt">-w</span> <span class="s1">'%{url_effective}'</span> https://github.com/ros-infrastructure/ros-apt-source/releases/latest | <span class="nb">awk</span> <span class="nt">-F</span>/ <span class="s1">'{print $NF}'</span><span class="si">)</span>
+curl <span class="nt">-L</span> <span class="nt">-o</span> /tmp/ros2-apt-source.deb <span class="s2">"https://github.com/ros-infrastructure/ros-apt-source/releases/download/</span><span class="k">${</span><span class="nv">ROS_APT_SOURCE_VERSION</span><span class="k">}</span><span class="s2">/ros2-apt-source_</span><span class="k">${</span><span class="nv">ROS_APT_SOURCE_VERSION</span><span class="k">}</span><span class="s2">.</span><span class="si">$(</span><span class="nb">.</span> /etc/os-release <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="k">${</span><span class="nv">UBUNTU_CODENAME</span><span class="k">:-${</span><span class="nv">VERSION_CODENAME</span><span class="k">}}</span><span class="si">)</span><span class="s2">_all.deb"</span>
+<span class="nb">sudo </span>dpkg <span class="nt">-i</span> /tmp/ros2-apt-source.deb
+</code></pre></div></div>
+
+<p>명령이 길어 보이지만 하는 일은 단순합니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>부분</th>
+      <th>의미</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">curl -fsSL -o /dev/null -w '%{url_effective}' .../releases/latest</code></td>
+      <td>최신 릴리스로 리다이렉트된 <strong>최종 URL</strong>만 읽어 옴</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">awk -F/ '{print $NF}'</code></td>
+      <td>그 URL의 마지막 조각(<code class="language-plaintext highlighter-rouge">태그 이름</code>)만 추출</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">$(. /etc/os-release &amp;&amp; echo ${UBUNTU_CODENAME:-${VERSION_CODENAME}})</code></td>
+      <td>현재 우분투 코드네임(<code class="language-plaintext highlighter-rouge">noble</code>)을 읽어 파일 이름을 완성</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sudo dpkg -i /tmp/ros2-apt-source.deb</code></td>
+      <td>내려받은 설정 패키지 설치</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>💡 예전 방식(수동 GPG 키)을 쓰는 튜토리얼도 여전히 많습니다. 두 방식을 <strong>동시에</strong> 적용하면 저장소가 중복 등록되어 <code class="language-plaintext highlighter-rouge">apt update</code>에 경고가 쌓일 수 있으니, 하나만 쓰세요. 이미 예전 방식으로 등록해 두었다면 <code class="language-plaintext highlighter-rouge">/etc/apt/sources.list.d/ros2.list</code>를 지우고 위 방식을 쓰는 편이 깔끔합니다.</p>
+</blockquote>
+
+<h3 id="2-4-개발-도구-선택">2-4. 개발 도구 (선택)</h3>
+
+<p>ROS 2 패키지를 직접 빌드하거나 개발할 계획이라면 설치합니다.</p>
+
+<p><em>⌨️ 입력 위치: 터미널 — 설치용 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update <span class="o">&amp;&amp;</span> <span class="nb">sudo </span>apt <span class="nb">install </span>ros-dev-tools
+</code></pre></div></div>
+
+<blockquote>
+  <p>⚠️ <strong>Ubuntu 24.04 주의사항</strong>: apt 소스에 <code class="language-plaintext highlighter-rouge">noble</code>만 있고 <code class="language-plaintext highlighter-rouge">noble-updates</code>, <code class="language-plaintext highlighter-rouge">noble-backports</code>가 빠져 있으면 <code class="language-plaintext highlighter-rouge">ros-dev-tools</code> 설치 시 의존성 충돌이 날 수 있습니다. 공식 문서가 안내하는 확인 방법은 다음과 같습니다.</p>
+
+  <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">grep </span>Suites /etc/apt/sources.list.d/ubuntu.sources
+</code></pre></div>  </div>
+
+  <p>출력에 <code class="language-plaintext highlighter-rouge">noble-updates</code>, <code class="language-plaintext highlighter-rouge">noble-backports</code>가 없다면 해당 줄을 아래처럼 고친 뒤 다시 진행합니다.</p>
+
+  <div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Suites: noble noble-updates noble-backports
+</code></pre></div>  </div>
+
+  <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt clean <span class="o">&amp;&amp;</span> <span class="nb">sudo </span>apt update <span class="o">&amp;&amp;</span> <span class="nb">sudo </span>apt full-upgrade <span class="nt">-y</span>
+</code></pre></div>  </div>
+</blockquote>
+
+<hr />
+
+<h2 id="3-ros-2-jazzy-설치">3. ROS 2 Jazzy 설치</h2>
+
+<p><em>⌨️ 입력 위치: 터미널 — 설치용 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt update
+<span class="nb">sudo </span>apt upgrade
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-jazzy-desktop
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">sudo apt upgrade</code>: ROS 2 패키지는 최신 우분투 시스템을 기준으로 빌드되므로, 설치 전 시스템을 최신으로 맞추라는 것이 공식 권장 사항입니다.</li>
+  <li><code class="language-plaintext highlighter-rouge">ros-jazzy-desktop</code>: <strong>ROS, RViz, 데모, 튜토리얼</strong>이 포함된 권장 설치입니다.</li>
+</ul>
+
+<h3 id="desktop-vs-ros-base">desktop vs ros-base</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>패키지</th>
+      <th>포함</th>
+      <th>언제</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ros-jazzy-desktop</code></td>
+      <td>통신 라이브러리 + GUI 도구(RViz, rqt) + 데모·튜토리얼</td>
+      <td>학습·개발 PC (권장)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ros-jazzy-ros-base</code></td>
+      <td>통신 라이브러리 + CLI 도구만 (GUI 없음)</td>
+      <td>로봇 본체, 서버, 임베디드</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>로봇 본체에 설치할 때는 <code class="language-plaintext highlighter-rouge">ros-base</code>로 용량을 줄이고, 개발 PC에는 <code class="language-plaintext highlighter-rouge">desktop</code>을 쓰는 구성이 일반적입니다.</p>
+
+<p>설치에는 환경에 따라 수 GB의 다운로드와 수 분~수십 분이 걸립니다.</p>
+
+<hr />
+
+<h2 id="4-환경-설정-source-한-줄의-의미">4. 환경 설정: <code class="language-plaintext highlighter-rouge">source</code> 한 줄의 의미</h2>
+
+<p>설치가 끝났다고 <code class="language-plaintext highlighter-rouge">ros2</code> 명령이 바로 되는 것은 아닙니다. <strong>새 터미널마다</strong> 다음을 실행해야 합니다.</p>
+
+<p><em>⌨️ 입력 위치: 터미널 — 설치용 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">source</span> /opt/ros/jazzy/setup.bash
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">setup.bash</code>는 현재 셸에 ROS 2 관련 환경변수를 등록합니다. 대표적으로:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">PATH</code>: <code class="language-plaintext highlighter-rouge">ros2</code> 실행 파일 위치</li>
+  <li><code class="language-plaintext highlighter-rouge">PYTHONPATH</code>: ROS 2 파이썬 패키지(<code class="language-plaintext highlighter-rouge">rclpy</code> 등) 위치</li>
+  <li><code class="language-plaintext highlighter-rouge">AMENT_PREFIX_PATH</code>: 패키지 탐색 경로</li>
+  <li><code class="language-plaintext highlighter-rouge">LD_LIBRARY_PATH</code>: 공유 라이브러리 경로</li>
+</ul>
+
+<p>확인:</p>
+
+<p><em>⌨️ 입력 위치: 터미널 — 설치용 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">printenv</span> | <span class="nb">grep</span> <span class="nt">-i</span> ros
+ros2 <span class="nt">--help</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">ROS_DISTRO=jazzy</code>가 보이면 정상입니다.</p>
+
+<blockquote>
+  <p>💡 <strong>매 터미널마다 입력하기 번거롭다면</strong> <code class="language-plaintext highlighter-rouge">~/.bashrc</code>에 넣어 자동화합니다. 정확한 방법과 주의점은 다음 글(터미널·<code class="language-plaintext highlighter-rouge">.bashrc</code>)에서 자세히 다룹니다.</p>
+
+  <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="s2">"source /opt/ros/jazzy/setup.bash"</span> <span class="o">&gt;&gt;</span> ~/.bashrc
+<span class="nb">source</span> ~/.bashrc
+</code></pre></div>  </div>
+</blockquote>
+
+<hr />
+
+<h2 id="5-설치-검증-talker와-listener">5. 설치 검증: talker와 listener</h2>
+
+<p>ROS 2의 정상 동작은 <strong>두 노드가 메시지를 주고받는 것</strong>으로 확인합니다. 공식 문서는 <strong>C++ talker</strong>와 <strong>Python listener</strong> 조합을 안내합니다. 이렇게 하면 C++ API와 Python API가 <strong>둘 다</strong> 정상이라는 것을 한 번에 확인할 수 있습니다.</p>
+
+<h3 id="터미널-1-talker">터미널 1: talker</h3>
+
+<p><em>⌨️ 입력 위치: <strong>터미널 1</strong> — talker 를 띄우는 창 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">source</span> /opt/ros/jazzy/setup.bash
+ros2 run demo_nodes_cpp talker
+</code></pre></div></div>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[INFO] [talker]: Publishing: 'Hello World: 1'
+[INFO] [talker]: Publishing: 'Hello World: 2'
+...
+</code></pre></div></div>
+
+<h3 id="터미널-2-listener">터미널 2: listener</h3>
+
+<p><em>⌨️ 입력 위치: <strong>터미널 2</strong> — listener 를 띄우는 창 (터미널 1은 그대로 둠) · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">source</span> /opt/ros/jazzy/setup.bash
+ros2 run demo_nodes_py listener
+</code></pre></div></div>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[INFO] [listener]: I heard: [Hello World: 1]
+[INFO] [listener]: I heard: [Hello World: 2]
+...
+</code></pre></div></div>
+
+<p>한쪽이 <code class="language-plaintext highlighter-rouge">Publishing</code>, 다른 쪽이 <code class="language-plaintext highlighter-rouge">I heard</code>를 출력하면 <strong>설치 성공</strong>입니다.</p>
+
+<blockquote>
+  <p>두 터미널 모두에서 <code class="language-plaintext highlighter-rouge">source</code>를 해야 합니다. 셸은 터미널마다 독립이기 때문입니다(0편). “listener가 아무것도 못 받는다”의 가장 흔한 원인이 이것입니다.</p>
+</blockquote>
+
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/2d578c67-2ecd-4692-a20d-cac91ed307a6/image.png" alt="turtlesim 실제 실행 화면 — 파란 창에 거북이가 그려진다" /></p>
+
+<p><em><code class="language-plaintext highlighter-rouge">ros2 run turtlesim turtlesim_node</code>를 실행하면 뜨는 실제 창입니다. talker/listener 대신 <strong>눈으로 확인할 수 있는 노드</strong>라 설치 검증에 자주 씁니다. (출처: ROS 2 공식 문서, CC BY 4.0)</em></p>
+
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/17c8bf3e-31b5-4317-80ad-665e5b9f4201/image.gif" alt="토픽 하나에 발행자 1개와 구독자 1개가 붙는 구조 (ROS 2 공식 애니메이션)" /></p>
+
+<p><em>발행자는 받는 사람을 모릅니다. 토픽 이름만 같으면 연결됩니다(1:N, 비동기). (출처: ROS 2 공식 문서 Understanding topics, CC BY 4.0)</em></p>
+
+<h3 id="통신-구조를-눈으로-보기">통신 구조를 눈으로 보기</h3>
+
+<p>세 번째 터미널에서:</p>
+
+<p><em>⌨️ 입력 위치: <strong>터미널 3</strong> — 확인용 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">source</span> /opt/ros/jazzy/setup.bash
+ros2 topic list
+ros2 topic <span class="nb">echo</span> /chatter
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">/chatter</code> 토픽에 메시지가 흐르는 것을 직접 볼 수 있습니다. GUI로 보고 싶다면:</p>
+
+<p><em>⌨️ 입력 위치: 터미널 3 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rqt_graph
+</code></pre></div></div>
+
+<p>talker → <code class="language-plaintext highlighter-rouge">/chatter</code> → listener의 연결이 그래프로 표시됩니다.</p>
+
+<hr />
+
+<h2 id="6-설치-후-알아-둘-것">6. 설치 후 알아 둘 것</h2>
+
+<h3 id="6-1-여러-대의-로봇이-같은-네트워크에-있을-때">6-1. 여러 대의 로봇이 같은 네트워크에 있을 때</h3>
+
+<p>ROS 2는 기본적으로 <strong>같은 네트워크의 모든 ROS 2 노드를 서로 발견</strong>합니다. 실습실이나 연구실처럼 여러 사람이 같은 공유기를 쓴다면, 내 로봇 명령이 다른 사람 노드에 보이고 그 반대도 마찬가지입니다.</p>
+
+<p>이를 막는 것이 <code class="language-plaintext highlighter-rouge">ROS_DOMAIN_ID</code>입니다. 같은 값을 가진 노드끼리만 통신합니다.</p>
+
+<p><em>⌨️ 입력 위치: 터미널 — 도메인 번호를 바꿔 볼 때 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">ROS_DOMAIN_ID</span><span class="o">=</span>13
+</code></pre></div></div>
+
+<p>기본값은 <strong>0</strong>이고, 안전하게 쓸 수 있는 범위는 <strong>0~101</strong>입니다(리눅스의 임시 포트 범위와 겹치지 않는 구간). 자세한 원리와 설정은 다음 글에서 다룹니다.</p>
+
+<h3 id="6-2-제거와-재설치">6-2. 제거와 재설치</h3>
+
+<p><em>⌨️ 입력 위치: 터미널 — 설치용 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt remove <span class="s1">'~nros-jazzy-*'</span> <span class="o">&amp;&amp;</span> <span class="nb">sudo </span>apt autoremove
+</code></pre></div></div>
+
+<p>저장소 설정까지 지우려면:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt remove ros2-apt-source
+<span class="nb">sudo </span>apt update
+<span class="nb">sudo </span>apt autoremove
+<span class="nb">sudo </span>apt upgrade
+</code></pre></div></div>
+
+<blockquote>
+  <p>설치가 꼬였을 때 “일단 지우고 다시 깔기”가 가능한 것이 바이너리 설치의 장점입니다.</p>
+</blockquote>
+
+<h3 id="6-3-gui-도구가-안-뜰-때">6-3. GUI 도구가 안 뜰 때</h3>
+
+<p>RViz나 rqt가 실행되지 않는 경우, 대부분 그래픽 드라이버 또는 원격 접속 환경 문제입니다.</p>
+
+<ul>
+  <li>SSH로 접속한 상태라면 GUI가 뜨지 않는 것이 정상입니다(X 포워딩 필요).</li>
+  <li>NVIDIA 드라이버 설치 후에는 재부팅이 필요할 수 있습니다.</li>
+  <li><code class="language-plaintext highlighter-rouge">ros2 run rviz2 rviz2</code>로 직접 실행해 오류 메시지를 확인하세요.</li>
+</ul>
+
+<hr />
+
+<h2 id="7-자주-막히는-지점">7. 자주 막히는 지점</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>증상</th>
+      <th>원인</th>
+      <th>해결</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ros2: command not found</code></td>
+      <td><code class="language-plaintext highlighter-rouge">source</code> 안 함</td>
+      <td>새 터미널마다 <code class="language-plaintext highlighter-rouge">source /opt/ros/jazzy/setup.bash</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">E: Unable to locate package ros-jazzy-desktop</code></td>
+      <td>저장소 미등록 또는 <code class="language-plaintext highlighter-rouge">apt update</code> 안 함</td>
+      <td><code class="language-plaintext highlighter-rouge">ros2-apt-source</code> 설치 후 <code class="language-plaintext highlighter-rouge">sudo apt update</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">apt update</code>에 GPG/서명 오류</td>
+      <td>키·저장소 중복 또는 만료</td>
+      <td>예전 <code class="language-plaintext highlighter-rouge">ros2.list</code> 제거 후 재등록</td>
+    </tr>
+    <tr>
+      <td>talker는 뜨는데 listener가 못 받음</td>
+      <td>한쪽만 <code class="language-plaintext highlighter-rouge">source</code> / 도메인 ID 불일치</td>
+      <td>두 터미널 모두 <code class="language-plaintext highlighter-rouge">source</code>, <code class="language-plaintext highlighter-rouge">echo $ROS_DOMAIN_ID</code> 비교</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ros-dev-tools</code> 설치 중 의존성 충돌</td>
+      <td><code class="language-plaintext highlighter-rouge">noble-updates</code>/<code class="language-plaintext highlighter-rouge">noble-backports</code> 누락</td>
+      <td><code class="language-plaintext highlighter-rouge">ubuntu.sources</code>의 <code class="language-plaintext highlighter-rouge">Suites</code> 수정 후 <code class="language-plaintext highlighter-rouge">full-upgrade</code></td>
+    </tr>
+    <tr>
+      <td>locale 경고</td>
+      <td>UTF-8 아님</td>
+      <td>2-1 절차 수행</td>
+    </tr>
+    <tr>
+      <td>설치가 중간에 멈춤</td>
+      <td>디스크 부족</td>
+      <td><code class="language-plaintext highlighter-rouge">df -h</code>로 여유 공간 확인 (수 GB 필요)</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="8-정리">8. 정리</h2>
+
+<p><em>⌨️ 입력 위치: 터미널 — 설치용 · <code class="language-plaintext highlighter-rouge">$</code> 뒤에 입력하고 <code class="language-plaintext highlighter-rouge">Enter</code></em></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1) 시스템 준비</span>
+<span class="nb">sudo </span>apt update <span class="o">&amp;&amp;</span> <span class="nb">sudo </span>apt <span class="nb">install </span>locales curl
+<span class="nb">sudo </span>locale-gen en_US en_US.UTF-8
+<span class="nb">sudo </span>update-locale <span class="nv">LC_ALL</span><span class="o">=</span>en_US.UTF-8 <span class="nv">LANG</span><span class="o">=</span>en_US.UTF-8
+<span class="nb">sudo </span>apt <span class="nb">install </span>software-properties-common
+<span class="nb">sudo </span>add-apt-repository universe
+
+<span class="c"># 2) ROS 2 저장소 등록 (공식 방식)</span>
+<span class="nb">export </span><span class="nv">ROS_APT_SOURCE_VERSION</span><span class="o">=</span><span class="si">$(</span>curl <span class="nt">-fsSL</span> <span class="nt">-o</span> /dev/null <span class="nt">-w</span> <span class="s1">'%{url_effective}'</span> https://github.com/ros-infrastructure/ros-apt-source/releases/latest | <span class="nb">awk</span> <span class="nt">-F</span>/ <span class="s1">'{print $NF}'</span><span class="si">)</span>
+curl <span class="nt">-L</span> <span class="nt">-o</span> /tmp/ros2-apt-source.deb <span class="s2">"https://github.com/ros-infrastructure/ros-apt-source/releases/download/</span><span class="k">${</span><span class="nv">ROS_APT_SOURCE_VERSION</span><span class="k">}</span><span class="s2">/ros2-apt-source_</span><span class="k">${</span><span class="nv">ROS_APT_SOURCE_VERSION</span><span class="k">}</span><span class="s2">.</span><span class="si">$(</span><span class="nb">.</span> /etc/os-release <span class="o">&amp;&amp;</span> <span class="nb">echo</span> <span class="k">${</span><span class="nv">UBUNTU_CODENAME</span><span class="k">:-${</span><span class="nv">VERSION_CODENAME</span><span class="k">}}</span><span class="si">)</span><span class="s2">_all.deb"</span>
+<span class="nb">sudo </span>dpkg <span class="nt">-i</span> /tmp/ros2-apt-source.deb
+
+<span class="c"># 3) 설치</span>
+<span class="nb">sudo </span>apt update <span class="o">&amp;&amp;</span> <span class="nb">sudo </span>apt upgrade
+<span class="nb">sudo </span>apt <span class="nb">install </span>ros-jazzy-desktop
+
+<span class="c"># 4) 환경 설정</span>
+<span class="nb">source</span> /opt/ros/jazzy/setup.bash
+</code></pre></div></div>
+
+<ul>
+  <li>배포판은 <strong>우분투 버전과 짝</strong>이 맞아야 합니다: Ubuntu 24.04 ↔ ROS 2 Jazzy.</li>
+  <li>저장소 등록은 이제 <strong><code class="language-plaintext highlighter-rouge">ros2-apt-source</code> 패키지</strong>로 처리합니다.</li>
+  <li>설치 검증은 <strong>talker/listener</strong>, 그리고 <code class="language-plaintext highlighter-rouge">rqt_graph</code>로 구조 확인.</li>
+  <li>여러 로봇이 같은 네트워크에 있다면 <code class="language-plaintext highlighter-rouge">ROS_DOMAIN_ID</code>를 반드시 설정합니다.</li>
+</ul>
+
+<p>다음 글에서는 <code class="language-plaintext highlighter-rouge">source</code>를 매번 치지 않아도 되게 만드는 <strong><code class="language-plaintext highlighter-rouge">.bashrc</code></strong>, 반복 명령을 줄이는 <strong><code class="language-plaintext highlighter-rouge">alias</code></strong>, 그리고 네트워크 격리의 핵심인 <strong><code class="language-plaintext highlighter-rouge">ROS_DOMAIN_ID</code></strong> 를 다룹니다.</p>
+
+<hr />
+
+<h2 id="이-글에-나온-명령어기호-풀이">이 글에 나온 명령어·기호 풀이</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>표기</th>
+      <th>원래 말 / 읽는 법</th>
+      <th>하는 일</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">locale</code></td>
+      <td>—</td>
+      <td>현재 언어·인코딩 설정을 보여 줍니다</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sudo locales</code> 설치</td>
+      <td>—</td>
+      <td>로케일 도구 설치</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sudo locale-gen ko_KR.UTF-8</code></td>
+      <td>generate</td>
+      <td>해당 로케일을 <strong>생성</strong></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sudo update-locale LANG=ko_KR.UTF-8</code></td>
+      <td>—</td>
+      <td>기본 언어 값을 <strong>파일에 등록</strong></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sudo add-apt-repository universe</code></td>
+      <td>—</td>
+      <td><code class="language-plaintext highlighter-rouge">universe</code> 저장소를 <strong>채널에 추가</strong></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">curl</code></td>
+      <td>—</td>
+      <td>인터넷에서 파일을 받는 도구</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-s</code> (<code class="language-plaintext highlighter-rouge">--silent</code>)</td>
+      <td>—</td>
+      <td>진행 표시를 숨깁니다</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-S</code> (<code class="language-plaintext highlighter-rouge">--show-error</code>)</td>
+      <td>—</td>
+      <td>오류는 그래도 보여 줍니다</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-L</code> (<code class="language-plaintext highlighter-rouge">--location</code>)</td>
+      <td>—</td>
+      <td>이동(리다이렉트) 주소를 따라갑니다</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-o 파일</code> (<code class="language-plaintext highlighter-rouge">--output</code>)</td>
+      <td>—</td>
+      <td>받은 내용을 <strong>파일로 저장</strong></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">./ros2-apt-source_*.deb</code></td>
+      <td>—</td>
+      <td>받은 설치 파일을 현재 폴더에서 설치</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">sudo apt install ros-jazzy-desktop</code></td>
+      <td>—</td>
+      <td>ROS 2 본체 + GUI 도구 설치</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">-y</code></td>
+      <td>yes</td>
+      <td>확인 질문에 자동 yes</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">source /opt/ros/jazzy/setup.bash</code></td>
+      <td>—</td>
+      <td>ROS 2 환경변수(PATH 등)를 <strong>이 창에</strong> 등록</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ros2 run 패키지 실행파일</code></td>
+      <td>—</td>
+      <td>노드(=프로그램)를 실행</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ros2 topic list</code></td>
+      <td>—</td>
+      <td>지금 흐르는 <strong>토픽 목록</strong></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ros2 topic echo /chatter</code></td>
+      <td>—</td>
+      <td>그 토픽에 오가는 <strong>내용을 출력</strong></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">printenv</code> | <code class="language-plaintext highlighter-rouge">grep -i ros</code></td>
+      <td>—</td>
+      <td>환경변수 중 <code class="language-plaintext highlighter-rouge">ros</code> 가 든 것만 출력</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">export ROS_DOMAIN_ID=13</code></td>
+      <td>—</td>
+      <td>통째 번호(도메인)를 <strong>이 창에</strong> 지정</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">~nros-jazzy-*</code></td>
+      <td>—</td>
+      <td><code class="language-plaintext highlighter-rouge">ros-jazzy-</code> 로 시작하는 패키지 전체를 뜻하는 <strong>정규식</strong></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">autoremove</code></td>
+      <td>—</td>
+      <td>필요 없어진 의존 패키지까지 정리</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">rqt_graph</code></td>
+      <td>—</td>
+      <td>노드·토픽 연결을 <strong>그림</strong>으로 보여 주는 도구</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">ros2: command not found</code> 는 “<strong>이 창에</strong> ROS 2 환경이 등록되지 않았다”는 뜻입니다. <code class="language-plaintext highlighter-rouge">source /opt/ros/jazzy/setup.bash</code> 를 입력하거나 새 창을 열면 해결됩니다.</p>
+</blockquote>
+
+<h2 id="공식-문서-참고">공식 문서 참고</h2>
+
+<ul>
+  <li>ROS 2 Jazzy 문서(시작점): <a href="https://docs.ros.org/en/jazzy/">https://docs.ros.org/en/jazzy/</a></li>
+  <li>ROS 2 Jazzy — Ubuntu(deb packages) 설치: <a href="https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html">https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html</a></li>
+  <li>ROS 2 환경 설정 튜토리얼: <a href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Configuring-ROS2-Environment.html">https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Configuring-ROS2-Environment.html</a></li>
+  <li>REP 2000 — ROS 2 배포판과 대상 플랫폼: <a href="https://reps.openrobotics.org/rep-2000/">https://reps.openrobotics.org/rep-2000/</a></li>
+  <li>ROS 2 Jazzy 릴리스 공지(2029년 5월까지 지원): <a href="https://discourse.openrobotics.org/t/ros-2-jazzy-jalisco-released/37862">https://discourse.openrobotics.org/t/ros-2-jazzy-jalisco-released/37862</a></li>
+  <li>ROS 2 설치 문제 해결: <a href="https://docs.ros.org/en/jazzy/How-To-Guides/Installation-Troubleshooting.html">https://docs.ros.org/en/jazzy/How-To-Guides/Installation-Troubleshooting.html</a></li>
+  <li><code class="language-plaintext highlighter-rouge">ros2-apt-source</code> 저장소: <a href="https://github.com/ros-infrastructure/ros-apt-source">https://github.com/ros-infrastructure/ros-apt-source</a></li>
+</ul>
+
+<h2 id="이미지-출처">이미지 출처</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>그림</th>
+      <th>출처</th>
+      <th>라이선스</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ROS 2 Jazzy 로고</td>
+      <td><a href="https://docs.ros.org/en/jazzy/">ROS 2 공식 문서</a> (jazzy-small.png)</td>
+      <td>CC BY 4.0</td>
+    </tr>
+    <tr>
+      <td>turtlesim 실행 화면</td>
+      <td><a href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Introducing-Turtlesim/Introducing-Turtlesim.html">ROS 2 공식 튜토리얼 Introducing Turtlesim</a></td>
+      <td>CC BY 4.0</td>
+    </tr>
+    <tr>
+      <td>토픽 발행/구독 구조</td>
+      <td><a href="https://docs.ros.org/en/jazzy/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Topics/Understanding-ROS2-Topics.html">ROS 2 공식 문서 Understanding topics</a></td>
+      <td>CC BY 4.0</td>
+    </tr>
+    <tr>
+      <td>설치 5단계</td>
+      <td>직접 그린 도해</td>
+      <td>—</td>
+    </tr>
+  </tbody>
+</table>
+
+  </div>
+
+  <nav class="post-nav" aria-label="이전 다음 글">
+    
+    <a class="post-nav-item post-nav-prev" href="/hello-robotics/posts/03-vscode/">
+      <span class="post-nav-dir">← 이전 글</span>
+      <span class="post-nav-title">VS Code 설치와 파이썬 인터프리터·주피터 커널 연결</span>
+    </a>
+    
+    
+    <a class="post-nav-item post-nav-next" href="/hello-robotics/posts/05-bashrc-domain/">
+      <span class="post-nav-dir">다음 글 →</span>
+      <span class="post-nav-title">.bashrc로 ROS 2 환경 자동화 + ROS_DOMAIN_ID 격리</span>
+    </a>
+    
+  </nav>
+
+  <p class="post-back"><a href="/hello-robotics/#series">전체 목차로 돌아가기</a></p>
+</article>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <p class="footer-brand">excelh11<span class="brand-dot">.log</span></p>
+      <p class="footer-note">우분투 · 파이썬 · ROS 2, 로봇을 공부하며 정리한 기록</p>
+      <p class="footer-meta">© 2026 excelh11 · Built with Jekyll on GitHub Pages</p>
+    </div>
+  </footer>
+
+  <script src="/hello-robotics/assets/js/main.js"></script>
+</body>
+</html>
