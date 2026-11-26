@@ -1,0 +1,60 @@
+---
+layout: default
+---
+{% assign series_posts = site.posts | sort: "order" %}
+
+<section class="hero">
+  <p class="hero-eyebrow">기술 블로그 · 시리즈</p>
+  <h1 class="hero-title">{{ site.series.title }}</h1>
+  <p class="hero-desc">{{ site.series.description }}</p>
+  <div class="hero-chips">
+    <span class="chip">{{ series_posts.size }}편</span>
+    <span class="chip">Ubuntu 24.04 LTS</span>
+    <span class="chip">ROS 2 Jazzy</span>
+    <span class="chip">Python · VS Code</span>
+  </div>
+</section>
+
+<section id="series" class="section">
+  <div class="section-head">
+    <h2 class="section-title">시리즈 목차</h2>
+    <p class="section-sub">순서대로 따라 하면 빈 노트북이 로봇 개발 환경이 됩니다.</p>
+  </div>
+
+  <ol class="series-list">
+    {% for post in series_posts %}
+    <li class="series-item">
+      <a class="series-link" href="{{ post.url | relative_url }}">
+        <span class="series-num">{{ post.order | prepend: '0' | slice: -2, 2 }}</span>
+        <span class="series-body">
+          <span class="series-name">{{ post.title }}</span>
+          <span class="series-desc">{{ post.description }}</span>
+        </span>
+        <span class="series-arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ol>
+</section>
+
+<section id="posts" class="section">
+  <div class="section-head">
+    <h2 class="section-title">모든 글</h2>
+    <p class="section-sub">최근에 올린 글부터 보여 줍니다.</p>
+  </div>
+
+  <ul class="post-list">
+    {% for post in site.posts %}
+    <li class="post-item">
+      <a class="post-link" href="{{ post.url | relative_url }}">
+        <span class="post-title">{{ post.title }}</span>
+        <span class="post-meta">
+          <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%Y.%m.%d' }}</time>
+          <span class="dot">·</span>
+          <span>약 {{ post.content | strip_html | size | divided_by: 500 | at_least: 1 }}분</span>
+        </span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</section>

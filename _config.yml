@@ -1,0 +1,37 @@
+title: excelh11
+tagline: 로봇을 공부하기 위한 가장 처음 해야 하는 세팅
+description: 우분투 설치부터 파이썬 가상환경, ROS 2 Jazzy 기초 명령까지 — 로봇 공부를 시작할 때 필요한 세팅을 순서대로 정리한 기록
+author: excelh11
+lang: ko-KR
+timezone: Asia/Seoul
+url: "https://excelh11.github.io"
+baseurl: ""
+github_username: excelh11
+permalink: /posts/:title/
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+  syntax_highlighter: rouge
+  auto_ids: true
+  toc_levels: 1..3
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+
+series:
+  key: robot-setup
+  title: 로봇을 공부하기 위한 가장 처음 해야 하는 세팅
+  description: 우분투 24.04 설치에서 ROS 2 기초 명령까지, 7편으로 따라 하는 로봇 개발 첫 세팅
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - node_modules

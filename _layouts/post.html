@@ -1,0 +1,71 @@
+---
+layout: default
+---
+{% assign series_posts = site.posts | where: "series", page.series | sort: "order" %}
+{% assign current_index = 0 %}
+{% for p in series_posts %}
+  {% if p.order == page.order %}{% assign current_index = forloop.index0 %}{% endif %}
+{% endfor %}
+{% assign prev_index = current_index | minus: 1 %}
+{% assign next_index = current_index | plus: 1 %}
+{% for p in series_posts %}
+  {% if forloop.index0 == prev_index %}{% assign prev_post = p %}{% endif %}
+  {% if forloop.index0 == next_index %}{% assign next_post = p %}{% endif %}
+{% endfor %}
+
+<article class="post">
+  <header class="post-header">
+    <a class="series-tag" href="{{ '/' | relative_url }}#series">{{ site.series.title }}</a>
+    <h1 class="post-title">{{ page.title }}</h1>
+    <div class="post-meta">
+      <span class="post-part">{{ page.order | prepend: '0' | slice: -2, 2 }} / {{ series_posts.size | prepend: '0' | slice: -2, 2 }}</span>
+      <span class="dot">·</span>
+      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%Y년 %m월 %d일' }}</time>
+      <span class="dot">·</span>
+      <span>약 {{ content | strip_html | size | divided_by: 500 | at_least: 1 }}분</span>
+    </div>
+  </header>
+
+  <details class="series-nav">
+    <summary>
+      <span class="series-nav-label">시리즈 목차</span>
+      <span class="series-nav-current">{{ page.order | prepend: '0' | slice: -2, 2 }}. {{ page.title }}</span>
+    </summary>
+    <ol class="series-nav-list">
+      {% for p in series_posts %}
+      <li class="{% if p.order == page.order %}is-current{% endif %}">
+        {% if p.order == page.order %}
+        <span>{{ p.order | prepend: '0' | slice: -2, 2 }}. {{ p.title }}</span>
+        {% else %}
+        <a href="{{ p.url | relative_url }}">{{ p.order | prepend: '0' | slice: -2, 2 }}. {{ p.title }}</a>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+  </details>
+
+  <div class="post-body">
+    {{ content }}
+  </div>
+
+  <nav class="post-nav" aria-label="이전 다음 글">
+    {% if prev_post %}
+    <a class="post-nav-item post-nav-prev" href="{{ prev_post.url | relative_url }}">
+      <span class="post-nav-dir">← 이전 글</span>
+      <span class="post-nav-title">{{ prev_post.title }}</span>
+    </a>
+    {% else %}
+    <span class="post-nav-item is-empty"></span>
+    {% endif %}
+    {% if next_post %}
+    <a class="post-nav-item post-nav-next" href="{{ next_post.url | relative_url }}">
+      <span class="post-nav-dir">다음 글 →</span>
+      <span class="post-nav-title">{{ next_post.title }}</span>
+    </a>
+    {% else %}
+    <span class="post-nav-item is-empty"></span>
+    {% endif %}
+  </nav>
+
+  <p class="post-back"><a href="{{ '/' | relative_url }}#series">전체 목차로 돌아가기</a></p>
+</article>
