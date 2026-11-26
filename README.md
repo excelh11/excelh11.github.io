@@ -1,8 +1,9 @@
-# excelh11.github.io
+# hello-robotics
 
 > 로봇을 공부하기 위한 가장 처음 해야 하는 세팅 — 우분투 24.04 · 파이썬 가상환경 · ROS 2 Jazzy
 
-`https://excelh11.github.io/` — Jekyll 기반 GitHub Pages 블로그입니다.
+`https://excelh11.github.io/hello-robotics/` — Jekyll 기반 GitHub Pages 블로그입니다.
+(프로젝트 사이트이므로 `_config.yml`에 `baseurl: "/hello-robotics"`가 설정되어 있습니다.)
 
 ## 구조
 

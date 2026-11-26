@@ -5,7 +5,7 @@ author: excelh11
 lang: ko-KR
 timezone: Asia/Seoul
 url: "https://excelh11.github.io"
-baseurl: ""
+baseurl: "/hello-robotics"
 github_username: excelh11
 permalink: /posts/:title/
 
