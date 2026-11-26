@@ -6,28 +6,28 @@
   <title>로봇 공부를 시작하기 전에 알아야 할 우분투·리눅스 기초 · excelh11</title>
   <meta name="description" content="운영체제·커널·셸·PATH·sudo·apt가 로봇 개발에서 어디에 쓰이는지, 코드보다 먼저 만나는 벽을 정리합니다.">
   <meta name="author" content="excelh11">
-  <link rel="canonical" href="https://excelh11.github.io/hello-robotics/posts/00-ubuntu-linux-basics/">
+  <link rel="canonical" href="https://excelh11.github.io/posts/00-ubuntu-linux-basics/">
   <meta property="og:type" content="article">
   <meta property="og:title" content="로봇 공부를 시작하기 전에 알아야 할 우분투·리눅스 기초">
   <meta property="og:description" content="운영체제·커널·셸·PATH·sudo·apt가 로봇 개발에서 어디에 쓰이는지, 코드보다 먼저 만나는 벽을 정리합니다.">
-  <meta property="og:url" content="https://excelh11.github.io/hello-robotics/posts/00-ubuntu-linux-basics/">
+  <meta property="og:url" content="https://excelh11.github.io/posts/00-ubuntu-linux-basics/">
   <meta property="og:site_name" content="excelh11">
   <meta name="twitter:card" content="summary">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%232563eb'/%3E%3Ctext x='50' y='70' font-family='system-ui,sans-serif' font-size='58' font-weight='700' fill='white' text-anchor='middle'%3Ee%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="/hello-robotics/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
   <a class="skip-link" href="#main">본문으로 바로 가기</a>
 
   <header class="site-header">
     <div class="wrap header-inner">
-      <a class="brand" href="/hello-robotics/">
+      <a class="brand" href="/">
         <span class="brand-mark">e</span>
         <span class="brand-text">excelh11<span class="brand-dot">.log</span></span>
       </a>
       <nav class="site-nav" aria-label="사이트 메뉴">
-        <a href="/hello-robotics/#series" >시리즈</a>
-        <a href="/hello-robotics/#posts">글 목록</a>
+        <a href="/#series" >시리즈</a>
+        <a href="/#posts">글 목록</a>
         <a href="https://github.com/excelh11" target="_blank" rel="noopener">GitHub</a>
       </nav>
     </div>
@@ -43,7 +43,7 @@
 
 <article class="post">
   <header class="post-header">
-    <a class="series-tag" href="/hello-robotics/#series">로봇을 공부하기 위한 가장 처음 해야 하는 세팅</a>
+    <a class="series-tag" href="/#series">로봇을 공부하기 위한 가장 처음 해야 하는 세팅</a>
     <h1 class="post-title">로봇 공부를 시작하기 전에 알아야 할 우분투·리눅스 기초</h1>
     <div class="post-meta">
       <span class="post-part">00 / 07</span>
@@ -69,37 +69,37 @@
       
       <li class="">
         
-        <a href="/hello-robotics/posts/01-ubuntu-install/">01. 우분투 24.04 설치와 첫 세팅 (부팅 USB부터 한글 입력까지)</a>
+        <a href="/posts/01-ubuntu-install/">01. 우분투 24.04 설치와 첫 세팅 (부팅 USB부터 한글 입력까지)</a>
         
       </li>
       
       <li class="">
         
-        <a href="/hello-robotics/posts/02-python-venv/">02. 파이썬 가상환경(venv) 완벽 정리 — 로봇 프로젝트를 위한 격리</a>
+        <a href="/posts/02-python-venv/">02. 파이썬 가상환경(venv) 완벽 정리 — 로봇 프로젝트를 위한 격리</a>
         
       </li>
       
       <li class="">
         
-        <a href="/hello-robotics/posts/03-vscode/">03. VS Code 설치와 파이썬 인터프리터·주피터 커널 연결</a>
+        <a href="/posts/03-vscode/">03. VS Code 설치와 파이썬 인터프리터·주피터 커널 연결</a>
         
       </li>
       
       <li class="">
         
-        <a href="/hello-robotics/posts/04-ros2-install/">04. ROS 2 Jazzy 설치 — Ubuntu 24.04에서 talker/listener까지</a>
+        <a href="/posts/04-ros2-install/">04. ROS 2 Jazzy 설치 — Ubuntu 24.04에서 talker/listener까지</a>
         
       </li>
       
       <li class="">
         
-        <a href="/hello-robotics/posts/05-bashrc-domain/">05. .bashrc로 ROS 2 환경 자동화 + ROS_DOMAIN_ID 격리</a>
+        <a href="/posts/05-bashrc-domain/">05. .bashrc로 ROS 2 환경 자동화 + ROS_DOMAIN_ID 격리</a>
         
       </li>
       
       <li class="">
         
-        <a href="/hello-robotics/posts/06-ros2-cli/">06. ROS 2 기초 명령 — 터틀심으로 노드·토픽·서비스·액션 익히기</a>
+        <a href="/posts/06-ros2-cli/">06. ROS 2 기초 명령 — 터틀심으로 노드·토픽·서비스·액션 익히기</a>
         
       </li>
       
@@ -129,7 +129,7 @@
 
 <p><img src="https://velog.velcdn.com/images/aiexcelh/post/25be7e37-7ff0-454a-b4bb-eec8f17c888a/image.png" alt="명령 한 줄이 실행되는 순서 — 터미널, 셸, 커널, 하드웨어와 PATH" /></p>
 
-<p><em>명령은 위에서 아래로 내려가고, 결과는 반대로 돌아옵니다. 맨 아래 상자는 ROS 2의 <code class="language-plaintext highlighter-rouge">source</code>가 <code class="language-plaintext highlighter-rouge">PATH</code>를 채우는 장면입니다. (이 그림만 개념을 정리한 도해이고, 아래부터는 실제 화면입니다.)</em></p>
+<p><em>명령은 위에서 아래로 내려가고, 결과는 반대로 돌아옵니다. 맨 아래 상자는 ROS 2의 <code class="language-plaintext highlighter-rouge">source</code>가 <code class="language-plaintext highlighter-rouge">PATH</code>를 채우는 장면입니다. (이 그림만 개념을 정리한 도해이고, 아래부터는 Ubuntu 24.04 화면입니다.)</em></p>
 
 <ol>
   <li><strong>입력</strong> — 키보드로 <code class="language-plaintext highlighter-rouge">ls -al</code> 입력</li>
@@ -161,9 +161,9 @@
 
 <p><em>실제 Ubuntu 24.04 LTS를 설치하고 처음 켰을 때 보이는 화면입니다. 왼쪽 아래 <strong>점 9개(Show Applications)</strong> 를 누르면 앱 목록이 열리고, 거기서 “Terminal”을 찾습니다.</em></p>
 
-<p><img src="https://velog.velcdn.com/images/aiexcelh/post/415df837-c1c2-4018-9460-6b25f7ccbf1d/image.png" alt="터미널에서 ls -al을 실행한 실제 화면 — 프롬프트, 명령, 결과가 한 화면에 이어서 찍힌다" /></p>
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/aed2e6d7-b819-4cdb-98d1-0cb520a8d75a/image.png" alt="터미널에서 ls -al을 실행한 화면 — 프롬프트, 명령, 결과가 한 화면에 이어서 찍힌다" /></p>
 
-<p><em>프롬프트(<code class="language-plaintext highlighter-rouge">wajper@goślinyzwrot:~$</code>) 뒤에 <code class="language-plaintext highlighter-rouge">ls -al</code>을 입력하고 Enter를 누른 결과입니다. 파일 권한(<code class="language-plaintext highlighter-rouge">-rw-r--r--</code>), 소유자, 크기, 이름 순서로 한 줄씩 출력됩니다.</em></p>
+<p><em>프롬프트(<code class="language-plaintext highlighter-rouge">user@robot-pc:~$</code>) 뒤에 <code class="language-plaintext highlighter-rouge">ls -al</code>을 입력하고 Enter를 누른 결과입니다. 파일 권한(<code class="language-plaintext highlighter-rouge">-rw-r--r--</code>), 소유자, 크기, 이름 순서로 한 줄씩 출력됩니다. (Ubuntu 24.04 기본 터미널 화면)</em></p>
 
 <p><strong>입력하는 위치</strong></p>
 <ul>
@@ -312,9 +312,9 @@
 
 <p><em>실제 우분투의 <code class="language-plaintext highlighter-rouge">/</code> 구조를 그린 공개 자료입니다. <code class="language-plaintext highlighter-rouge">bin</code>→<code class="language-plaintext highlighter-rouge">usr/bin</code>, <code class="language-plaintext highlighter-rouge">lib</code>→<code class="language-plaintext highlighter-rouge">usr/lib</code> 같은 링크(→ 표시)도 보입니다. (출처: Wikimedia Commons, CC BY-SA 4.0)</em></p>
 
-<p><img src="https://velog.velcdn.com/images/aiexcelh/post/8e4f84e6-8827-420b-b529-68986d861738/image.png" alt="루트(/)에서 ls를 실행한 실제 화면 — bin, boot, dev, etc, home, opt, usr, var가 실제로 들어 있다" /></p>
+<p><img src="https://velog.velcdn.com/images/aiexcelh/post/2dc5f544-cb5f-4922-875a-43b8f709ed3d/image.png" alt="`ls /`를 실행한 화면 — bin, boot, dev, etc, home, opt, usr, var가 실제로 들어 있다" /></p>
 
-<p><em><code class="language-plaintext highlighter-rouge">ls /</code>를 실행하면 위 표의 디렉터리들이 실제로 나옵니다. 로봇 개발에서 가장 자주 들어갈 곳은 <strong><code class="language-plaintext highlighter-rouge">/opt</code>(ROS 2 설치 위치)</strong>, <strong><code class="language-plaintext highlighter-rouge">/dev</code>(USB 카메라·포트)</strong>, <strong><code class="language-plaintext highlighter-rouge">/home</code>(내 작업 폴더)</strong> 입니다.</em></p>
+<p><em><code class="language-plaintext highlighter-rouge">ls /</code>를 실행하면 위 표의 디렉터리들이 실제로 나옵니다(<code class="language-plaintext highlighter-rouge">bin</code>·<code class="language-plaintext highlighter-rouge">lib</code>·<code class="language-plaintext highlighter-rouge">sbin</code>처럼 <code class="language-plaintext highlighter-rouge">usr</code> 아래를 가리키는 링크는 청록색). 로봇 개발에서 가장 자주 들어갈 곳은 <strong><code class="language-plaintext highlighter-rouge">/opt</code>(ROS 2 설치 위치)</strong>, <strong><code class="language-plaintext highlighter-rouge">/dev</code>(USB 카메라·포트)</strong>, <strong><code class="language-plaintext highlighter-rouge">/home</code>(내 작업 폴더)</strong> 입니다.</em></p>
 
 <p>로봇 개발에서 자주 만나는 위치만 정리하면 다음과 같습니다.</p>
 
@@ -952,8 +952,8 @@ ros2 top&lt;Tab&gt;        <span class="c"># 명령 자동완성</span>
     </tr>
     <tr>
       <td>터미널 <code class="language-plaintext highlighter-rouge">ls -al</code> 화면</td>
-      <td>Wikimedia Commons <a href="https://commons.wikimedia.org/wiki/File:GNOME_Terminal_3.32_screenshot.png">GNOME Terminal 3.32 screenshot</a></td>
-      <td>GPLv3</td>
+      <td>직접 제작 — Ubuntu 24.04 기본 터미널(GNOME Terminal) 재현 화면 (<code class="language-plaintext highlighter-rouge">user@robot-pc</code>)</td>
+      <td>—</td>
     </tr>
     <tr>
       <td>파일 시스템 계층</td>
@@ -961,9 +961,9 @@ ros2 top&lt;Tab&gt;        <span class="c"># 명령 자동완성</span>
       <td>CC BY-SA 4.0</td>
     </tr>
     <tr>
-      <td>루트 <code class="language-plaintext highlighter-rouge">ls</code> 화면</td>
-      <td>Wikimedia Commons <a href="https://commons.wikimedia.org/wiki/File:Command_line.png">Command line.png</a></td>
-      <td>GPL</td>
+      <td><code class="language-plaintext highlighter-rouge">ls /</code> 화면</td>
+      <td>직접 제작 — Ubuntu 24.04 기본 터미널(GNOME Terminal) 재현 화면 (<code class="language-plaintext highlighter-rouge">user@robot-pc</code>)</td>
+      <td>—</td>
     </tr>
   </tbody>
 </table>
@@ -975,14 +975,14 @@ ros2 top&lt;Tab&gt;        <span class="c"># 명령 자동완성</span>
     <span class="post-nav-item is-empty"></span>
     
     
-    <a class="post-nav-item post-nav-next" href="/hello-robotics/posts/01-ubuntu-install/">
+    <a class="post-nav-item post-nav-next" href="/posts/01-ubuntu-install/">
       <span class="post-nav-dir">다음 글 →</span>
       <span class="post-nav-title">우분투 24.04 설치와 첫 세팅 (부팅 USB부터 한글 입력까지)</span>
     </a>
     
   </nav>
 
-  <p class="post-back"><a href="/hello-robotics/#series">전체 목차로 돌아가기</a></p>
+  <p class="post-back"><a href="/#series">전체 목차로 돌아가기</a></p>
 </article>
 
   </main>
@@ -995,6 +995,6 @@ ros2 top&lt;Tab&gt;        <span class="c"># 명령 자동완성</span>
     </div>
   </footer>
 
-  <script src="/hello-robotics/assets/js/main.js"></script>
+  <script src="/assets/js/main.js"></script>
 </body>
 </html>
