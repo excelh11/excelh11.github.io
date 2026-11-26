@@ -79,7 +79,7 @@ bash는 실행될 때 상황에 따라 다른 파일을 읽습니다.
 
 ![터미널을 4개로 나눈 화면 — 칸마다 별개의 bash가 떠 있고, 칸마다 .bashrc의 "ROS2 Jazzy is activated"가 한 번씩 찍혀 있다](https://velog.velcdn.com/images/aiexcelh/post/e9062050-bedf-448e-8eca-a00c215b4a29/image.png)
 
-*Terminator 같은 터미널을 분할해 쓰면 **칸마다 별개의 bash**가 실행됩니다. 그래서 `.bashrc`도 칸마다 한 번씩 읽히고(`ROS2 Jazzy is activated`가 칸마다 찍혀 있는 것이 그 증거입니다), `source ~/.bashrc`도 지금 커서가 있는 칸에만 적용됩니다. "옆 창에서는 되는데 이 창에서는 `ros2`가 안 된다"는 상황이 바로 이것입니다. (Ubuntu 24.04 + Terminator 화면)*
+*Terminator 같은 터미널을 분할해 쓰면 **칸마다 별개의 bash**가 실행됩니다. 그래서 `.bashrc`도 칸마다 한 번씩 읽히고(`ROS2 Jazzy is activated`가 칸마다 찍혀 있는 것이 그 증거입니다), `source ~/.bashrc`도 지금 커서가 있는 칸에만 적용됩니다. "옆 창에서는 되는데 이 창에서는 `ros2`가 안 된다"는 상황이 바로 이것입니다. (Ubuntu 24.04 + Terminator 화면 — 프롬프트의 `user@robot-pc`는 예시 계정 이름이고, 각자 PC에서는 자기 계정 이름이 표시됩니다.)*
 
 > `~`는 홈 디렉터리(`/home/사용자명`)이고, 파일 이름 앞의 `.`은 **숨김 파일**이라는 표시입니다. `ls`로는 보이지 않고 `ls -a`로 확인할 수 있습니다.
 
@@ -353,7 +353,7 @@ cp ~/.bashrc.backup ~/.bashrc
 source ~/.bashrc
 ```
 
-> 터미널이 열리지 않을 정도로 깨졌다면, `Ctrl`+`Alt`+`F3`으로 가상 콘솔에 로그인해 파일을 고치거나, 복구 모드로 진입해 백업을 복원합니다. 백업이 있으면 1분, 없으면 1시간입니다.
+> 터미널이 열리지 않을 정도로 깨졌다면, `Ctrl`+`Alt`+`F3`으로 가상 콘솔에 로그인해 파일을 고치거나, 복구 모드로 진입해 백업을 복원합니다. 백업이 있으면 되돌리는 일이 간단하지만, 없으면 손이 많이 갑니다.
 
 ### `.bashrc`가 실행되지 않는 경우
 
